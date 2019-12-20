@@ -1,0 +1,201 @@
+######################################
+# Project selection 
+######################################
+DIRECTORIES = $(sort $(dir $(wildcard ../projects/*/)))
+PROJECT ?= 0
+
+#Path to libopen, needed by genlink-config.mk
+OPENCM3_DIR = ../libopencm3
+
+ifneq (,$(findstring $(PROJECT),$(DIRECTORIES)))
+#Project was found in projects directory, lets include its project.mk file
+include ../projects/$(PROJECT)/project.mk
+
+#Include configuration for linker file, we also get our arch_flags from here
+include ../libopencm3/mk/genlink-config.mk
+
+#Everything is done, lets go to the main rule
+all: ../projects/$(PROJECT)/build/microlite_build/microlite.a
+else
+#Project was not found, exit gracefully 
+all: 
+	@echo Project was not found, exiting!
+endif
+
+######################################
+# Make Verbosity
+######################################
+# Be silent per default, but 'make V=1' will show all compiler calls.
+# If you want, V=99 will print out all sorts of things.
+V?=0
+ifeq ($(V),0)
+Q	:= @
+NULL	:= 2>/dev/null
+endif
+
+#For checking macros, to use it write make print-VARIABLE
+print-%  : ; @echo $* = $($*)
+
+
+###################################### 
+# Tool paths
+######################################
+PREFIX	?= arm-none-eabi-
+CC	= $(PREFIX)gcc
+CXX = $(PREFIX)g++
+LD	= $(PREFIX)g++
+AS = $(PREFIX)gcc -x assembler-with-cpp
+AR = $(PREFIX)ar
+OBJCOPY	= $(PREFIX)objcopy
+OBJDUMP	= $(PREFIX)objdump
+
+
+######################################
+# All sources, .c, .cc, .s files
+######################################
+MICROLITE_LIB_SRCS := \
+tensorflow/lite/micro/simple_memory_allocator.cc  \
+tensorflow/lite/micro/memory_helpers.cc  \
+tensorflow/lite/micro/micro_error_reporter.cc  \
+tensorflow/lite/micro/micro_mutable_op_resolver.cc  \
+tensorflow/lite/micro/micro_utils.cc  \
+tensorflow/lite/micro/micro_optional_debug_tools.cc  \
+tensorflow/lite/micro/debug_log.cc  \
+tensorflow/lite/micro/debug_log_numbers.cc  \
+tensorflow/lite/micro/test_helpers.cc  \
+tensorflow/lite/micro/micro_interpreter.cc  \
+tensorflow/lite/micro/micro_allocator.cc  \
+tensorflow/lite/micro/kernels/pack.cc  \
+tensorflow/lite/micro/kernels/logical.cc  \
+tensorflow/lite/micro/kernels/comparisons.cc  \
+tensorflow/lite/micro/kernels/reshape.cc  \
+tensorflow/lite/micro/kernels/depthwise_conv.cc  \
+tensorflow/lite/micro/kernels/split.cc  \
+tensorflow/lite/micro/kernels/conv.cc  \
+tensorflow/lite/micro/kernels/prelu.cc  \
+tensorflow/lite/micro/kernels/dequantize.cc  \
+tensorflow/lite/micro/kernels/activations.cc  \
+tensorflow/lite/micro/kernels/logistic.cc  \
+tensorflow/lite/micro/kernels/ceil.cc  \
+tensorflow/lite/micro/kernels/arg_min_max.cc  \
+tensorflow/lite/micro/kernels/unpack.cc  \
+tensorflow/lite/micro/kernels/add.cc  \
+tensorflow/lite/micro/kernels/pooling.cc  \
+tensorflow/lite/micro/kernels/softmax.cc  \
+tensorflow/lite/micro/kernels/floor.cc  \
+tensorflow/lite/micro/kernels/svdf.cc  \
+tensorflow/lite/micro/kernels/concatenation.cc  \
+tensorflow/lite/micro/kernels/mul.cc  \
+tensorflow/lite/micro/kernels/round.cc  \
+tensorflow/lite/micro/kernels/quantize.cc  \
+tensorflow/lite/micro/kernels/all_ops_resolver.cc  \
+tensorflow/lite/micro/kernels/pad.cc  \
+tensorflow/lite/micro/kernels/fully_connected.cc  \
+tensorflow/lite/micro/kernels/maximum_minimum.cc  \
+tensorflow/lite/micro/kernels/elementwise.cc  \
+tensorflow/lite/micro/kernels/strided_slice.cc  \
+tensorflow/lite/micro/kernels/neg.cc  \
+tensorflow/lite/micro/memory_planner/linear_memory_planner.cc  \
+tensorflow/lite/micro/memory_planner/greedy_memory_planner.cc  \
+tensorflow/lite/c/common.c  \
+tensorflow/lite/core/api/error_reporter.cc  \
+tensorflow/lite/core/api/flatbuffer_conversions.cc  \
+tensorflow/lite/core/api/op_resolver.cc  \
+tensorflow/lite/core/api/tensor_utils.cc  \
+tensorflow/lite/kernels/internal/quantization_util.cc  \
+tensorflow/lite/kernels/kernel_util.cc
+
+
+######################################
+# Build directory
+######################################
+BUILD = ../projects/$(PROJECT)/build
+MICROLITE_LIB_PATH = $(BUILD)/microlite_build
+MICROLITE_LIB = $(MICROLITE_LIB_PATH)/microlite.a
+
+
+######################################
+# INCLUDES
+######################################
+THIRD_PARTY_DIR = tensorflow/lite/micro/tools/make/downloads
+INCLUDES := \
+-I. \
+-I$(THIRD_PARTY_DIR)/gemmlowp \
+-I$(THIRD_PARTY_DIR)/flatbuffers/include \
+-I$(THIRD_PARTY_DIR)/kissfft \
+
+
+######################################
+# Objects
+######################################
+MICROLITE_LIB_OBJS := \
+$(addprefix $(BUILD)/, $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(MICROLITE_LIB_SRCS))))
+vpath %.c $(sort $(dir $(MICROLITE_LIB_SRCS)))
+vpath %.cc $(sort $(dir $(MICROLITE_LIB_SRCS)))
+
+
+######################################
+# Defines
+######################################
+C_DEFS := 
+
+CXX_DEFS :=  \
+-DNDEBUG \
+-DTF_LITE_STATIC_MEMORY \
+#-DTF_LITE_MCU_DEBUG_LOG
+
+######################################
+# Compiler Flags
+######################################
+FLAGS :=\
+-std=c++11 \
+-fno-rtti \
+-fmessage-length=0 \
+-fno-exceptions \
+-fno-unwind-tables \
+-fno-builtin \
+-ffunction-sections \
+-fdata-sections \
+-funsigned-char \
+-fshort-wchar \
+-MMD \
+-std=gnu++11 \
+-Wvla \
+-Wall \
+-Wextra \
+-Wno-unused-parameter \
+-Wno-missing-field-initializers \
+-Wno-write-strings \
+-Wno-sign-compare \
+-fno-delete-null-pointer-checks \
+-fomit-frame-pointer \
+-fpermissive \
+-nostdlib \
+-ggdb \
+
+MICROLITE_CFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(C_DEFS)
+
+MICROLITE_CXXFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(CXX_DEFS)
+
+
+######################################
+# Rules 
+######################################
+
+../projects/$(PROJECT)/build/microlite_build/microlite.a: $(MICROLITE_LIB_OBJS)
+	@printf "  AR\t$<\n"
+	@mkdir -p $(dir $@)
+	$(Q)$(AR) -r $@ $(MICROLITE_LIB_OBJS) 
+
+../projects/$(PROJECT)/build/%.o: %.c
+	@printf "  CC\t$<\n"
+	@mkdir -p $(dir $@)
+	$(Q)$(CC) $(MICROLITE_CFLAGS) $(INCLUDES) -c $< -o $@
+
+../projects/$(PROJECT)/build/%.o: %.cc
+	@printf "  CXX\t$<\n"
+	@mkdir -p $(dir $@)
+	$(Q)$(CXX) $(MICROLITE_CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+clean:
+	rm -rf ../projects/$(PROJECT)/build 
