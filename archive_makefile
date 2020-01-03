@@ -1,4 +1,15 @@
 ######################################
+# Instructions
+######################################
+# To generate microlite.a file for your particular project you have 
+# to run the following command from main directory:
+# make -C tensorflow/ -f ../archive_makefile PROJECT=<name_of_your_project>
+# This will create microlite.a file for your target system, which will be
+# included in the linking process. 
+# Variable PROJECT has to match to the name of your project folder inside 
+# projects directory. 
+
+######################################
 # Project selection 
 ######################################
 DIRECTORIES = $(sort $(dir $(wildcard ../projects/*/)))
