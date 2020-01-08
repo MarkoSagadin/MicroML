@@ -35,7 +35,7 @@ MicroML combines Tensorflow Lite and libopencm3. Programmer first builds each mo
 
 I suggest you to create Ubuntu server with Oracle VM VirtualBox, create a shared folder between a guest and host machine. That way you can change the code with an editor of your choice and then switch to Ubuntu server to invoke make. There is a great tutorial on [youtube](https://www.youtube.com/watch?v=kYEzEFH5LiM) that guides you through the process while explaining the basics. I use exact same setup and it works as expected.  
 
-I wrote down all neccessery steps in VirtualBox_setup.md file. They are almost the same as in the video, with minor differences. In the end I wrote steps for setting up st-link to flash programs to microcontorllers from guest machine.
+I wrote down all neccessery steps in [VirtualBox_setup.md](https://github.com/SkobecSlo/MicroML/blob/master/VirtualBox_setup.md) file. They are almost the same as in the video, with minor differences. In the end I wrote steps for setting up st-link to flash programs to microcontorllers from guest machine.
 
 I tried using TensorFlow Lite on Windows with help of Cygwin and Msys. This setup did not work as I was getting weird errors while building a simple hello world example. 
 
