@@ -29,7 +29,7 @@
 1. Run sudo apt update and sudo apt upgrade to get packages
 2. Then install other tools:
 ```
-sudo apt install make git gcc g++ unzip bash wget openocd gdb-multiarch gcc-arm-none-eabi cmake minicom
+sudo apt install make git gcc g++ unzip bash wget openocd gdb-multiarch gcc-arm-none-eabi cmake minicom curl python
 ```
 ## Installing VistualBox Guest Additions and creating a shared folder
 1. Make sure that Ubuntu is already running, go to VirtualBox and click Show button
