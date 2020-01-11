@@ -22,7 +22,7 @@
 1. Run Ubuntu in headless mode
 2. Open settings->Network->Advanced->Port forwarding
 3. Add a rule with Name SSH, Host port is 2222, guest port is 22, click Ok
-4. Open Putty and connect to localhost, port 22, you should save it.
+4. Open Putty and connect to localhost, port 2222, you should save it.
 5. Now you can connect to your virtual machine with Putty.
 
 ## Ubuntu dev tools
