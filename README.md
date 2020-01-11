@@ -79,7 +79,7 @@ You can see program in action by running following command:
 ### libopencm3 setup
 
 Libopencm3 will provide us with libraries for out targets, it will also generate necessary linker and startup files.
-To generate all necessary files just do:
+To generate all necessary files just do inside root MicroML directory:
 
 `make -C libopencm3`
 
