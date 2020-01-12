@@ -48,7 +48,7 @@ OBJS += $(CCFILES:%.cc=$(BUILD_DIR)/%.o)
 OBJS += $(AFILES:%.S=$(BUILD_DIR)/%.o)
 OBJS += $(MICROLITE_LIB_OBJS)
 
-GENERATED_BINS = $(PROJECT).elf $(PROJECT).bin $(PROJECT).map
+GENERATED_BINS = firmware.elf firmware.bin firmware.map
 
 
 ######################################
@@ -170,10 +170,10 @@ endif
 # Rules
 ######################################
 
-all: $(BUILD_DIR)/$(PROJECT).elf $(BUILD_DIR)/$(PROJECT).bin
-flash: $(PROJECT).flash
-monitor: $(PROJECT).monitor
-clean: $(PROJECT).clean
+all: $(BUILD_DIR)/firmware.elf $(BUILD_DIR)/firmware.bin
+#flash: $(PROJECT).flash
+#monitor: $(PROJECT).monitor
+#clean: $(PROJECT).clean
 
 #For checking macros, to use it write make print-VARIABLE
 print-%  : ; @echo $* = $($*)
@@ -204,24 +204,27 @@ $(BUILD_DIR)/%.o: %.S
 	@mkdir -p $(dir $@)
 	$(Q)$(AS) $(TGT_ASFLAGS) $(ASFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/$(PROJECT).elf: $(OBJS) $(LDSCRIPT) $(LIBDEPS)
+$(BUILD_DIR)/firmware.elf: $(OBJS) $(LDSCRIPT) $(LIBDEPS)
 	@printf "  LD\t$@\n"
 	$(Q)$(LD) $(OBJS) $(TGT_LDFLAGS) $(INCLUDES) $(LDLIBS) -o $@
 
-$(BUILD_DIR)/$(PROJECT).bin: $(BUILD_DIR)/$(PROJECT).elf
+$(BUILD_DIR)/firmware.bin: $(BUILD_DIR)/firmware.elf
 	@printf "  OBJCOPY\t$@\n"
 	$(Q)$(OBJCOPY) -O binary -S $< $@
 
 # It is expected that a openocd.cfg file is in project folder
-%.flash: $(BUILD_DIR)/%.bin
+flash: $(BUILD_DIR)/firmware.bin
 	openocd
 
-%.monitor: $(BUILD_DIR)/%.bin
+monitor: $(BUILD_DIR)/firmware.bin
 	openocd
 	minicom 
 
-%.clean:
-	rm -rf $(BUILD_DIR)
+clean:
+	rm -rf $(BUILD_DIR) generated.*
+
+clean_all:
+	rm -rf $(BUILD_DIR) generated.* microlite_build
 
 .PHONY: all clean flash
 -include $(OBJS:.o=.d)

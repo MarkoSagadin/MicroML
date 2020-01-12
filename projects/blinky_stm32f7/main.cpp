@@ -8,17 +8,9 @@ extern "C" {
 }
 
 static void clock_setup() {
-    // First, let's ensure that our clock is running off the high-speed internal
-    // oscillator (HSI) at 48MHz.
-    //rcc_clock_setup_in_hsi_out_48mhz();
-
-    // Since our LED is on GPIO bank A, we need to enable
+    // Since our LED is on GPIO bank B, we need to enable
     // the peripheral clock to this GPIO bank in order to use it.
-    rcc_periph_clock_enable(RCC_GPIOC);
     rcc_periph_clock_enable(RCC_GPIOB);
-
-    // In order to use our UART, we must enable the clock to it as well.
-    rcc_periph_clock_enable(RCC_USART1);
 }
 static void systick_setup() {
     // Set the systick clock source to our main clock
@@ -59,8 +51,11 @@ void delay(uint64_t duration) {
 }
 
 static void gpio_setup() {
-    // Our test LED is connected to Port C pin 4, so let's set it as output
-    gpio_mode_setup(GPIOC, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO4);
+    // Our LEDs are connected to Port B pins 0, 7 and 14 so let's set them 
+    // as output
+    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO0);
+    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO7);
+    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO14);
 }
 
 int main() 
@@ -72,10 +67,14 @@ int main()
     // Toggle the LED on and off forever
     while (1) 
     {
-        gpio_set(GPIOC, GPIO4);
-        delay(1000);
-        gpio_clear(GPIOC, GPIO4);
-        delay(1000);
+        gpio_set(GPIOB, GPIO0);
+        gpio_set(GPIOB, GPIO7);
+        gpio_set(GPIOB, GPIO14);
+        delay(100);
+        gpio_clear(GPIOB, GPIO0);
+        gpio_clear(GPIOB, GPIO7);
+        gpio_clear(GPIOB, GPIO14);
+        delay(100);
     }
 
     return 0;

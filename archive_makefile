@@ -9,6 +9,15 @@
 # Variable PROJECT has to match to the name of your project folder inside 
 # projects directory. 
 
+
+######################################
+# Build directory
+######################################
+PROJECT_PATH = ../projects/$(PROJECT)
+MICROLITE_BUILD_PATH = $(PROJECT_PATH)/microlite_build
+MICROLITE_LIB = $(MICROLITE_BUILD_PATH)/microlite.a
+
+
 ######################################
 # Project selection 
 ######################################
@@ -26,7 +35,7 @@ include ../projects/$(PROJECT)/project.mk
 include ../libopencm3/mk/genlink-config.mk
 
 #Everything is done, lets go to the main rule
-all: ../projects/$(PROJECT)/build/microlite_build/microlite.a
+all: $(MICROLITE_LIB)
 else
 #Project was not found, exit gracefully 
 all: 
@@ -118,14 +127,6 @@ tensorflow/lite/kernels/kernel_util.cc
 
 
 ######################################
-# Build directory
-######################################
-BUILD = ../projects/$(PROJECT)/build
-MICROLITE_LIB_PATH = $(BUILD)/microlite_build
-MICROLITE_LIB = $(MICROLITE_LIB_PATH)/microlite.a
-
-
-######################################
 # INCLUDES
 ######################################
 THIRD_PARTY_DIR = tensorflow/lite/micro/tools/make/downloads
@@ -140,7 +141,7 @@ INCLUDES := \
 # Objects
 ######################################
 MICROLITE_LIB_OBJS := \
-$(addprefix $(BUILD)/, $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(MICROLITE_LIB_SRCS))))
+$(addprefix $(MICROLITE_BUILD_PATH)/, $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(MICROLITE_LIB_SRCS))))
 vpath %.c $(sort $(dir $(MICROLITE_LIB_SRCS)))
 vpath %.cc $(sort $(dir $(MICROLITE_LIB_SRCS)))
 
@@ -178,6 +179,7 @@ FLAGS :=\
 -Wno-missing-field-initializers \
 -Wno-write-strings \
 -Wno-sign-compare \
+-Wno-type-limits \
 -fno-delete-null-pointer-checks \
 -fomit-frame-pointer \
 -fpermissive \
@@ -193,20 +195,20 @@ MICROLITE_CXXFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(CXX_DEFS)
 # Rules 
 ######################################
 
-../projects/$(PROJECT)/build/microlite_build/microlite.a: $(MICROLITE_LIB_OBJS)
+$(MICROLITE_LIB): $(MICROLITE_LIB_OBJS)
 	@printf "  AR\t$<\n"
 	@mkdir -p $(dir $@)
 	$(Q)$(AR) -r $@ $(MICROLITE_LIB_OBJS) 
 
-../projects/$(PROJECT)/build/%.o: %.c
+$(MICROLITE_BUILD_PATH)/%.o: %.c
 	@printf "  CC\t$<\n"
 	@mkdir -p $(dir $@)
 	$(Q)$(CC) $(MICROLITE_CFLAGS) $(INCLUDES) -c $< -o $@
 
-../projects/$(PROJECT)/build/%.o: %.cc
+$(MICROLITE_BUILD_PATH)/%.o: %.cc
 	@printf "  CXX\t$<\n"
 	@mkdir -p $(dir $@)
 	$(Q)$(CXX) $(MICROLITE_CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -rf ../projects/$(PROJECT)/build 
+	rm -rf $(MICROLITE_BUILD_PATH) 

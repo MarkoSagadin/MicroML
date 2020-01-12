@@ -2,7 +2,7 @@
 # Project settings 
 ######################################
 # Name of the MCU, use exact name, for example stm32f405vg, this is needed by libopencm3
-DEVICE = stm32f405vg
+DEVICE = stm32f767zi
 
 # General settings
 OPT = -Og
@@ -15,6 +15,7 @@ CFILES = $(wildcard *.c)
 CXXFILES = $(wildcard *.cpp)
 CCFILES = $(wildcard *.cc)
 AFILES = $(wildcard *.s)
-LDLIBS = build/microlite_build/microlite.a
+LDLIBS = microlite_build/microlite.a
+
 # If you add new folders do not forget to update the INCLUDES!
 INCLUDES += $(patsubst %,-I%, . $(SHARED_DIR))
