@@ -1,4 +1,14 @@
+# Ignore tags file in root folder
 tags
+
+# Ignore build folder in any directory
 **/build 
+
+# Ignore microlite_build folder in any directory
+**/microlite_build 
+
+# Ignore any .ld files anywhere
 *.ld
+
+# Ignore any .swp files anywhere
 *.swp
