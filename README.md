@@ -70,7 +70,7 @@ And then
 This will call several scripts that will download the libraries and then 
 it will start compiling the source files. It might take a while.
 
-Quick explanation on tensorflow hello_world example:
+Quick explanation on TensorFlow hello_world example:
 It is feeding values into a model that represents the sine wave function which calculates the output. Both the input and output values are continuously printed.
 You can see program in action by running following command:
 
@@ -83,32 +83,43 @@ To generate all necessary files just do inside root MicroML directory:
 
 `make -C libopencm3`
 
-### Hello World, sine wave example on STM32F405GT microcontroller
+## Building projects
 
-Start with this section only after you completed TensorFlow setup and libopencm3 setup.
+Each project file should contain:
+* Makefile, which we will call with make command
+* project.mk, where we specify our MCU
+* openocd.cfg, which tells openocd how to flash firmware to our MCU
+* .c, .h source files
 
-Move into main MicroML directory and run:
+Project.mk and openocd.cfg are only two files where we have to change something specific to our project settings. In project.mk you specify the name of the MCU, in openocd.cfg you specify the correct programmer and correct target.
 
-`make -C tensorflow/ -f ../archive_makefile PROJECT=hello_world`
+### Blinky and uart example
 
-This will create microlite.a archive file which will be linked against in linking process.
+In project folder there are blinky and uart examples for two different MCUs that were available to me. These are the two most simple examples that you can test on your devices to test the build system. They are almost exact copy from what you can find in libopencm3 examples repository. Uart examples use excellent printf library that can be found on [github](https://github.com/mpaland/printf).
 
-Now compile and flash program to the microcontroller:
+To build a project just run a `make` inside of this projects.
+To build and flash to target use `make flash`, to build, flash and open minicom use `make monitor`.
 
+Of course some changes in the code will be needed to accommodate for a different architecture.
+
+### Hello world example
+
+Start with this example only after you completed TensorFlow setup and libopencm3 setup.
+Hello world example is exactly the same as Hello world example mentioned in TensorFlow setup, but his time we will run it on microcontroller. Because this example needs access to TensorFlow functions we first need to create microlite.a archive file. We do this by moving into main MicroMl directory and run: 
+
+`make -C tensorflow/ -f ../archive_makefile PROJECT=<name of our project>`
+
+This will create a microlite_build folder in our directory.
+
+If move into one of hello_world examples you will notice an extra line which was not present in blinky and uart examples:
 ```
-cd projects/hello_world/
-make flash
+LDLIBS = microlite_build/microlite.a
 ```
+This is needed to link microlite.a file in linking process.
 
-Open your favorite serial terminal and watch values scrolling by.
+After that we build and flash our program as before, with `make flash`.
+If you now open a serial monitor you should see x and y values scrolling by. Congrats you just run your first neural net on a microcontroller!
 
-# To generate microlite.a file for your particular project you have
-  5 # to run the following command from main directory:
-  6 # make -C tensorflow/ -f ../archive_makefile PROJECT=<name_of_your_project>
-  7 # This will create microlite.a file for your target system, which will be
-  8 # included in the linking process.
-  9 # Variable PROJECT has to match to the name of your project folder inside
- 10 # projects directory.
 
 ## Contributing
 
