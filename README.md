@@ -118,18 +118,4 @@ LDLIBS = microlite_build/microlite.a
 This is needed to link microlite.a file in linking process.
 
 After that we build and flash our program as before, with `make flash`.
-If you now open a serial monitor you should see x and y values scrolling by. Congrats you just run your first neural net on a microcontroller!
-
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Authors
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
+If you now open a serial monitor you should see x and y values scrolling by. Congrats! You just ran your first neural net on a microcontroller!
