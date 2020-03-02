@@ -78,9 +78,8 @@ static void i2c_setup(void)
 {
     rcc_periph_clock_enable(RCC_I2C1);
     rcc_periph_clock_enable(RCC_GPIOB);
-	delay(1); //Needed before we can access anything for I2C, DO NOT REMOVE
 
-	/* Setup GPIO pin GPIO_USART2_TX/GPIO9 on GPIO port A for transmit. */
+    /* Setup GPIO pin GPIO_USART2_TX/GPIO9 on GPIO port A for transmit. */
 	gpio_set_af(GPIOB, GPIO_AF4, GPIO8 | GPIO9);
 	gpio_set_output_options(GPIOB, GPIO_OTYPE_OD, GPIO_OSPEED_100MHZ,  GPIO8 | GPIO9);
     gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO8 | GPIO9);
