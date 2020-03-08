@@ -21,6 +21,7 @@ AS = $(PREFIX)gcc -x assembler-with-cpp
 AR = $(PREFIX)ar
 OBJCOPY	= $(PREFIX)objcopy
 OBJDUMP	= $(PREFIX)objdump
+SIZE	= $(PREFIX)size
 
 
 ###################################### 
@@ -171,9 +172,8 @@ endif
 ######################################
 
 all: $(BUILD_DIR)/firmware.elf $(BUILD_DIR)/firmware.bin
-#flash: $(PROJECT).flash
-#monitor: $(PROJECT).monitor
-#clean: $(PROJECT).clean
+	@printf "  SIZE\t$<\n"
+	$(Q)$(SIZE) $(BUILD_DIR)/firmware.elf
 
 #For checking macros, to use it write make print-VARIABLE
 print-%  : ; @echo $* = $($*)
