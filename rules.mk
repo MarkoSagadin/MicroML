@@ -82,6 +82,7 @@ FLAGS :=\
 -Wno-missing-field-initializers \
 -Wno-write-strings \
 -Wno-sign-compare \
+-Wno-narrowing \
 -fno-delete-null-pointer-checks \
 -fomit-frame-pointer \
 -fpermissive \
