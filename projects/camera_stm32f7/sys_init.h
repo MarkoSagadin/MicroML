@@ -14,11 +14,7 @@
 extern "C" {
 #endif
 
-uint64_t millis();
-uint64_t micros();
-void sys_tick_handler();
-void delay(uint64_t duration);
-void delay_us(uint64_t duration);
+extern volatile uint8_t g_clock_mhz; //defined in sys_init.c
 void clock_setup();
 void i2c_setup();
 void usart_setup();

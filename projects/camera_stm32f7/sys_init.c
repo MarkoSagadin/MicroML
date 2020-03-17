@@ -5,82 +5,16 @@ void _putchar(char character)
     usart_send_blocking(USART3, character); /* USART3: Send byte. */
 }
 
-// Storage for our monotonic system clock.
-// Note that it needs to be volatile since we're modifying it from an interrupt.
-static volatile uint64_t _millis = 0;
-
 // Our clock frequency in MHz, it has to be set manually by programmer in clock setup
-// It is used for calculating micros.
-static volatile uint8_t clock_mhz = 0;
-
-uint64_t millis()
-{
-    return _millis;
-}
-
-/*!
- * @brief Returns how long microcontroller has been running in microseconds
- *
- * @return time alive in microseconds
- *
- * @note Explanation on implementation, we first get ms and turn them in us,
- * then we get number of cycles left in systick timer, and turn that into us.
- * Last part might not make sense, but only because it was simplified to avoid
- * unnecessary math operations. Original equation was:
- * number_of_cycles_in_ms = rcc_ahb_frequency/1000
- * cycles_in_systick = systick_get_value()
- * time_in_us = (number_of_cycles_in_ms - cycles_in_systick)/(rcc_ahb_frequency/1000000)
- *  (millis() * 1000) + time_in_us
- */
-uint64_t micros()
-{
-    return (millis() * 1000) + (1001 - (systick_get_value() / clock_mhz));
-}
-
-// This is our interrupt handler for the systick reload interrupt.
-// The full list of interrupt services routines that can be implemented is
-// listed in libopencm3/include/libopencm3/stm32/f0/nvic.h
-void sys_tick_handler(void)
-{
-    // Increment our monotonic clock
-    _millis++;
-}
-
-/**
- */
-
-/*!
- * @brief Delay for a real number of milliseconds
- *
- * @param[in] duration      in milliseconds
- *
- * @note Blocks for specified duration
- */
-void delay(uint64_t duration)
-{
-    const uint64_t until = millis() + duration;
-    while (millis() < until);
-}
-
-/*!
- * @brief Delay for a real number of microseconds
- *
- * @param[in] duration      in microseconds
- *
- * @note Blocks for specified duration
- */
-void delay_us(uint64_t duration)
-{
-    const uint64_t until = micros() + duration;
-    while (micros() < until);
-}
+// It is used for calculating micros in utility.c
+volatile uint8_t g_clock_mhz = 0;
 
 void clock_setup()
 {
     // First, let's ensure that our clock is running off the high-speed internal
     // oscillator (HSI) at 48MHz.
     rcc_clock_setup_hsi(&rcc_3v3[RCC_CLOCK_3V3_48MHZ]);
-    clock_mhz = 48;     // Has to be the same as our clock in Mhz
+    g_clock_mhz = 48;     // Has to be the same as our clock in Mhz
 
     // Turn on MCO1 and MCO2 pins which show you internal frequencies
     // Both will have prescaler division of 4
@@ -166,7 +100,4 @@ void gpio_setup()
 {
     rcc_periph_clock_enable(RCC_GPIOB);
     gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO14);
-
-    rcc_periph_clock_enable(RCC_GPIOA);
-    gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO0);
 }

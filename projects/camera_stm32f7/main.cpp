@@ -1,5 +1,6 @@
 #include "sys_init.h"
 #include "utility.h"
+#include "flir.h"
 
 #define ADDRESS  (0x2A)
 
@@ -11,37 +12,7 @@
 #define GET (0x00)
 #define SET (0x01)
 #define RUN (0x02)
-// TODO: V tem vrstnem redu, 
-// * implementiraj timeout za NACK
-// * poglej na kakšen način dobivaš čas, rabiš nekaj kot je millis
-// * premakni delay, systick etc v utility
-// * komaj potem se lahko lotiš sprejemanja podatkov. 16/03/2020 17:04:32
-//Kaj dejansko potrebujem
-//
-//Preprosta write funkcija, daš ji addresso, array bytov in dolžino
-//bool i2c_write(uint8_t addr, uint8_t * data, uint8_t num_bytes)
-// lahko imaš tudi samo in pošiljaš po en byte
-//bool i2c_write(uint8_t addr, uint8_t data)
-// Začne se s startom in konča s stopom
-// Potrebuješ tudi error handeling za ack/nack, ne mores imeti loopov, ki ti lahko
-// do neskončnosti zaciklajo program; torej rabiš timeout
 
-void i2c_request_from(uint8_t address, uint8_t num_bytes)
-{
-    /* Setting transfer properties */
-    i2c_set_7bit_address(I2C1, address);
-    i2c_set_read_transfer_dir(I2C1);
-    i2c_set_bytes_to_transfer(I2C1, num_bytes);
-    /* start transfer */
-    i2c_send_start(I2C1);
-    /* important to do it afterwards to do a proper repeated start! */
-    i2c_enable_autoend(I2C1);
-}
-
-uint8_t i2c_read()
-{
-
-}
 
 /**
  * Run a write/read transaction to a given 7bit i2c address
@@ -111,27 +82,25 @@ int main()
     gpio_setup();
     i2c_setup();
 
+    printf("System setup done!\n");
 
-    printf("FIRST OUTPUT\n");
+    uint16_t serial_num[4];
 
-    // We are getting WHO_AM_I register from LIS2DW12
-    //uint8_t addr = 0x19;
-    //uint8_t cmd = 0x0F;
-    uint8_t data;
+    if(!get_flir_command(command_code(LEP_CID_SYS_FLIR_SERIAL_NUMBER, LEP_I2C_COMMAND_TYPE_GET), serial_num, 4))
+        printf("Fail");
 
-    uint16_t data_tran[4] = {0x1234, 0x5678, 0xABCD, 0x6969};
+    printf("SYS Flir Serial Number: %04X, %04X, %04X, %04X", serial_num[0],
+                                                     serial_num[1],
+                                                     serial_num[2],
+                                                     serial_num[3]);
     while (1) 
     {
         //i2c_transfer7(I2C1, ADDRESS, data_tran, 2, &data, 0);
-        //printf("Received this = %d\n", data);
         
-        //i2c_write(ADDRESS, data_tran, 2);
-        //i2c_write16_array(ADDRESS, data_tran, 4);
-        //gpio_set(GPIOB, GPIO14);
-        gpio_set(GPIOA, GPIO0);
-        delay_us(500);
-        gpio_clear(GPIOA, GPIO0);
-        delay_us(500);
+        gpio_set(GPIOB, GPIO14);
+        delay(1000);
+        gpio_clear(GPIOB, GPIO14);
+        delay(1000);
     }
 
     return 0;
