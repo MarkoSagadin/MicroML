@@ -265,7 +265,15 @@ static bool write_command_register(uint16_t cmd_code, uint16_t * data_words, uin
  * @param[in] read_words  
  * @param[in] max_length    That can be read in words  
  *
- * @return true, if everything ok, otherwise false
+ * @return                  True, if everything ok, otherwise false
+ * @note                    When transmitting DATA that are larger than a 
+ *                          single word (16-bits), the larger DATA is divided 
+ *                          into multiple 16-bit words; each word is then placed 
+ *                          into multiple DATA registers with the least 
+ *                          significant word in the lower DATA register. 
+ *                          Thus for a 32-bit transfer, a Host would place the 
+ *                          lower 16-bits into DATA 0 (Least Significant Word 
+ *                          first) and the upper 16-bits into DATA 1.
  */
 static bool read_data_register(uint16_t * read_words, uint8_t max_length)
 {

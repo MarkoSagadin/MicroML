@@ -19,15 +19,15 @@ int main()
         printf("Fail\n");
 
     printf("SYS Flir Serial Number: %04X, %04X, %04X, %04X\n", 
-                                                serial_num[0],
-                                                serial_num[1],
+                                                serial_num[3],
                                                 serial_num[2],
-                                                serial_num[3]);
+                                                serial_num[1],
+                                                serial_num[0]);
 
     if(!get_flir_command(command_code(LEP_CID_SYS_SHUTTER_POSITION, LEP_I2C_COMMAND_TYPE_GET), shutter_position , 2))
         printf("Fail\n");
 
-    printf("Got shutter position: %04X, %04X\n", shutter_position[0], shutter_position[1]);
+    printf("Got shutter position: %04X, %04X\n", shutter_position[1], shutter_position[0]);
 
     delay(1000);
 
@@ -41,7 +41,7 @@ int main()
     if(!get_flir_command(command_code(LEP_CID_SYS_SHUTTER_POSITION, LEP_I2C_COMMAND_TYPE_GET), shutter_position, 2))
         printf("Fail\n");
 
-    printf("Got shutter position: %04X, %04X\n", shutter_position[0], shutter_position[1]);
+    printf("Got shutter position: %04X, %04X\n", shutter_position[1], shutter_position[0]);
 
     delay(1000);
 
@@ -55,7 +55,7 @@ int main()
     if(!get_flir_command(command_code(LEP_CID_SYS_SHUTTER_POSITION, LEP_I2C_COMMAND_TYPE_GET), shutter_position, 2))
         printf("Fail\n");
 
-    printf("Got shutter position: %04X, %04X\n", shutter_position[0], shutter_position[1]);
+    printf("Got shutter position: %04X, %04X\n", shutter_position[1], shutter_position[0]);
 
 
 
