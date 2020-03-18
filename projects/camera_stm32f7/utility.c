@@ -243,6 +243,9 @@ bool i2c_read16(uint8_t addr, uint16_t * data)
         separated_bytes[i] = i2c_get_data(I2C1);
     }
     
+    //printf("high separated byte is %d\n", separated_bytes[0]);
+    //printf("low separated byte is %d\n", separated_bytes[1]);
+
     //Join bytes together
     *data =(uint16_t)(separated_bytes[0] << 8) | separated_bytes[1];
 

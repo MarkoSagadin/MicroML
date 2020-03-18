@@ -24,7 +24,7 @@ bool get_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_word
     {
         // write command ID to command reg
         // Read command status register
-        if (write_register(LEP_I2C_COMMAND_REG, cmd_code) == 0) 
+        if (write_register(LEP_I2C_COMMAND_REG, cmd_code)) 
         {
             // Successful wait for Flir to process this
             if(wait_busy_bit(FLIR_BUSY_TIMEOUT))
@@ -106,7 +106,7 @@ bool wait_busy_bit(uint16_t timeout)
 {
     uint16_t status;
 
-    if (read_register(LEP_I2C_STATUS_REG, &status))
+    if (!read_register(LEP_I2C_STATUS_REG, &status))
     {
         // Something went wrong
         return false;
@@ -127,7 +127,7 @@ bool wait_busy_bit(uint16_t timeout)
     {
         flir_delay(1);
 
-        if (read_register(LEP_I2C_STATUS_REG, &status))
+        if(!read_register(LEP_I2C_STATUS_REG, &status))
         {
             // Something went wrong
             return false;
@@ -143,6 +143,7 @@ bool wait_busy_bit(uint16_t timeout)
     else
     {
         // Busy bit was still set after timeout
+        printf("Fail 3\n");
         return false;
     }
 }
@@ -171,15 +172,12 @@ LEP_RESULT get_last_flir_result()
  */
 static bool write_register(uint16_t reg_address, uint16_t value)
 {
-    if (!i2c_write16(LEP_I2C_DEVICE_ADDRESS, reg_address))
+    uint16_t temp_buf[2] = {reg_address, value};
+    if (!i2c_write16_array(LEP_I2C_DEVICE_ADDRESS, temp_buf, 2))
     {
         return false;
     }
 
-    if (!i2c_write16(LEP_I2C_DEVICE_ADDRESS, value))
-    {
-        return false;
-    }
     return true;
 }
 
