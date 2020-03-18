@@ -7,7 +7,7 @@ static volatile uint64_t _millis = 0;
 
 
 /*!
- * @brief prepares i2c peripheral for transfer of data 
+ * @brief                   Prepares i2c peripheral for transfer of data 
  *
  * @param[in] i2c           I2Cx peripheral that we will use
  * @param[in] addr          Slave address that we will be communicating with
@@ -50,12 +50,12 @@ void i2c_prepare(uint32_t i2c, uint8_t addr, uint8_t dir, uint8_t num_bytes)
 }
 
 /*!
- * @brief Writes one byte of data to specified address over i2c
+ * @brief               Writes one byte of data to specified address over i2c
  *
- * @param[in] addr  Address that we will write to
- * @param[in] data  One byte that we will write
+ * @param[in] addr      Address that we will write to
+ * @param[in] data      One byte that we will write
  *
- * @return          if everything ok return true, otherwise false
+ * @return              True if everything is ok, otherwise false
  */
 bool i2c_write(uint8_t addr, uint8_t data)
 {
@@ -79,13 +79,14 @@ bool i2c_write(uint8_t addr, uint8_t data)
 }
 
 /*!
- * @brief Writes an array of bytes of data to specified address over i2c
+ * @brief                   Writes an array of bytes of data to 
+ *                          specified address over i2c
  *
  * @param[in] addr          Address that we will write to
  * @param[in] data          Reference to array of data that we will write
  * @param[in] num_bytes     Number of bytes that we will write 
  *
- * @return true, if everything ok, otherwise false
+ * @return                  True if everything is ok, otherwise false
  */
 bool i2c_write_array(uint8_t addr, uint8_t * data, uint8_t num_bytes)
 {
@@ -112,12 +113,12 @@ bool i2c_write_array(uint8_t addr, uint8_t * data, uint8_t num_bytes)
 }
 
 /*!
- * @brief Writes one word of data to specified address over i2c
+ * @brief               Writes one word of data to specified address over i2c
  *
- * @param[in] addr  Address that we will write to
- * @param[in] data  One word that we will write
+ * @param[in] addr      Address that we will write to
+ * @param[in] data      One word that we will write
  *
- * @return true, if everything ok, otherwise false
+ * @return              True if everything is ok, otherwise false
  */
 bool i2c_write16(uint8_t addr, uint16_t data)
 {
@@ -148,13 +149,14 @@ bool i2c_write16(uint8_t addr, uint16_t data)
 }
 
 /*!
- * @brief Writes an array of words of data to specified address over i2c
+ * @brief                   Writes an array of words of data to 
+ *                          specified address over i2c
  *
  * @param[in] addr          Address that we will write to
  * @param[in] data          Reference to array of data that we will write
  * @param[in] num_words     Number of words that we will write 
  *
- * @return true, if everything ok, otherwise false
+ * @return                  True if everything is ok, otherwise false
  */
 bool i2c_write16_array(uint8_t addr, uint16_t * data, uint8_t num_words)
 {
@@ -298,12 +300,12 @@ bool i2c_write_two_16_array(uint8_t addr, uint16_t * data1, uint8_t num_words1,
 }
 
 /*!
- * @brief Reads one byte over i2c
+ * @brief               Reads one byte over i2c
  *
- * @param[in] addr  Address that we will read from
- * @param[in] data  Copy by reference, where we will copy read byte
+ * @param[in] addr      Address that we will read from
+ * @param[in] data      Copy by reference, where we will copy read byte
  *
- * @return true, if everything ok, otherwise false
+ * @return              True if everything is ok, otherwise false
  */
 bool i2c_read(uint8_t addr, uint8_t * data)
 {
@@ -320,12 +322,12 @@ bool i2c_read(uint8_t addr, uint8_t * data)
 }
 
 /*!
- * @brief Reads one word over i2c
+ * @brief               Reads one word over i2c
  *
- * @param[in] addr  Address that we will read from
- * @param[in] data  Copy by reference, where we will copy read word
+ * @param[in] addr      Address that we will read from
+ * @param[in] data      Copy by reference, where we will copy read word
  *
- * @return true, if everything ok, otherwise false
+ * @return              True if everything is ok, otherwise false
  */
 bool i2c_read16(uint8_t addr, uint16_t * data)
 {
@@ -352,11 +354,13 @@ bool i2c_read16(uint8_t addr, uint16_t * data)
 }
 
 /*!
- * @brief Reads number of bytes over i2c
+ * @brief                   Reads number of bytes over i2c
  *
  * @param[in] addr          Address that we will read from
  * @param[in] data          Reference to array of data that we will receive
  * @param[in] num_bytes     Number of bytes that we expect
+ *
+ * @return                  True if everything is ok, otherwise false
  */
 bool i2c_read_array(uint8_t addr, uint8_t * data, uint8_t num_bytes)
 {
@@ -374,11 +378,13 @@ bool i2c_read_array(uint8_t addr, uint8_t * data, uint8_t num_bytes)
 }
 
 /*!
- * @brief Reads number of words over i2c
+ * @brief                   Reads number of words over i2c
  *
  * @param[in] addr          Address that we will read from
  * @param[in] data          Reference to array of data that we will receive
  * @param[in] num_words     Number of words that we expect
+ *
+ * @return                  True if everything is ok, otherwise false
  */
 bool i2c_read16_array(uint8_t addr, uint16_t * data, uint8_t num_words)
 {
@@ -414,11 +420,11 @@ bool i2c_read16_array(uint8_t addr, uint16_t * data, uint8_t num_words)
 }
 
 /*!
- * @brief Waits for ACK bit until timeout
+ * @brief               Waits for ACK bit until timeout
  *
- * @param[in]   timeout in milliseconds
+ * @param[in] timeout   In milliseconds
  *
- * @return True if ack was received, false if timeout was reached
+ * @return              True if ACK was received, false if timeout was reached
  */
 bool wait_for_ack(uint32_t timeout)
 {
@@ -435,11 +441,11 @@ bool wait_for_ack(uint32_t timeout)
 }
 
 /*!
- * @brief Waits for empty data reg until timeout
+ * @brief               Waits for empty data reg until timeout
  *
- * @param[in]   timeout in milliseconds
+ * @param[in] timeout   In milliseconds
  *
- * @return True if reg was cleaned, false if timeout was reached
+ * @return              True if reg was cleaned, false if timeout was reached
  */
 bool wait_for_empty_data_reg(uint32_t timeout)
 {
@@ -458,10 +464,10 @@ bool wait_for_empty_data_reg(uint32_t timeout)
 }
 
 /*!
- * @brief Returns how long microcontroller has been running in microseconds
+ * @brief   Returns how long microcontroller has been running in microseconds
  *
- * @return time alive in milliseconds
- * @note This value is incremented in sys_tick_handler
+ * @return  Time alive in milliseconds
+ * @note    This value is incremented in sys_tick_handler
  */
 uint64_t millis()
 {
@@ -469,9 +475,9 @@ uint64_t millis()
 }
 
 /*!
- * @brief Returns how long microcontroller has been running in microseconds
+ * @brief   Returns how long microcontroller has been running in microseconds
  *
- * @return time alive in microseconds
+ * @return  Time alive in microseconds
  *
  * @note    Explanation on implementation, we first get ms and turn them in us,
  *          then we get number of cycles left in systick timer, and turn that 
@@ -490,9 +496,10 @@ uint64_t micros()
 }
 
 /*!
- * @brief This is our interrupt handler for the systick reload interrupt.
+ * @brief                   This is our interrupt handler for the 
+ *                          systick reload interrupt.
  *
- * @param[in] duration      in milliseconds
+ * @param[in] duration      In milliseconds
  *
  * @note    The full list of interrupt services routines that can be 
  *          implemented is listed in 
@@ -505,11 +512,11 @@ void sys_tick_handler(void)
 }
 
 /*!
- * @brief Delay for a real number of milliseconds
+ * @brief                   Delay for a real number of milliseconds
  *
- * @param[in] duration      in milliseconds
+ * @param[in] duration      In milliseconds
  *
- * @note Blocks for specified duration
+ * @note                    Blocks for specified duration
  */
 void delay(uint64_t duration)
 {
@@ -518,11 +525,11 @@ void delay(uint64_t duration)
 }
 
 /*!
- * @brief Delay for a real number of microseconds
+ * @brief                   Delay for a real number of microseconds
  *
- * @param[in] duration      in microseconds
+ * @param[in] duration      In microseconds
  *
- * @note Blocks for specified duration
+ * @note                    Blocks for specified duration
  */
 void delay_us(uint64_t duration)
 {

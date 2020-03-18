@@ -11,6 +11,9 @@ extern "C" {
 
 #define FLIR_BUSY_TIMEOUT (5000)
 
+// Debug macro, define it to enable debug uart
+#define FLIR_DEBUG
+
 // Low level commands
 bool get_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_words);
 bool set_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_words);

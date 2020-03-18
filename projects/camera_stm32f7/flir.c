@@ -1,5 +1,7 @@
 #include "flir.h"
 #include "utility.h"
+#include <stdarg.h>
+#include <stdio.h>
 
 static uint8_t last_flir_error = LEP_OK;
 
@@ -14,16 +16,32 @@ static void flir_delay(uint32_t delay);
 static uint32_t flir_millis();
 
 
+/*!
+ * @brief           Debug output wrapper
+ *
+ * @param[in] string  
+ * @param[in] variable number of arguments  
+ */
+void flir_debug(char* fmt, ...)
+{
+#ifdef FLIR_DEBUG
+    va_list args;
+    va_start(args, fmt);
+    printf("FLIR_DEBUG: ");
+    vprintf(fmt, args);
+    va_end(args);
+#endif 
+}
 
 /*!
- * @brief Sends get command to FLIR module
+ * @brief                   Sends get command to FLIR module
  *
- * @param[in] cmd_code      Command code to be send, use the ones 
+ * @param[in] cmd_code      Command code to be send, use ones 
  *                          defined in flir_defines.h
  * @param[in] data_words    Copy by reference, result will be copied into it
  * @param[in] num_words     Num of words that will be read
  *
- * @return  Returns true if everything is ok, otherwise false
+ * @return                  True if everything is ok, otherwise false
  *
  * @note    Procedure implemented as written in Lepton Software Interface 
  *          Description Document rev200.pdf, page 11
@@ -54,14 +72,14 @@ bool get_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_word
 }
 
 /*!
- * @brief Sends set command to FLIR module
+ * @brief                   Sends set command to FLIR module
  *
  * @param[in] cmd_code      Command code to be send, use the ones 
  *                          defined in flir_defines.h
  * @param[in] data_words    Copy by reference, result will be copied into it
  * @param[in] num_words     Num of words that will be read
  *
- * @return  Returns true if everything is ok, otherwise false
+ * @return                  True if everything is ok, otherwise false
  *
  * @note    Procedure implemented as written in Lepton Software Interface 
  *          Description Document rev200.pdf, page 12
@@ -89,8 +107,9 @@ bool set_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_word
 }
 
 /*!
- * @brief Function will convert command ID and type into one cmd_code,
- *        which will be fed into get_flir_command() or set_flir_command()
+ * @brief                   Function will convert command ID and type 
+ *                          into one cmd_code, which will be fed into 
+ *                          get_flir_command() or set_flir_command()
  *
  * @param[in] cmd_id        Like LEP_CID_VID_POLARITY_SELECT
  * @param[in] cmd_type      Like LEP_I2C_COMMAND_TYPE_GET
@@ -107,12 +126,14 @@ uint16_t command_code(uint16_t cmd_id, uint16_t cmd_type)
 }
 
 /*!
- * @brief Blocking function, will wait until FLIR camera is ready to
- * receive commands
+ * @brief                   Blocking function, will wait until FLIR camera is 
+ *                          ready to receive commands
  *
- * @param[in] timeout How long will function pool for BUSY bit in milliseconds
+ * @param[in] timeout       How long will function pool for BUSY bit 
+ *                          in milliseconds
  *
- * @return  Returns true if BUSY bit was cleared or false if timeout was reached
+ * @return                  True if BUSY bit was cleared or false 
+ *                          if timeout was reached
  */
 bool wait_busy_bit(uint16_t timeout)
 {
@@ -160,11 +181,12 @@ bool wait_busy_bit(uint16_t timeout)
 }
 
 /*!
- * @brief Returns static variable that will show last error code given from FLIR
+ * @brief                   Returns static variable that will show last 
+ *                          error code given from FLIR
  *
  * @return error code
  *
- * @note Check LEP_RESULT enum for possible values
+ * @note                    Check LEP_RESULT enum for possible values
  */
 LEP_RESULT get_last_flir_result()
 {
@@ -174,12 +196,12 @@ LEP_RESULT get_last_flir_result()
 //I2C commands, i2c peripheral should be initialized before using flir.h
 
 /*!
- * @brief Writes two bytes into FLIR register
+ * @brief                   Writes two bytes into FLIR register
  *
  * @param[in] reg_address   Register address that will be written
  * @param[in] value         Value that will be written in register  
  *
- * @return true, if everything ok, otherwise false
+ * @return                  True if everything ok, otherwise false
  */
 static bool write_register(uint16_t reg_address, uint16_t value)
 {
@@ -188,18 +210,17 @@ static bool write_register(uint16_t reg_address, uint16_t value)
     {
         return false;
     }
-
     return true;
 }
 
 /*!
- * @brief Read FLIR register
+ * @brief                   Read FLIR register
  *
  * @param[in] reg_address  
  * @param[in] value         Passed by reference, will hold read value after
  *                          function call
  *
- * @return true, if everything ok, otherwise false
+ * @return                  True if everything ok, otherwise false
  */
 static bool read_register(uint16_t reg_address, uint16_t * value)
 {
@@ -212,13 +233,13 @@ static bool read_register(uint16_t reg_address, uint16_t * value)
 }
 
 /*!
- * @brief Functions writes into command register of FLIR camera
+ * @brief                   Functions writes into command register of FLIR camera
  *
  * @param[in] cmd_code      Command code that will be written
  * @param[in] data_words      
  * @param[in] num_words
  *
- * @return true, if everything ok, otherwise false
+ * @return                  True if everything ok, otherwise false
  */
 static bool write_command_register(uint16_t cmd_code, uint16_t * data_words, uint16_t num_words)
 {
@@ -260,7 +281,7 @@ static bool write_command_register(uint16_t cmd_code, uint16_t * data_words, uin
 }
 
 /*!
- * @brief Functions reads DATA register of FLIR camera
+ * @brief                   Functions reads DATA register of FLIR camera
  *
  * @param[in] read_words  
  * @param[in] max_length    That can be read in words  
@@ -323,11 +344,11 @@ static bool read_data_register(uint16_t * read_words, uint8_t max_length)
 // Utility functions, hardware depended
 
 /*!
- * @brief Function will delay processor for specified time
+ * @brief                   Function will delay processor for specified time
  *
- * @param[in] delay In milliseconds  
+ * @param[in] delay         In milliseconds  
  *
- * @note Hardware depended implementation
+ * @note                    Hardware depended implementation
  */
 static void flir_delay(uint32_t delay_in_ms)
 {
@@ -335,11 +356,11 @@ static void flir_delay(uint32_t delay_in_ms)
 }
 
 /*!
- * @brief Get value how long is processor running in milliseconds
+ * @brief               Get value how long is processor running in milliseconds
  *
- * @return time in milliseconds
+ * @return time         In milliseconds
  *
- * @note Hardware depended implementation
+ * @note                Hardware depended implementation
  */
 static uint32_t flir_millis()
 {
