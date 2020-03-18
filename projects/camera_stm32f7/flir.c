@@ -3,6 +3,18 @@
 
 static uint8_t last_flir_error = LEP_OK;
 
+//I2C commands, i2c peripheral should be initialized before using flir.h
+static bool write_register(uint16_t reg_address, uint16_t value);
+static bool read_register(uint16_t reg_address, uint16_t * value);
+static bool write_command_register(uint16_t cmd_code, uint16_t * data_words, uint16_t num_words);
+static bool read_data_register(uint16_t * read_words, uint8_t max_length);
+
+// Utility functions, hardware depended
+static void flir_delay(uint32_t delay);
+static uint32_t flir_millis();
+
+
+
 /*!
  * @brief Sends get command to FLIR module
  *
@@ -62,7 +74,7 @@ bool set_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_word
     {
         // write command ID to command reg
         // Read command status register
-        if (write_command_register(cmd_code, data_words, num_words) == 0) 
+        if (write_command_register(cmd_code, data_words, num_words))
         {
             // Successful wait for Flir to process this
             if (wait_busy_bit(FLIR_BUSY_TIMEOUT))
@@ -143,7 +155,6 @@ bool wait_busy_bit(uint16_t timeout)
     else
     {
         // Busy bit was still set after timeout
-        printf("Fail 3\n");
         return false;
     }
 }
@@ -207,50 +218,46 @@ static bool read_register(uint16_t reg_address, uint16_t * value)
  * @param[in] data_words      
  * @param[in] num_words
  *
- * @return 0:   success
- *         1:   data too long to fit in transmit buffer
- *         2:   received NACK on transmit of address
- *         3:   received NACK on transmit of data
- *         4:   other error 
+ * @return true, if everything ok, otherwise false
  */
-//static bool write_command_register(uint16_t cmd_code, uint16_t * data_words, uint16_t num_words)
-//{
-//    if (data_words && num_words)
-//    {
-//        i2c_begin_transmission(LEP_I2C_DEVICE_ADDRESS);
-//        i2c_write16(LEP_I2C_DATA_LENGTH_REG);
-//        i2c_write16(num_words);
-//
-//        uint8_t status = i2c_end_transmission();
-//
-//        if (status)
-//        {
-//            return status;
-//        }
-//
-//        uint16_t reg_address = num_words <= 16 ? LEP_I2C_DATA_0_REG : LEP_I2C_DATA_BUFFER;
-//
-//        i2c_begin_transmission(LEP_I2C_DEVICE_ADDRESS);
-//        i2c_write16(reg_address);
-//
-//        while (num_words-- > 0)
-//        {
-//            i2c_write16(*data_words++);
-//        }
-//
-//        status = i2c_end_transmission();
-//
-//        if (status)
-//        {
-//            return status;
-//        }
-//    }
-//
-//    i2c_begin_transmission(LEP_I2C_DEVICE_ADDRESS);
-//    i2c_write16(LEP_I2C_COMMAND_REG);
-//    i2c_write16(cmd_code);
-//    return i2c_end_transmission();
-//}
+static bool write_command_register(uint16_t cmd_code, uint16_t * data_words, uint16_t num_words)
+{
+    uint16_t data[2];
+    if (data_words && num_words)
+    {
+        data[0] = LEP_I2C_DATA_LENGTH_REG;
+        data[1] = num_words;
+
+        if(!i2c_write16_array(LEP_I2C_DEVICE_ADDRESS, data, 2))
+        {
+            // Something went wrong
+            return false;
+        }
+
+        uint16_t reg_address = num_words <= 16 ? LEP_I2C_DATA_0_REG : LEP_I2C_DATA_BUFFER;
+
+
+        // If you are wondering why this has to be sent out in the weird way
+        // read comment next to function definition
+        if (!i2c_write_two_16_array(LEP_I2C_DEVICE_ADDRESS, 
+                                    &reg_address, 1, 
+                                    data_words, num_words))
+        {
+            return false;
+        }
+    }
+
+    data[0] = LEP_I2C_COMMAND_REG;
+    data[1] = cmd_code;
+
+    if(!i2c_write16_array(LEP_I2C_DEVICE_ADDRESS, data, 2))
+    {
+        // Something went wrong
+        return false;
+    }
+
+    return true;
+}
 
 /*!
  * @brief Functions reads DATA register of FLIR camera

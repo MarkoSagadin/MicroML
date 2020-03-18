@@ -20,6 +20,8 @@ bool i2c_write(uint8_t addr, uint8_t data);
 bool i2c_write_array(uint8_t addr, uint8_t * data, uint8_t num_bytes);
 bool i2c_write16(uint8_t addr, uint16_t data);
 bool i2c_write16_array(uint8_t addr, uint16_t * data, uint8_t num_words);
+bool i2c_write_two_16_array(uint8_t addr, uint16_t * data1, uint8_t num_words1, 
+                                          uint16_t * data2, uint8_t num_words2);
 
 bool i2c_read(uint8_t addr, uint8_t * data);
 bool i2c_read16(uint8_t addr, uint16_t * data);

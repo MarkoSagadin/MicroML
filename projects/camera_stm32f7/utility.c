@@ -148,7 +148,7 @@ bool i2c_write16(uint8_t addr, uint16_t data)
 }
 
 /*!
- * @brief Writes an array of bytes of data to specified address over i2c
+ * @brief Writes an array of words of data to specified address over i2c
  *
  * @param[in] addr          Address that we will write to
  * @param[in] data          Reference to array of data that we will write
@@ -192,6 +192,105 @@ bool i2c_write16_array(uint8_t addr, uint16_t * data, uint8_t num_words)
             uint8_t byte = (uint8_t) (*data & 0xFF);
             i2c_send_data(I2C1, byte);
             data++;                     // Increment pointer to next element
+            high_byte = true;
+        }
+    }
+    return true;
+}
+
+/*!
+ * @brief                   Writes two arrays of words of data 
+ *                          to specified address over i2c, one after another
+ *
+ * @param[in] addr          Address that we will write to
+ * @param[in] data1         Reference to array of data that we will write first
+ * @param[in] num_words1    Number of words that we will write first
+ * @param[in] data2         Reference to array of data that we will write second
+ * @param[in] num_words2    Number of words that we will write second
+ *
+ * @return                  True, if everything ok, otherwise false
+ * @note                    This function was created because I ran on case
+ *                          where I had to sent reg address and then data array.
+ *                          Cause sending this two pieces separately would have
+ *                          incorrect effect. I considered using variable lenght
+ *                          array as a buffer where I would join both pieces,
+ *                          but decided to not use as this could introduce
+ *                          potential problems later in development.
+ */
+bool i2c_write_two_16_array(uint8_t addr, uint16_t * data1, uint8_t num_words1, 
+                                          uint16_t * data2, uint8_t num_words2)
+{
+    i2c_prepare(I2C1, addr, I2C_WRITE_DIR, (2 * num_words1 + 2 * num_words2));
+
+    bool high_byte = true;
+    uint16_t num_bytes1 = 2 * num_words1;
+    uint16_t num_bytes2 = 2 * num_words2;
+
+    //Send out first array of data
+    while (num_bytes1--) 
+    {
+        bool wait = true;
+        while (wait) 
+        {
+            if (i2c_transmit_int_status(I2C1)) 
+            {
+                wait = false;
+            }
+            //blocks until ack is received, or it timeouts
+            if(!wait_for_ack(I2C_TIMEOUT))
+            {
+                return false; 
+            }
+        }
+        if (high_byte)
+        {
+            //time to send high byte of the data element
+            uint8_t byte = (uint8_t) (*data1 >> 8) & 0xFF;
+            //send it
+            i2c_send_data(I2C1, byte);
+            high_byte = false;
+        }
+        else
+        {
+            //time to send low byte of the data element
+            uint8_t byte = (uint8_t) (*data1 & 0xFF);
+            i2c_send_data(I2C1, byte);
+            data1++;                     // Increment pointer to next element
+            high_byte = true;
+        }
+    }
+
+    high_byte = true;   //Probably not needed
+    //Send out second array of data
+    while (num_bytes2--) 
+    {
+        bool wait = true;
+        while (wait) 
+        {
+            if (i2c_transmit_int_status(I2C1)) 
+            {
+                wait = false;
+            }
+            //blocks until ack is received, or it timeouts
+            if(!wait_for_ack(I2C_TIMEOUT))
+            {
+                return false; 
+            }
+        }
+        if (high_byte)
+        {
+            //time to send high byte of the data element
+            uint8_t byte = (uint8_t) (*data2 >> 8) & 0xFF;
+            //send it
+            i2c_send_data(I2C1, byte);
+            high_byte = false;
+        }
+        else
+        {
+            //time to send low byte of the data element
+            uint8_t byte = (uint8_t) (*data2 & 0xFF);
+            i2c_send_data(I2C1, byte);
+            data2++;                     // Increment pointer to next element
             high_byte = true;
         }
     }
