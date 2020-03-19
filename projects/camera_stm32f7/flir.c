@@ -88,8 +88,8 @@ LEP_SYS_SHUTTER_POSITION get_flir_shutter_position()
     uint32_t position = 0;
 
     if(get_flir_command32(command_code(LEP_CID_SYS_SHUTTER_POSITION, 
-                                     LEP_I2C_COMMAND_TYPE_GET), 
-                                     &position))
+                                       LEP_I2C_COMMAND_TYPE_GET), 
+                                       &position))
     {
         
         flir_print("Shutter position: %s\n", 
@@ -97,7 +97,7 @@ LEP_SYS_SHUTTER_POSITION get_flir_shutter_position()
     }
     else
     {
-        flir_print("Shutter position: function failed!");
+        flir_print("Shutter position: function failed!\n");
     }
     
     return (LEP_SYS_SHUTTER_POSITION) position;
@@ -110,18 +110,93 @@ LEP_SYS_SHUTTER_POSITION get_flir_shutter_position()
  */
 void set_flir_shutter_position(LEP_SYS_SHUTTER_POSITION position)
 { 
-    if(!set_flir_command32(command_code(LEP_CID_SYS_SHUTTER_POSITION, LEP_I2C_COMMAND_TYPE_SET), (uint32_t) position))
+    if(!set_flir_command32(command_code(LEP_CID_SYS_SHUTTER_POSITION, 
+                    LEP_I2C_COMMAND_TYPE_SET), (uint32_t) position))
     {
-        flir_print("Set shutter position : Fail\n");
+        flir_print("Set shutter position : function failed!\n");
     }
 }
 
+/*!
+ * @brief               Enable or disable AGC processing
+ *
+ * @param[in] position  If true AGC will be enabled
+ *
+ * @note                Function prints fail, if something went wrong
+ */
+void set_flir_agc(bool enable)
+{
+    if(!set_flir_command32(command_code(LEP_CID_AGC_ENABLE_STATE, 
+                                        LEP_I2C_COMMAND_TYPE_SET), 
+                                        (uint32_t) enable))
+    {
+        flir_print("AGC mode: function failed!\n");
+    }
+}
+
+/*!
+ * @brief   Get current state of AGC mode
+ *
+ * @return  True if AGC mode is enabled, otherwise false
+ *
+ * @note    Function prints fail, if something went wrong
+ */
+bool get_flir_agc()
+{
+    uint32_t agc_state = 0;
+    if(get_flir_command32(command_code(LEP_CID_AGC_ENABLE_STATE, 
+                                       LEP_I2C_COMMAND_TYPE_GET), 
+                                       &agc_state))
+    {
+        flir_print("AGC mode: %s\n", agc_state ? "On" : "Off"); 
+    }
+    else
+    {
+        flir_print("AGC mode: function failed!\n");
+    }
+    return (bool) agc_state;
+}
 
 
+/*!
+ * @brief               Enable or disable AGC processing
+ *
+ * @param[in] position  If true AGC will be enabled
+ *
+ * @note                Function prints fail, if something went wrong
+ */
+void set_flir_telemetry(bool enable)
+{
+    if(!set_flir_command32(command_code(LEP_CID_SYS_TELEMETRY_ENABLE_STATE, 
+                                        LEP_I2C_COMMAND_TYPE_SET), 
+                                        (uint32_t) enable))
+    {
+        flir_print("Set Telemetry : function failed!\n");
+    }
+}
 
-
-
-
+/*!
+ * @brief   Get current state of AGC mode
+ *
+ * @return  True if AGC mode is enabled, otherwise false
+ *
+ * @note    Function prints fail, if something went wrong
+ */
+bool get_flir_telemetry()
+{
+    uint32_t telemetry_state = 0;
+    if(get_flir_command32(command_code(LEP_CID_SYS_TELEMETRY_ENABLE_STATE, 
+                                       LEP_I2C_COMMAND_TYPE_GET), 
+                                       &telemetry_state))
+    {
+        flir_print("Telemetry: %s\n", telemetry_state ? "On" : "Off"); 
+    }
+    else
+    {
+        flir_print("Telemetry: function failed!\n");
+    }
+    return (bool) telemetry_state ;
+}
 
 
 
