@@ -642,3 +642,20 @@ static const char * shutter_position_str(LEP_SYS_SHUTTER_POSITION position)
         default:                                return "unknown";
     }
 }
+
+
+/*!
+ * @brief               Enables chip select line for FLIR, pulls it down
+ */
+void enable_flir_cs()
+{
+    gpio_clear(GPIOB, GPIO8);
+}
+
+/*!
+ * @brief               Disables chip select line for FLIR, pulls it up
+ */
+void disable_flir_cs()
+{
+    gpio_set(GPIOB, GPIO8);
+}

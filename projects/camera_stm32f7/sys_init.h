@@ -7,6 +7,7 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/usart.h>
 #include <libopencm3/stm32/i2c.h>
+#include <libopencm3/stm32/spi.h>
 #include <libopencm3/cm3/systick.h>
 #include "printf.h"
 
@@ -17,6 +18,7 @@ extern "C" {
 extern volatile uint8_t g_clock_mhz; //defined in sys_init.c
 void clock_setup();
 void i2c_setup();
+void spi_setup();
 void usart_setup();
 void systick_setup();
 void gpio_setup();

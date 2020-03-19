@@ -2,6 +2,7 @@
 #define utility_H
 
 #include <libopencm3/stm32/i2c.h>
+#include <libopencm3/stm32/spi.h>
 #include <libopencm3/cm3/systick.h>
 #include "printf.h"
 
@@ -30,6 +31,9 @@ bool i2c_read16_array(uint8_t addr, uint16_t * data, uint8_t num_words);
 
 bool wait_for_ack(uint32_t timeout);
 bool wait_for_empty_data_reg(uint32_t timeout);
+
+// SPI related functions
+void spi_read16(uint16_t * data, uint16_t num_words);
 
 // Time delay related functions, systick_setup is in sys_init.c
 uint64_t millis();

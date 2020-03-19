@@ -463,6 +463,28 @@ bool wait_for_empty_data_reg(uint32_t timeout)
 
 }
 
+
+// SPI related functions
+
+
+/*!
+ * @brief               Reads 16bit data from SPI and saves it 
+ *                      into data variable
+ *
+ * @param[in] data      Copy by reference, read data will be saved into it
+ * @param[in] num_words How many words to read
+ *
+ * @note                Number of elements in data and num_words should match
+ */
+void spi_read16(uint16_t * data, uint16_t num_words)
+{
+    while(num_words--)
+    {
+        *data++ = spi_read(SPI1);
+    }
+}
+
+
 /*!
  * @brief   Returns how long microcontroller has been running in microseconds
  *

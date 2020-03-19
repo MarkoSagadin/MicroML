@@ -37,7 +37,7 @@ void i2c_setup(void)
     rcc_periph_clock_enable(RCC_I2C1);
     rcc_periph_clock_enable(RCC_GPIOB);
 
-    /* Setup GPIO pin GPIO_USART2_TX/GPIO9 on GPIO port A for transmit. */
+    // Setup PB8 and PB9 as I2C pins
 	gpio_set_af(GPIOB, GPIO_AF4, GPIO8 | GPIO9);
 	gpio_set_output_options(GPIOB, GPIO_OTYPE_OD, GPIO_OSPEED_100MHZ,  GPIO8 | GPIO9);
     gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO8 | GPIO9);
@@ -51,12 +51,76 @@ void i2c_setup(void)
 	i2c_enable_analog_filter(I2C1);
 	i2c_set_digital_filter(I2C1, 0); //Disabled
 
-	/* HSI is at 16Mhz */
+	// HSI is at 16Mhz
 	i2c_set_speed(I2C1, i2c_speed_sm_100k, 16);
 	i2c_enable_stretching(I2C1);
 	i2c_set_7bit_addr_mode(I2C1);
 
 	i2c_peripheral_enable(I2C1);
+}
+
+void spi_setup()
+{
+    // Enable clock for SPI1 peripheral and gpio pins
+    rcc_periph_clock_enable(RCC_SPI1);
+    rcc_periph_clock_enable(RCC_GPIOA);
+    // SPI1 pins are:
+    // - MISO = PA6
+    // - MOSI = PA7
+    // - SCK  = PA5 
+    
+    // Setup GPIOA PB8 and PB9 as I2C pins
+	gpio_set_af(GPIOA, GPIO_AF5, GPIO5 | GPIO6 | GPIO7);
+    gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO5 | GPIO6 | GPIO7);
+
+    // Notice that after above two lines we do not do anything with PA6,
+    // as it is treated as input
+	gpio_set_output_options(GPIOA, 
+                            GPIO_OTYPE_PP, 
+                            GPIO_OSPEED_25MHZ, 
+                            GPIO5 | GPIO7);
+
+    //Prepare our SS pin
+    rcc_periph_clock_enable(RCC_GPIOB);
+    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO8);
+	gpio_set_output_options(GPIOB, 
+                            GPIO_OTYPE_PP, 
+                            GPIO_OSPEED_25MHZ, 
+                            GPIO8);
+    //Pull it high
+    gpio_set(GPIOB, GPIO8); 
+
+    // Reset our peripheral
+    spi_reset(SPI1);
+
+    // Set main SPI settings:
+    // - CPOL = 1, CPHA = 1
+    // - Send the most significant bit (MSB) first
+    spi_init_master(SPI1, 
+                    SPI_CR1_BAUDRATE_FPCLK_DIV_2, 
+                    SPI_CR1_CPOL_CLK_TO_1_WHEN_IDLE,
+                    SPI_CR1_CPHA_CLK_TRANSITION_2,
+                    SPI_CR1_MSBFIRST);
+
+    // Since we are manually managing the SS line, we need to move it to
+    // software control here.
+    spi_enable_software_slave_management(SPI1);
+
+    // We also need to set the value of NSS high, so that our SPI peripheral
+    // doesn't think it is itself in slave mode.
+    spi_set_nss_high(SPI1);
+
+    // The terminology around directionality can be a little confusing here -
+    // unidirectional mode means that this is the only chip initiating
+    // transfers, not that it will ignore any incoming data on the MISO pin.
+    // Enabling duplex is required to read data back however.
+    spi_set_unidirectional_mode(SPI1);
+
+    // We're using 16 bit, not 8 bit, transfers
+    spi_set_data_size(SPI1, SPI_CR2_DS_16BIT);
+
+    // Enable the peripheral
+    spi_enable(SPI1);
 }
 
 void usart_setup(void)

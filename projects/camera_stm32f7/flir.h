@@ -1,9 +1,10 @@
 #ifndef FLIR_H
 #define FLIR_H
 
+#include <libopencm3/stm32/gpio.h>
 #include <stdbool.h>
-#include "flir_defines.h"
 #include "printf.h"
+#include "flir_defines.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,6 +41,10 @@ bool set_flir_command32(uint16_t cmd_code, uint32_t data_long_word);
 
 uint16_t command_code(uint16_t cmd_id, uint16_t cmd_type);
 LEP_RESULT get_last_flir_result();
+
+void enable_flir_cs();
+void disable_flir_cs();
+
 
 #ifdef __cplusplus
 }
