@@ -85,22 +85,22 @@ void display_flir_serial()
  */
 LEP_SYS_SHUTTER_POSITION get_flir_shutter_position()
 {
-    uint16_t shutter[2] = {0,0};
+    uint32_t position = 0;
 
-    if(get_flir_command(command_code(LEP_CID_SYS_SHUTTER_POSITION, 
+    if(get_flir_command32(command_code(LEP_CID_SYS_SHUTTER_POSITION, 
                                      LEP_I2C_COMMAND_TYPE_GET), 
-                                     shutter , 2))
+                                     &position))
     {
         
         flir_print("Shutter position: %s\n", 
-                shutter_position_str((LEP_SYS_SHUTTER_POSITION) shutter[0]));
+                shutter_position_str((LEP_SYS_SHUTTER_POSITION) position));
     }
     else
     {
         flir_print("Shutter position: function failed!");
     }
     
-    return (LEP_SYS_SHUTTER_POSITION) shutter[0];
+    return (LEP_SYS_SHUTTER_POSITION) position;
 }
 
 /*!
@@ -110,9 +110,7 @@ LEP_SYS_SHUTTER_POSITION get_flir_shutter_position()
  */
 void set_flir_shutter_position(LEP_SYS_SHUTTER_POSITION position)
 { 
-    //It seems that this has to be done in order enums are sent correctly
-    uint32_t changed_position = (uint32_t) position;
-    if(!set_flir_command(command_code(LEP_CID_SYS_SHUTTER_POSITION, LEP_I2C_COMMAND_TYPE_SET), (uint16_t *) &changed_position, 2))
+    if(!set_flir_command32(command_code(LEP_CID_SYS_SHUTTER_POSITION, LEP_I2C_COMMAND_TYPE_SET), (uint32_t) position))
     {
         flir_print("Set shutter position : Fail\n");
     }
@@ -175,6 +173,46 @@ bool get_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_word
 }
 
 /*!
+ * @brief                   Sends get command to FLIR module
+ *
+ * @param[in] cmd_code      Command code to be send, use ones 
+ *                          defined in flir_defines.h
+ * @param[in] data_words    Copy by reference, result will be copied into it
+ * @param[in] num_words     Num of words that will be read
+ *
+ * @return                  True if everything is ok, otherwise false
+ *
+ * @note    Procedure implemented as written in Lepton Software Interface 
+ *          Description Document rev200.pdf, page 11
+ *          This seems like unnecessary duplicate of the other set function,
+ *          but it will make high level use easier
+ */
+bool get_flir_command32(uint16_t cmd_code, uint32_t * data_long_word)
+{
+    // Read command status register
+    // If not BUSY, write number of data words to read into DATA length reg.
+    if(wait_busy_bit(FLIR_BUSY_TIMEOUT))
+    {
+        // write command ID to command reg
+        // Read command status register
+        if (write_register(LEP_I2C_COMMAND_REG, cmd_code)) 
+        {
+            // Successful wait for Flir to process this
+            if(wait_busy_bit(FLIR_BUSY_TIMEOUT))
+            {
+                // If no timeout, read DATA from DATA regs
+                if(read_data_register((uint16_t * ) data_long_word, 2))
+                {
+                    return true; 
+                }
+            }
+        }
+    }
+    // Something failed
+    return false;
+}
+
+/*!
  * @brief                   Sends set command to FLIR module
  *
  * @param[in] cmd_code      Command code to be send, use the ones 
@@ -196,6 +234,43 @@ bool set_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_word
         // write command ID to command reg
         // Read command status register
         if (write_command_register(cmd_code, data_words, num_words))
+        {
+            // Successful wait for Flir to process this
+            if (wait_busy_bit(FLIR_BUSY_TIMEOUT))
+            {
+                return true; 
+            }
+        }
+    }
+
+    // Something failed
+    return false;
+}
+
+/*!
+ * @brief                       Sends set command to FLIR module
+ *
+ * @param[in] cmd_code          Command code to be send, use the ones 
+ *                              defined in flir_defines.h
+ * @param[in] data_long_word    Copy by value
+ * @param[in] num_words         Num of words that will be read
+ *
+ * @return                      True if everything is ok, otherwise false
+ *
+ * @note    Procedure implemented as written in Lepton Software Interface 
+ *          Description Document rev200.pdf, page 12
+ *          This seems like unnecessary duplicate of the other set function,
+ *          but it will make high level use easier
+ */
+bool set_flir_command32(uint16_t cmd_code, uint32_t data_long_word)
+{
+    // Read command status register
+    // If not BUSY, write number of data words to read into DATA length reg.
+    if (wait_busy_bit(FLIR_BUSY_TIMEOUT))
+    {
+        // write command ID to command reg
+        // Read command status register
+        if (write_command_register(cmd_code, (uint16_t *) &data_long_word, 2))
         {
             // Successful wait for Flir to process this
             if (wait_busy_bit(FLIR_BUSY_TIMEOUT))

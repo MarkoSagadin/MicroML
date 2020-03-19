@@ -26,7 +26,10 @@ void set_flir_shutter_position(LEP_SYS_SHUTTER_POSITION position);
 
 // Low level commands
 bool get_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_words);
+bool get_flir_command32(uint16_t cmd_code, uint32_t * data_long_word);
+
 bool set_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_words);
+bool set_flir_command32(uint16_t cmd_code, uint32_t data_long_word);
 
 uint16_t command_code(uint16_t cmd_id, uint16_t cmd_type);
 LEP_RESULT get_last_flir_result();
