@@ -22,6 +22,7 @@ extern "C" {
 //General diagnostic, set and get functions
 void display_flir_serial();
 LEP_SYS_SHUTTER_POSITION get_flir_shutter_position();
+void set_flir_shutter_position(LEP_SYS_SHUTTER_POSITION position);
 
 // Low level commands
 bool get_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_words);

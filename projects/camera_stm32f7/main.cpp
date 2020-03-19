@@ -12,7 +12,7 @@ int main()
 
     printf("System setup done!\n");
 
-    uint16_t shutter_position[2] = {0,0};
+    LEP_SYS_SHUTTER_POSITION position;
 
     display_flir_serial();
 
@@ -20,10 +20,8 @@ int main()
 
     delay(1000);
 
-    printf("Change shutter position to close\n");
-    shutter_position[0] = 2;
-    if(!set_flir_command(command_code(LEP_CID_SYS_SHUTTER_POSITION, LEP_I2C_COMMAND_TYPE_SET), shutter_position, 2))
-        printf("Fail\n");
+    position = LEP_SYS_SHUTTER_POSITION_CLOSED;
+    set_flir_shutter_position(position);
 
     delay(1000);
 
@@ -31,10 +29,8 @@ int main()
 
     delay(1000);
 
-    printf("Change shutter position to open\n");
-    shutter_position[0]= 1;
-    if(!set_flir_command(command_code(LEP_CID_SYS_SHUTTER_POSITION, LEP_I2C_COMMAND_TYPE_SET), shutter_position, 2))
-        printf("Fail\n");
+    position = LEP_SYS_SHUTTER_POSITION_OPEN;
+    set_flir_shutter_position(position);
 
     delay(1000);
 

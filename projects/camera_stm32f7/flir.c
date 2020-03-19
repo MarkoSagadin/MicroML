@@ -103,6 +103,20 @@ LEP_SYS_SHUTTER_POSITION get_flir_shutter_position()
     return (LEP_SYS_SHUTTER_POSITION) shutter[0];
 }
 
+/*!
+ * @brief               Function sets position of shutter
+ *
+ * @param[in] position  
+ */
+void set_flir_shutter_position(LEP_SYS_SHUTTER_POSITION position)
+{ 
+    //It seems that this has to be done in order enums are sent correctly
+    uint32_t changed_position = (uint32_t) position;
+    if(!set_flir_command(command_code(LEP_CID_SYS_SHUTTER_POSITION, LEP_I2C_COMMAND_TYPE_SET), (uint16_t *) &changed_position, 2))
+    {
+        flir_print("Set shutter position : Fail\n");
+    }
+}
 
 
 
