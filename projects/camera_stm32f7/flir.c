@@ -5,6 +5,10 @@
 
 static uint8_t last_flir_error = LEP_OK;
 
+
+// Low level commands
+static bool wait_busy_bit(uint16_t timeout);
+
 //I2C commands, i2c peripheral should be initialized before using flir.h
 static bool write_register(uint16_t reg_address, uint16_t value);
 static bool read_register(uint16_t reg_address, uint16_t * value);
@@ -15,9 +19,12 @@ static bool read_data_register(uint16_t * read_words, uint8_t max_length);
 static void flir_delay(uint32_t delay);
 static uint32_t flir_millis();
 
+// Enum to string functions
+static const char * shutter_position_str(LEP_SYS_SHUTTER_POSITION position);
+
 
 /*!
- * @brief           Debug output wrapper
+ * @brief     Debug output wrapper
  *
  * @param[in] string  
  * @param[in] variable number of arguments  
@@ -32,6 +39,88 @@ void flir_debug(char* fmt, ...)
     va_end(args);
 #endif 
 }
+
+void flir_print(char* fmt, ...)
+{
+#ifdef FLIR_PRINT
+    va_list args;
+    va_start(args, fmt);
+    printf("FLIR_PRINT: ");
+    vprintf(fmt, args);
+    va_end(args);
+#endif 
+}
+
+/*!
+ * @brief           Display FLIR serial number
+ *
+ * @note            Function prints fail, if something went wrong
+ */
+void display_flir_serial()
+{
+    uint16_t serial_num[4] = {0,0,0,0};
+
+    if(get_flir_command(command_code(LEP_CID_SYS_FLIR_SERIAL_NUMBER, 
+                                     LEP_I2C_COMMAND_TYPE_GET), 
+                                     serial_num, 4))
+    {
+        flir_print("SYS Flir Serial Number: %04X%04X%04X%04X\n", 
+                                              serial_num[3],
+                                              serial_num[2],
+                                              serial_num[1],
+                                              serial_num[0]);
+    }
+    else
+    {
+        flir_print("SYS Flir Serial Number: Fail\n");
+    }
+}
+
+/*!
+ * @brief                              Function gets current position of shutter
+ *
+ * @return LEP_SYS_SHUTTER_POSITION    enum defined in flir_defines.h file
+ *
+ * @note            Function prints fail, if something went wrong
+ */
+LEP_SYS_SHUTTER_POSITION get_flir_shutter_position()
+{
+    uint16_t shutter[2] = {0,0};
+
+    if(get_flir_command(command_code(LEP_CID_SYS_SHUTTER_POSITION, 
+                                     LEP_I2C_COMMAND_TYPE_GET), 
+                                     shutter , 2))
+    {
+        
+        flir_print("Shutter position: %s\n", 
+                shutter_position_str((LEP_SYS_SHUTTER_POSITION) shutter[0]));
+    }
+    else
+    {
+        flir_print("Shutter position: function failed!");
+    }
+    
+    return (LEP_SYS_SHUTTER_POSITION) shutter[0];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*!
  * @brief                   Sends get command to FLIR module
@@ -135,7 +224,7 @@ uint16_t command_code(uint16_t cmd_id, uint16_t cmd_type)
  * @return                  True if BUSY bit was cleared or false 
  *                          if timeout was reached
  */
-bool wait_busy_bit(uint16_t timeout)
+static bool wait_busy_bit(uint16_t timeout)
 {
     uint16_t status;
 
@@ -365,4 +454,27 @@ static void flir_delay(uint32_t delay_in_ms)
 static uint32_t flir_millis()
 {
     return millis();
+}
+
+
+/*!
+ * @brief               Used to decode enum for shutter positionk
+ *
+ * @param[in] position  of enum type  
+ *
+ * @return              String describing position of shutter 
+ *
+ * @note            Use only for printing
+ */
+static const char * shutter_position_str(LEP_SYS_SHUTTER_POSITION position)
+{
+    switch(position)
+    {
+        case LEP_SYS_SHUTTER_POSITION_UNKNOWN:  return "unknown";
+        case LEP_SYS_SHUTTER_POSITION_IDLE :    return "idle";
+        case LEP_SYS_SHUTTER_POSITION_OPEN:     return "open";
+        case LEP_SYS_SHUTTER_POSITION_CLOSED:   return "closed";
+        case LEP_SYS_SHUTTER_POSITION_BRAKE_ON: return "brake on";
+        default:                                return "unknown";
+    }
 }

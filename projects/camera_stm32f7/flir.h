@@ -11,15 +11,23 @@ extern "C" {
 
 #define FLIR_BUSY_TIMEOUT (5000)
 
-// Debug macro, define it to enable debug uart
+// Debug options
+// FLIR_DEBUG macro is used for debugging purposes, tracing path of functions
+// and other problems. It is normally undefined
+// FLIR_PRINT is used to display some data about FLIR, like serial number,
+// current settings, etc. It is normally defined
 #define FLIR_DEBUG
+#define FLIR_PRINT
+
+//General diagnostic, set and get functions
+void display_flir_serial();
+LEP_SYS_SHUTTER_POSITION get_flir_shutter_position();
 
 // Low level commands
 bool get_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_words);
 bool set_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_words);
 
 uint16_t command_code(uint16_t cmd_id, uint16_t cmd_type);
-bool wait_busy_bit(uint16_t timeout);
 LEP_RESULT get_last_flir_result();
 
 #ifdef __cplusplus
