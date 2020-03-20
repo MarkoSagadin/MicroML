@@ -82,13 +82,16 @@ void spi_setup()
 
     //Prepare our SS pin
     rcc_periph_clock_enable(RCC_GPIOB);
-    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO8);
+
+    //Pull it high, before stting it as output
+    gpio_set(GPIOB, GPIO4); 
+    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO4);
 	gpio_set_output_options(GPIOB, 
                             GPIO_OTYPE_PP, 
                             GPIO_OSPEED_25MHZ, 
-                            GPIO8);
+                            GPIO4);
     //Pull it high
-    gpio_set(GPIOB, GPIO8); 
+    //gpio_set(GPIOB, GPIO4); 
 
     // Reset our peripheral
     spi_reset(SPI1);
@@ -97,7 +100,7 @@ void spi_setup()
     // - CPOL = 1, CPHA = 1
     // - Send the most significant bit (MSB) first
     spi_init_master(SPI1, 
-                    SPI_CR1_BAUDRATE_FPCLK_DIV_2, 
+                    SPI_CR1_BAUDRATE_FPCLK_DIV_4, 
                     SPI_CR1_CPOL_CLK_TO_1_WHEN_IDLE,
                     SPI_CR1_CPHA_CLK_TRANSITION_2,
                     SPI_CR1_MSBFIRST);
@@ -114,13 +117,17 @@ void spi_setup()
     // unidirectional mode means that this is the only chip initiating
     // transfers, not that it will ignore any incoming data on the MISO pin.
     // Enabling duplex is required to read data back however.
-    spi_set_unidirectional_mode(SPI1);
+    //spi_set_unidirectional_mode(SPI1);
+	//SPI_CR1(SPI1) &= ~SPI_CR1_BIDIMODE;
+    //spi_set_receive_only_mode(SPI1);
+    //spi_set_bidirectional_receive_only_mode(SPI1);
 
     // We're using 16 bit, not 8 bit, transfers
     spi_set_data_size(SPI1, SPI_CR2_DS_16BIT);
 
     // Enable the peripheral
     spi_enable(SPI1);
+    //spi_disable(SPI1);
 }
 
 void usart_setup(void)

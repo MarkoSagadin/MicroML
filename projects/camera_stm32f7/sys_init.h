@@ -10,6 +10,7 @@
 #include <libopencm3/stm32/spi.h>
 #include <libopencm3/cm3/systick.h>
 #include "printf.h"
+#include "utility.h"
 
 #ifdef __cplusplus
 extern "C" {

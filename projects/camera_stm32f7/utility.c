@@ -478,10 +478,14 @@ bool wait_for_empty_data_reg(uint32_t timeout)
  */
 void spi_read16(uint16_t * data, uint16_t num_words)
 {
+    spi_set_receive_only_mode(SPI1);
+    spi_enable(SPI1);
     while(num_words--)
     {
         *data++ = spi_read(SPI1);
     }
+    //spi_set_full_duplex_mode(SPI1);
+    spi_disable(SPI1);
 }
 
 

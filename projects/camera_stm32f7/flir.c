@@ -649,7 +649,7 @@ static const char * shutter_position_str(LEP_SYS_SHUTTER_POSITION position)
  */
 void enable_flir_cs()
 {
-    gpio_clear(GPIOB, GPIO8);
+    gpio_clear(GPIOB, GPIO4);
 }
 
 /*!
@@ -657,5 +657,5 @@ void enable_flir_cs()
  */
 void disable_flir_cs()
 {
-    gpio_set(GPIOB, GPIO8);
+    gpio_set(GPIOB, GPIO4);
 }

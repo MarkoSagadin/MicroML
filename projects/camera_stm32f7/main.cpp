@@ -36,20 +36,50 @@ int main()
     //gpio_toggle(GPIOB, GPIO14);
     //spi_send(SPI1, counter);
     //rx_value = spi_read(SPI1);
-    delay(1000);
-
 
     state_e state = INIT;
     uint16_t packet[82];
     uint16_t frame[60][80];
     uint8_t frame_row = 0;
 
-    printf("We get here 000\n");
     set_flir_agc(1);
-    printf("We get here 00\n");
     set_flir_telemetry(1);
-    printf("We get here 0\n");
 
+    uint16_t pico = 0;
+    uint16_t pico1 = 0;
+    uint16_t pico2 = 0;
+
+                enable_flir_cs();
+                disable_flir_cs();
+                delay(185);
+                enable_flir_cs();
+
+    spi_set_receive_only_mode(SPI1);
+    spi_enable(SPI1);
+
+    pico = spi_read(SPI1);
+
+//1, Interrupt the receive flow by disabling SPI (SPE=0) in the specific time window while
+//the last data frame is ongoing.
+    spi_disable(SPI1);
+
+//2. Wait until BSY=0 (the last data frame is processed).
+	while ((SPI_SR(SPI1) & SPI_SR_BSY));
+
+//3. Read data until FRLVL[1:0] = 00 (read all the received data).
+//
+	while (!((SPI_SR(SPI1) & (0b11 << 9)) == SPI_SR_FRLVL_FIFO_EMPTY))
+    {
+        pico1 = spi_read(SPI1);
+        pico2++;
+    }
+
+    printf("First one is:  %04X\n", pico);
+    printf("Second one is: %04X\n", pico1);
+    printf("Third one is: %i\n", pico2);
+    while(1)
+    {
+    }
     while(1)
     {
         switch(state)
@@ -63,17 +93,22 @@ int main()
                 break;
 
             case OUT_OF_SYNC:
-                printf("We get here 1\n");
+                printf("State: Out of sync\n");
+                //TODO Imaš problem s spijem clock se ti iz nekega razloga ne toggla ker se v 
+                //spi_read(SPI1) v 
+	            //while (!(SPI_SR(spi) & SPI_SR_RXNE)) zacikla.
+                //
                 spi_read16(packet, 82);
 
                 if ((packet[0] & 0x0F00) == 0x0f00)
                 {
-                    //Discard packet detected
+                    printf("Discard packet detected\n");
                     //Do nothing for now, you can add later some kind of timeout
                 } 
                 else
                 {
                     //Not a discard packet
+                    printf("Not a discard packet\n");
                     if ((packet[0] & 0x00FF) == 0x0)
                     {
                         //Start detected, change state so we can start moving this into frame array
@@ -84,9 +119,10 @@ int main()
 
             case READING_FRAME:
                 // We should read ID field of each packet to be sure that it is the packet that we want
-                printf("We get here 2\n");
+                printf("State: reading frame\n");
                 if((packet[0] & 0x00FF) == frame_row)
                 {
+                    printf("State: reading frame, id matches frame row\n");
                     memcpy(frame[frame_row], packet + 2, 80);
                     frame_row++;
 
@@ -106,6 +142,7 @@ int main()
                 {
                     //Error getting correct packet ID, this will have to be handeled somehow later
                     printf("ID error");
+                    disable_flir_cs();
                     while(1)
                     {}
                 }
