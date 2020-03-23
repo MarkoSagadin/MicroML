@@ -474,18 +474,47 @@ bool wait_for_empty_data_reg(uint32_t timeout)
  * @param[in] data      Copy by reference, read data will be saved into it
  * @param[in] num_words How many words to read
  *
- * @note                Number of elements in data and num_words should match
+ * @note                WARNING - to be used only in Master receive only mode
+ *                      Number of elements in data and num_words should match
+ *                      This function needs proper setup, look at spi_setup in 
+ *                      sys_init.c . It is important to use set receive only 
+ *                      mode in here, as this turn on the SPI clock which runs 
+ *                      as long until you turn it off with setting full duplex 
+ *                      mode. Proper turn off procedure needs to be followed 
+ *                      after this to ensure that we receive all data correctly.
+ *                      Spi shouldn't be disabled as this will make SPI clock to
+ *                      be low when idle, which when using setting CPOL = 1
+ *                      is undesirable. 
  */
 void spi_read16(uint16_t * data, uint16_t num_words)
 {
     spi_set_receive_only_mode(SPI1);
-    spi_enable(SPI1);
+    spi_enable(SPI1);                   // Needed because above statement is not 
+                                        // taken into account otherwise
     while(num_words--)
     {
-        *data++ = spi_read(SPI1);
+        if(num_words != 0)
+        {
+            *data++ = spi_read(SPI1);
+        }
+        else
+        {
+            // We are getting last transmitted packet, to issue stop sequence
+            // we have to:
+            
+            // 1. Clear RXONLY bit, we stop clock with this, but not immediately 
+            spi_set_full_duplex_mode(SPI1);
+
+            //2. Wait until BSY=0 (the last data frame is processed).
+            while ((SPI_SR(SPI1) & SPI_SR_BSY));
+
+            //3. Read data until FRLVL[1:0] = 00 (read all the received data).
+            while (!((SPI_SR(SPI1) & (0b11 << 9)) == SPI_SR_FRLVL_FIFO_EMPTY))
+            {
+                *data++ = spi_read(SPI1);   //Read last packet
+            }
+        }
     }
-    //spi_set_full_duplex_mode(SPI1);
-    spi_disable(SPI1);
 }
 
 

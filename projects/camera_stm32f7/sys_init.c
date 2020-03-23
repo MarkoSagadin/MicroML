@@ -65,7 +65,7 @@ void spi_setup()
     rcc_periph_clock_enable(RCC_SPI1);
     rcc_periph_clock_enable(RCC_GPIOA);
     // SPI1 pins are:
-    // - MISO = PA6
+    // - MISO = PA6, But we do not need it here, we are doing master recive only
     // - MOSI = PA7
     // - SCK  = PA5 
     
@@ -90,8 +90,6 @@ void spi_setup()
                             GPIO_OTYPE_PP, 
                             GPIO_OSPEED_25MHZ, 
                             GPIO4);
-    //Pull it high
-    //gpio_set(GPIOB, GPIO4); 
 
     // Reset our peripheral
     spi_reset(SPI1);
@@ -99,8 +97,10 @@ void spi_setup()
     // Set main SPI settings:
     // - CPOL = 1, CPHA = 1
     // - Send the most significant bit (MSB) first
+    // - Highest possible speed, take note that you will have to change this 
+    // if you set system clock higher
     spi_init_master(SPI1, 
-                    SPI_CR1_BAUDRATE_FPCLK_DIV_4, 
+                    SPI_CR1_BAUDRATE_FPCLK_DIV_2, 
                     SPI_CR1_CPOL_CLK_TO_1_WHEN_IDLE,
                     SPI_CR1_CPHA_CLK_TRANSITION_2,
                     SPI_CR1_MSBFIRST);
@@ -113,21 +113,15 @@ void spi_setup()
     // doesn't think it is itself in slave mode.
     spi_set_nss_high(SPI1);
 
-    // The terminology around directionality can be a little confusing here -
-    // unidirectional mode means that this is the only chip initiating
-    // transfers, not that it will ignore any incoming data on the MISO pin.
-    // Enabling duplex is required to read data back however.
+    // We do do not need to set any special mode here, this will be handeled
+    // by specific spi_read function
     //spi_set_unidirectional_mode(SPI1);
-	//SPI_CR1(SPI1) &= ~SPI_CR1_BIDIMODE;
-    //spi_set_receive_only_mode(SPI1);
-    //spi_set_bidirectional_receive_only_mode(SPI1);
 
-    // We're using 16 bit, not 8 bit, transfers
+    // We're using 16 bit per packet
     spi_set_data_size(SPI1, SPI_CR2_DS_16BIT);
 
-    // Enable the peripheral
+    // Enable the peripheral, CPOL = 1 will come into effect here
     spi_enable(SPI1);
-    //spi_disable(SPI1);
 }
 
 void usart_setup(void)
