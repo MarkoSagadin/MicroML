@@ -45,38 +45,17 @@ int main()
     set_flir_agc(1);
     set_flir_telemetry(1);
 
+                enable_flir_cs();
+                disable_flir_cs();
+                delay(185);
+                enable_flir_cs();
 
-    enable_flir_cs();
-    disable_flir_cs();
-    delay(185);
-    enable_flir_cs();
-
-    spi_read16(packet, 82);
-
-    disable_flir_cs();
-    
-    delay(1000);
-    ////////////////////////////////
-
-    enable_flir_cs();
-    disable_flir_cs();
-    delay(185);
-    enable_flir_cs();
-
-    spi_read16(packet, 82);
-
-    disable_flir_cs();
-    
-    delay(1000);
-
-    for(int i=0; i<82; i++) 
-    {
-        printf("packet[%i] = %04X\n", i, packet[i]);
-    }
-
+                spi_read16(packet, 2);
     while(1)
     {
+    
     }
+
     while(1)
     {
         switch(state)
@@ -95,7 +74,7 @@ int main()
                 //spi_read(SPI1) v 
 	            //while (!(SPI_SR(spi) & SPI_SR_RXNE)) zacikla.
                 //
-                spi_read16(packet, 82);
+                spi_read16(packet, 2);
 
                 if ((packet[0] & 0x0F00) == 0x0f00)
                 {
@@ -132,7 +111,7 @@ int main()
                     else
                     {
                         //Not yet done, keep getting spi packets
-                        spi_read16(packet, 82);
+                        spi_read16(packet, 2);
                     }
                 }
                 else

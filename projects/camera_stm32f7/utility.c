@@ -493,12 +493,15 @@ void spi_read16(uint16_t * data, uint16_t num_words)
                                         // taken into account otherwise
     while(num_words--)
     {
+        printf("Num_words is: %i\n", num_words);
         if(num_words != 0)
         {
+            printf("First\n");
             *data++ = spi_read(SPI1);
         }
         else
         {
+            printf("Second\n");
             // We are getting last transmitted packet, to issue stop sequence
             // we have to:
             
