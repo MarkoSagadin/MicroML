@@ -491,32 +491,27 @@ void spi_read16(uint16_t * data, uint16_t num_words)
     spi_set_receive_only_mode(SPI1);
     spi_enable(SPI1);                   // Needed because above statement is not 
                                         // taken into account otherwise
-    while(num_words--)
+
+    // Get all packets except last one
+    for(uint16_t i = 0; i < num_words-1; i++)
     {
-        printf("Num_words is: %i\n", num_words);
-        if(num_words != 0)
-        {
-            printf("First\n");
-            *data++ = spi_read(SPI1);
-        }
-        else
-        {
-            printf("Second\n");
-            // We are getting last transmitted packet, to issue stop sequence
-            // we have to:
-            
-            // 1. Clear RXONLY bit, we stop clock with this, but not immediately 
-            spi_set_full_duplex_mode(SPI1);
+            data[i] = spi_read(SPI1);
+    }
 
-            //2. Wait until BSY=0 (the last data frame is processed).
-            while ((SPI_SR(SPI1) & SPI_SR_BSY));
+    // To get last transmitted packet, we have to do stop sequence
+    // we have to:
 
-            //3. Read data until FRLVL[1:0] = 00 (read all the received data).
-            while (!((SPI_SR(SPI1) & (0b11 << 9)) == SPI_SR_FRLVL_FIFO_EMPTY))
-            {
-                *data++ = spi_read(SPI1);   //Read last packet
-            }
-        }
+    // 1. Clear RXONLY bit, we stop clock with this, but not immediately 
+    //spi_disable(SPI1);
+    spi_set_full_duplex_mode(SPI1);
+
+    //2. Wait until BSY=0 (the last data frame is processed).
+    while ((SPI_SR(SPI1) & SPI_SR_BSY));
+
+    //3. Read data until FRLVL[1:0] = 00 (read all the received data).
+    while (!((SPI_SR(SPI1) & (0b11 << 9)) == SPI_SR_FRLVL_FIFO_EMPTY))
+    {
+        data[num_words-1] = spi_read(SPI1);   //Read last packet
     }
 }
 

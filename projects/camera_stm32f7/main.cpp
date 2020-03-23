@@ -45,16 +45,19 @@ int main()
     set_flir_agc(1);
     set_flir_telemetry(1);
 
-                enable_flir_cs();
-                disable_flir_cs();
-                delay(185);
-                enable_flir_cs();
+    //enable_flir_cs();
+    //disable_flir_cs();
+    //delay(185);
+    //enable_flir_cs();
 
-                spi_read16(packet, 2);
-    while(1)
-    {
+    //for(int i =0; i<300; i++)
+    //{
+    //spi_read16(packet, 82);
+    //}
+    //disable_flir_cs();
     
-    }
+    //printf("DONE!\n");
+
 
     while(1)
     {
@@ -69,16 +72,11 @@ int main()
                 break;
 
             case OUT_OF_SYNC:
-                printf("State: Out of sync\n");
-                //TODO Imaš problem s spijem clock se ti iz nekega razloga ne toggla ker se v 
-                //spi_read(SPI1) v 
-	            //while (!(SPI_SR(spi) & SPI_SR_RXNE)) zacikla.
-                //
-                spi_read16(packet, 2);
+                spi_read16(packet, 82);
 
                 if ((packet[0] & 0x0F00) == 0x0f00)
                 {
-                    printf("Discard packet detected\n");
+                    //printf("Discard packet detected\n");
                     //Do nothing for now, you can add later some kind of timeout
                 } 
                 else
@@ -88,6 +86,11 @@ int main()
                     if ((packet[0] & 0x00FF) == 0x0)
                     {
                         //Start detected, change state so we can start moving this into frame array
+                        printf("DONE!\n");
+                        while(1)
+                        {
+
+                        }
                         state = READING_FRAME;
                     }
                 }

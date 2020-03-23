@@ -100,7 +100,7 @@ void spi_setup()
     // - Highest possible speed, take note that you will have to change this 
     // if you set system clock higher
     spi_init_master(SPI1, 
-                    SPI_CR1_BAUDRATE_FPCLK_DIV_2, 
+                    SPI_CR1_BAUDRATE_FPCLK_DIV_4, 
                     SPI_CR1_CPOL_CLK_TO_1_WHEN_IDLE,
                     SPI_CR1_CPHA_CLK_TRANSITION_2,
                     SPI_CR1_MSBFIRST);
