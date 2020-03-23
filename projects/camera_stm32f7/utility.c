@@ -491,7 +491,7 @@ void spi_read16(uint16_t * data, uint16_t num_words)
     spi_set_receive_only_mode(SPI1);
     spi_enable(SPI1);                   // Needed because above statement is not 
                                         // taken into account otherwise
-
+    int i = 0;
     // Get all packets except last one
     for(uint16_t i = 0; i < num_words-1; i++)
     {
@@ -511,8 +511,11 @@ void spi_read16(uint16_t * data, uint16_t num_words)
     //3. Read data until FRLVL[1:0] = 00 (read all the received data).
     while (!((SPI_SR(SPI1) & (0b11 << 9)) == SPI_SR_FRLVL_FIFO_EMPTY))
     {
+        i++;
         data[num_words-1] = spi_read(SPI1);   //Read last packet
     }
+    if(i !=1)
+        printf("WRONG\n");
 }
 
 
