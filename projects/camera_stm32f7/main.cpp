@@ -25,10 +25,10 @@ int main()
 
     //while (1) 
     //{
-    //    gpio_set(GPIOB, GPIO14);
-    //    delay(1000);
-    //    gpio_clear(GPIOB, GPIO14);
-    //    delay(1000);
+        //gpio_set(GPIOB, GPIO14);
+        //delay(1000);
+        //gpio_clear(GPIOB, GPIO14);
+        //delay(1000);
     //}
 
 
@@ -48,16 +48,49 @@ int main()
     uint16_t pico = 0;
     uint16_t pico1 = 0;
     uint16_t pico2 = 0;
+    uint16_t pico3 = 0;
+    uint16_t pico4 = 0;
+    uint16_t pico5 = 0;
 
-                enable_flir_cs();
-                disable_flir_cs();
-                delay(185);
-                enable_flir_cs();
+    enable_flir_cs();
+    disable_flir_cs();
+    delay(185);
+    enable_flir_cs();
 
     spi_set_receive_only_mode(SPI1);
     spi_enable(SPI1);
 
     pico = spi_read(SPI1);
+
+//1, Interrupt the receive flow by disabling SPI (SPE=0) in the specific time window while
+//the last data frame is ongoing.
+    //spi_disable(SPI1);
+    spi_set_full_duplex_mode(SPI1);
+
+//2. Wait until BSY=0 (the last data frame is processed).
+	while ((SPI_SR(SPI1) & SPI_SR_BSY));
+
+//3. Read data until FRLVL[1:0] = 00 (read all the received data).
+//
+	while (!((SPI_SR(SPI1) & (0b11 << 9)) == SPI_SR_FRLVL_FIFO_EMPTY))
+    {
+        pico1 = spi_read(SPI1);
+        pico2++;
+    }
+    disable_flir_cs();
+    
+    delay(1000);
+    ////////////////////////////////
+
+    enable_flir_cs();
+    disable_flir_cs();
+    delay(185);
+    enable_flir_cs();
+
+    spi_set_receive_only_mode(SPI1);
+    //spi_enable(SPI1);
+
+    pico3 = spi_read(SPI1);
 
 //1, Interrupt the receive flow by disabling SPI (SPE=0) in the specific time window while
 //the last data frame is ongoing.
@@ -70,13 +103,22 @@ int main()
 //
 	while (!((SPI_SR(SPI1) & (0b11 << 9)) == SPI_SR_FRLVL_FIFO_EMPTY))
     {
-        pico1 = spi_read(SPI1);
-        pico2++;
+        pico4 = spi_read(SPI1);
+        pico5++;
     }
+    disable_flir_cs();
+    
+    delay(1000);
 
-    printf("First one is:  %04X\n", pico);
-    printf("Second one is: %04X\n", pico1);
-    printf("Third one is: %i\n", pico2);
+    ////////////////////////////////////
+    //
+    printf("pico is:  %04X\n", pico);
+    printf("pico1 is: %04X\n", pico1);
+    printf("pico2 is: %04X\n", pico2);
+    printf("pico3 is: %04X\n", pico3);
+    printf("pico4 is: %04X\n", pico4);
+    printf("pico5 is: %04X\n", pico5);
+
     while(1)
     {
     }
