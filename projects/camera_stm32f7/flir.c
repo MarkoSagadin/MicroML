@@ -8,6 +8,11 @@ static uint8_t last_flir_error = LEP_OK;
 
 // Low level commands
 static bool wait_busy_bit(uint16_t timeout);
+static bool get_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_words);
+static bool get_flir_command32(uint16_t cmd_code, uint32_t * data_long_word);
+//static bool set_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_words);
+static bool set_flir_command32(uint16_t cmd_code, uint32_t data_long_word);
+static uint16_t command_code(uint16_t cmd_id, uint16_t cmd_type);
 
 //I2C commands, i2c peripheral should be initialized before using flir.h
 static bool write_register(uint16_t reg_address, uint16_t value);
@@ -198,7 +203,78 @@ bool get_flir_telemetry()
     return (bool) telemetry_state ;
 }
 
+// Frame commands
+bool get_picture(uint16_t frame[60][82])
+{
+    state_e state = INIT;
+    uint8_t frame_row = 0;
 
+    while(1)
+    {
+        switch(state)
+        {
+            case INIT:
+                enable_flir_cs();
+                disable_flir_cs();
+                delay(185);
+                enable_flir_cs();
+                state = OUT_OF_SYNC;
+                break;
+
+            case OUT_OF_SYNC:
+                spi_read16(frame[frame_row], 82);
+
+                if ((frame[frame_row][0] & 0x0F00) == 0x0f00)
+                {
+                    //printf("Discard packet detected\n");
+                    //Do nothing for now, you can add later some kind of timeout
+                } 
+                else
+                {
+                    //Not a discard packet
+                    if ((frame[frame_row][0] & 0x00FF) == 0x0)
+                    {
+                        //Start detected, change state so we can start moving this into frame array
+                        frame_row++;
+                        state = READING_FRAME;
+                    }
+                }
+                break;
+
+            case READING_FRAME:
+                spi_read16(frame[frame_row], 82);
+
+                // We should read ID field of each packet to be sure that it is the packet that we want
+                if((frame[frame_row][0] & 0x00FF) == frame_row)
+                {
+                    frame_row++;
+
+                    if (frame_row == 60)
+                    {
+                        //We got full frame, go to DONE
+                        disable_flir_cs();
+                        state = DONE;
+                    }
+                }
+                else
+                {
+                    //Error getting correct packet ID, this will have to be handeled somehow later
+                    printf("ID error\n");
+                    disable_flir_cs();
+                    return false;
+                    delay(10);
+                    frame_row = 0;
+                    state = INIT;
+                }
+                break;
+
+            case DONE:
+                printf("DONE!\n");
+                return true;
+                break;
+        }
+    }
+}
 
 
 
@@ -222,7 +298,7 @@ bool get_flir_telemetry()
  * @note    Procedure implemented as written in Lepton Software Interface 
  *          Description Document rev200.pdf, page 11
  */
-bool get_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_words)
+static bool get_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_words)
 {
     // Read command status register
     // If not BUSY, write number of data words to read into DATA length reg.
@@ -262,7 +338,7 @@ bool get_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_word
  *          This seems like unnecessary duplicate of the other set function,
  *          but it will make high level use easier
  */
-bool get_flir_command32(uint16_t cmd_code, uint32_t * data_long_word)
+static bool get_flir_command32(uint16_t cmd_code, uint32_t * data_long_word)
 {
     // Read command status register
     // If not BUSY, write number of data words to read into DATA length reg.
@@ -300,27 +376,27 @@ bool get_flir_command32(uint16_t cmd_code, uint32_t * data_long_word)
  * @note    Procedure implemented as written in Lepton Software Interface 
  *          Description Document rev200.pdf, page 12
  */
-bool set_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_words)
-{
-    // Read command status register
-    // If not BUSY, write number of data words to read into DATA length reg.
-    if (wait_busy_bit(FLIR_BUSY_TIMEOUT))
-    {
-        // write command ID to command reg
-        // Read command status register
-        if (write_command_register(cmd_code, data_words, num_words))
-        {
-            // Successful wait for Flir to process this
-            if (wait_busy_bit(FLIR_BUSY_TIMEOUT))
-            {
-                return true; 
-            }
-        }
-    }
-
-    // Something failed
-    return false;
-}
+//static bool set_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_words)
+//{
+//    // Read command status register
+//    // If not BUSY, write number of data words to read into DATA length reg.
+//    if (wait_busy_bit(FLIR_BUSY_TIMEOUT))
+//    {
+//        // write command ID to command reg
+//        // Read command status register
+//        if (write_command_register(cmd_code, data_words, num_words))
+//        {
+//            // Successful wait for Flir to process this
+//            if (wait_busy_bit(FLIR_BUSY_TIMEOUT))
+//            {
+//                return true; 
+//            }
+//        }
+//    }
+//
+//    // Something failed
+//    return false;
+//}
 
 /*!
  * @brief                       Sends set command to FLIR module
@@ -337,7 +413,7 @@ bool set_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_word
  *          This seems like unnecessary duplicate of the other set function,
  *          but it will make high level use easier
  */
-bool set_flir_command32(uint16_t cmd_code, uint32_t data_long_word)
+static bool set_flir_command32(uint16_t cmd_code, uint32_t data_long_word)
 {
     // Read command status register
     // If not BUSY, write number of data words to read into DATA length reg.
@@ -371,7 +447,7 @@ bool set_flir_command32(uint16_t cmd_code, uint32_t data_long_word)
  *
  * @note 
  */
-uint16_t command_code(uint16_t cmd_id, uint16_t cmd_type) 
+static uint16_t command_code(uint16_t cmd_id, uint16_t cmd_type) 
 {
     return (cmd_id & LEP_I2C_COMMAND_MODULE_ID_BIT_MASK) | 
            (cmd_id & LEP_I2C_COMMAND_ID_BIT_MASK) | 

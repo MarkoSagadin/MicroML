@@ -12,6 +12,15 @@ extern "C" {
 
 #define FLIR_BUSY_TIMEOUT (5000)
 
+typedef enum 
+{
+    INIT,
+    OUT_OF_SYNC,
+    READING_FRAME,
+    DONE
+}state_e;
+
+
 // Debug options
 // FLIR_DEBUG macro is used for debugging purposes, tracing path of functions
 // and other problems. It is normally undefined
@@ -32,14 +41,11 @@ bool get_flir_agc();
 void set_flir_telemetry(bool enable);
 bool get_flir_telemetry();
 
+//Frame commands
+bool get_picture(uint16_t frame[60][82]);
+
+
 // Low level commands
-bool get_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_words);
-bool get_flir_command32(uint16_t cmd_code, uint32_t * data_long_word);
-
-bool set_flir_command(uint16_t cmd_code, uint16_t * data_words, uint8_t num_words);
-bool set_flir_command32(uint16_t cmd_code, uint32_t data_long_word);
-
-uint16_t command_code(uint16_t cmd_id, uint16_t cmd_type);
 LEP_RESULT get_last_flir_result();
 
 void enable_flir_cs();
