@@ -135,7 +135,7 @@ void usart_setup(void)
 	gpio_set_af(GPIOD, GPIO_AF7, GPIO8);
 
 	/* Setup USART2 parameters. */
-	usart_set_baudrate(USART3, 115200);
+	usart_set_baudrate(USART3, 921600);
 	usart_set_databits(USART3, 8);
 	usart_set_stopbits(USART3, USART_STOPBITS_1);
 	usart_set_mode(USART3, USART_MODE_TX);
