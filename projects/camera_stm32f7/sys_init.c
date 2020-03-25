@@ -13,8 +13,9 @@ void clock_setup()
 {
     // First, let's ensure that our clock is running off the high-speed internal
     // oscillator (HSI) at 48MHz.
-    rcc_clock_setup_hsi(&rcc_3v3[RCC_CLOCK_3V3_48MHZ]);
-    g_clock_mhz = 48;     // Has to be the same as our clock in Mhz
+    rcc_clock_setup_hsi(&rcc_3v3[RCC_CLOCK_3V3_216MHZ]);
+
+    g_clock_mhz = 216;     // Has to be the same as our clock in Mhz
 
     // Turn on MCO1 and MCO2 pins which show you internal frequencies
     // Both will have prescaler division of 4
@@ -100,7 +101,7 @@ void spi_setup()
     // - Highest possible speed, take note that you will have to change this 
     // if you set system clock higher
     spi_init_master(SPI1, 
-                    SPI_CR1_BAUDRATE_FPCLK_DIV_4, 
+                    SPI_CR1_BAUDRATE_FPCLK_DIV_8, 
                     SPI_CR1_CPOL_CLK_TO_1_WHEN_IDLE,
                     SPI_CR1_CPHA_CLK_TRANSITION_2,
                     SPI_CR1_MSBFIRST);
