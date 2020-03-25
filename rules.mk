@@ -22,7 +22,8 @@ AR = $(PREFIX)ar
 OBJCOPY	= $(PREFIX)objcopy
 OBJDUMP	= $(PREFIX)objdump
 SIZE	= $(PREFIX)size
-
+OPENOCD = openocd
+MINICOM = minicom
 
 ###################################### 
 # Includes
@@ -215,11 +216,18 @@ $(BUILD_DIR)/firmware.bin: $(BUILD_DIR)/firmware.elf
 
 # It is expected that a openocd.cfg file is in project folder
 flash: $(BUILD_DIR)/firmware.bin
-	openocd
+	@printf "  SIZE\t$<\n"
+	$(Q)$(SIZE) $(BUILD_DIR)/firmware.elf
+	@printf "  OPENOCD\t$<\n"
+	$(Q)$(OPENOCD)
 
 monitor: $(BUILD_DIR)/firmware.bin
-	openocd
-	minicom 
+	@printf "  SIZE\t$<\n"
+	$(Q)$(SIZE) $(BUILD_DIR)/firmware.elf
+	@printf "  OPENOCD\t$<\n"
+	$(Q)$(OPENOCD)
+	@printf "  MINICOM\t$<\n"
+	$(Q)$(MINICOM)
 
 clean:
 	rm -rf $(BUILD_DIR) generated.*
