@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#include "constants.h"
+#include "tensorflow/lite/micro/examples/hello_world/constants.h"
 
 // This is a small number so that it's easy to read the logs
 const int kInferencesPerCycle = 20;

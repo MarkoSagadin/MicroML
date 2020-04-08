@@ -13,8 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#ifndef TENSORFLOW_LITE_EXPERIMENTAL_MICRO_EXAMPLES_HELLO_WORLD_OUTPUT_HANDLER_H_
-#define TENSORFLOW_LITE_EXPERIMENTAL_MICRO_EXAMPLES_HELLO_WORLD_OUTPUT_HANDLER_H_
+#ifndef TENSORFLOW_LITE_MICRO_EXAMPLES_HELLO_WORLD_OUTPUT_HANDLER_H_
+#define TENSORFLOW_LITE_MICRO_EXAMPLES_HELLO_WORLD_OUTPUT_HANDLER_H_
 
 #include "tensorflow/lite/c/common.h"
 #include "tensorflow/lite/micro/micro_error_reporter.h"
@@ -23,4 +23,4 @@ limitations under the License.
 void HandleOutput(tflite::ErrorReporter* error_reporter, float x_value,
                   float y_value);
 
-#endif  // TENSORFLOW_LITE_EXPERIMENTAL_MICRO_EXAMPLES_HELLO_WORLD_OUTPUT_HANDLER_H_
+#endif  // TENSORFLOW_LITE_MICRO_EXAMPLES_HELLO_WORLD_OUTPUT_HANDLER_H_

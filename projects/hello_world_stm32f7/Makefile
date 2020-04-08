@@ -6,6 +6,7 @@ PROJECT := $(notdir $(patsubst %/,%,$(dir $(MKFILE_PATH))))
 OPENCM3_DIR = ../../libopencm3
 #Our build folder for all binaries and object files
 BUILD_DIR = build
+TEST_BUILD_DIR = test_build
 
 # Include project specific settings
 include project.mk

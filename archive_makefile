@@ -1,9 +1,11 @@
 ######################################
-# Instructions
+# General Instructions
 ######################################
 # To generate microlite.a file for your particular project you have 
 # to run the following command from main directory:
+#
 # make -C tensorflow/ -f ../archive_makefile PROJECT=<name_of_your_project>
+#
 # This will create microlite.a file for your target system, which will be
 # included in the linking process. 
 # Variable PROJECT has to match to the name of your project folder inside 
@@ -11,12 +13,32 @@
 
 
 ######################################
+# Instructions for testing
+######################################
+# To avoid unnecessary flashing, we can test hardware independent 
+# parts of code on development machine. 
+# To compile test files add them to TESTFILES variable in specific projects project.mk file
+# We also need to create separate archive file for testing, we will call it testlite.a
+# To create it run following command from main directory:
+#
+# make -C tensorflow/ -f ../archive_makefile test PROJECT=<name_of_your_project>
+#
+# This will create testlite.a file for your development system, which will be
+# included in the linking process. 
+# Variable PROJECT has to match to the name of your project folder inside 
+# projects directory. 
+######################################
 # Build directory
 ######################################
 PROJECT_PATH = ../projects/$(PROJECT)
+
+# Microcontroller specific
 MICROLITE_BUILD_PATH = $(PROJECT_PATH)/microlite_build
 MICROLITE_LIB = $(MICROLITE_BUILD_PATH)/microlite.a
 
+# Test, development machine specific
+TESTLITE_BUILD_PATH  = $(PROJECT_PATH)/testlite_build
+TESTLITE_LIB = $(TESTLITE_BUILD_PATH)/testlite.a
 
 ######################################
 # Project selection 
@@ -34,11 +56,16 @@ include ../projects/$(PROJECT)/project.mk
 #Include configuration for linker file, we also get our arch_flags from here
 include ../libopencm3/mk/genlink-config.mk
 
-#Everything is done, lets go to the main rule
+#Everything is done, lets go to the main rule or to test rule
 all: $(MICROLITE_LIB)
+# Clean up PREFIX variable
+test : PREFIX =
+test : $(TESTLITE_LIB)
 else
 #Project was not found, exit gracefully 
 all: 
+	@echo Project was not found, exiting!
+test: 
 	@echo Project was not found, exiting!
 endif
 
@@ -61,11 +88,11 @@ print-%  : ; @echo $* = $($*)
 # Tool paths
 ######################################
 PREFIX	?= arm-none-eabi-
-CC	= $(PREFIX)gcc
-CXX = $(PREFIX)g++
-LD	= $(PREFIX)g++
-AS = $(PREFIX)gcc -x assembler-with-cpp
-AR = $(PREFIX)ar
+CC		= $(PREFIX)gcc
+CXX 	= $(PREFIX)g++
+LD		= $(PREFIX)g++
+AS 		= $(PREFIX)gcc -x assembler-with-cpp
+AR 		= $(PREFIX)ar
 OBJCOPY	= $(PREFIX)objcopy
 OBJDUMP	= $(PREFIX)objdump
 
@@ -135,6 +162,7 @@ tensorflow/lite/micro/testing/test_utils.cc \
 THIRD_PARTY_DIR = tensorflow/lite/micro/tools/make/downloads
 INCLUDES := \
 -I. \
+-I$(THIRD_PARTY_DIR) \
 -I$(THIRD_PARTY_DIR)/gemmlowp \
 -I$(THIRD_PARTY_DIR)/flatbuffers/include \
 -I$(THIRD_PARTY_DIR)/kissfft \
@@ -144,11 +172,17 @@ INCLUDES := \
 ######################################
 # Objects
 ######################################
+#default
 MICROLITE_LIB_OBJS := \
 $(addprefix $(MICROLITE_BUILD_PATH)/, $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(MICROLITE_LIB_SRCS))))
 vpath %.c $(sort $(dir $(MICROLITE_LIB_SRCS)))
 vpath %.cc $(sort $(dir $(MICROLITE_LIB_SRCS)))
 
+#test
+TESTLITE_LIB_OBJS := \
+$(addprefix $(TESTLITE_BUILD_PATH)/, $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(MICROLITE_LIB_SRCS))))
+vpath %.c $(sort $(dir $(MICROLITE_LIB_SRCS)))
+vpath %.cc $(sort $(dir $(MICROLITE_LIB_SRCS)))
 
 ######################################
 # Defines
@@ -164,8 +198,6 @@ CXX_DEFS :=  \
 # Compiler Flags
 ######################################
 FLAGS :=\
--std=c++11 \
--fno-rtti \
 -fmessage-length=0 \
 -fno-exceptions \
 -fno-unwind-tables \
@@ -175,7 +207,6 @@ FLAGS :=\
 -funsigned-char \
 -fshort-wchar \
 -MMD \
--std=gnu++11 \
 -Wvla \
 -Wall \
 -Wextra \
@@ -186,19 +217,23 @@ FLAGS :=\
 -Wno-type-limits \
 -fno-delete-null-pointer-checks \
 -fomit-frame-pointer \
--fpermissive \
 -nostdlib \
 -ggdb \
 
-MICROLITE_CFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(C_DEFS)
 
-MICROLITE_CXXFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(CXX_DEFS)
+# Default flags
+MICROLITE_CFLAGS 	:= $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(C_DEFS)   -std=c11
+MICROLITE_CXXFLAGS 	:= $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(CXX_DEFS) -std=c++11 -fno-rtti -std=gnu++11 -fpermissive
 
+# Test flags
+TESTLITE_CXXFLAGS 	= -std=c++11 -DTF_LITE_STATIC_MEMORY -O3 -DTF_LITE_DISABLE_X86_NEON 
+TESTLITE_CFLAGS 	= -DTF_LITE_STATIC_MEMORY -O3 -DTF_LITE_DISABLE_X86_NEON 
 
 ######################################
 # Rules 
 ######################################
 
+#default all rules
 $(MICROLITE_LIB): $(MICROLITE_LIB_OBJS)
 	@printf "  AR\t$<\n"
 	@mkdir -p $(dir $@)
@@ -213,6 +248,22 @@ $(MICROLITE_BUILD_PATH)/%.o: %.cc
 	@printf "  CXX\t$<\n"
 	@mkdir -p $(dir $@)
 	$(Q)$(CXX) $(MICROLITE_CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+#test rules
+$(TESTLITE_LIB): $(TESTLITE_LIB_OBJS)
+	@printf "  AR\t$<\n"
+	@mkdir -p $(dir $@)
+	$(Q)$(AR) -r $@ $(TESTLITE_LIB_OBJS) 
+
+$(TESTLITE_BUILD_PATH)/%.o: %.c
+	@printf "  CC\t$<\n"
+	@mkdir -p $(dir $@)
+	$(Q)$(CC) $(TESTLITE_CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(TESTLITE_BUILD_PATH)/%.o: %.cc
+	@printf "  CXX\t$<\n"
+	@mkdir -p $(dir $@)
+	$(Q)$(CXX) $(TESTLITE_CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	rm -rf $(MICROLITE_BUILD_PATH) 

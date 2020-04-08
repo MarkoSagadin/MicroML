@@ -9,6 +9,8 @@ Q	:= @
 NULL	:= 2>/dev/null
 endif
 
+#For checking macros, to use it write make print-VARIABLE
+print-%  : ; @echo $* = $($*)
 
 ###################################### 
 # Tool paths
@@ -38,20 +40,34 @@ INCLUDES := \
 -I$(THIRD_PARTY_DIR)/gemmlowp \
 -I$(THIRD_PARTY_DIR)/flatbuffers/include \
 -I$(THIRD_PARTY_DIR)/kissfft \
+-I$(THIRD_PARTY_DIR)/ruy \
 -I$(TENSORFLOW_DIR)
+
+TEST_INCLUDES := \
+-I. \
+-I$(THIRD_PARTY_DIR) \
+-I$(THIRD_PARTY_DIR)/gemmlowp \
+-I$(THIRD_PARTY_DIR)/flatbuffers/include \
+-I$(THIRD_PARTY_DIR)/kissfft \
+-I$(THIRD_PARTY_DIR)/ruy \
+-I$(TENSORFLOW_DIR)
+
 
 
 ######################################
 # OBJECTS and BINS
 ######################################
+# Default
 OBJS = $(CFILES:%.c=$(BUILD_DIR)/%.o)
 OBJS += $(CXXFILES:%.cpp=$(BUILD_DIR)/%.o)
 OBJS += $(CCFILES:%.cc=$(BUILD_DIR)/%.o)
 OBJS += $(AFILES:%.S=$(BUILD_DIR)/%.o)
-OBJS += $(MICROLITE_LIB_OBJS)
 
 GENERATED_BINS = firmware.elf firmware.bin firmware.map
 
+# Test
+TEST_OBJS = $(TESTFILES:%.cc=$(TEST_BUILD_DIR)/%.o)
+ 
 
 ######################################
 # Defines
@@ -65,8 +81,6 @@ CXX_DEFS :=  \
 # Compiler Flags
 ######################################
 FLAGS :=\
--std=c++11 \
--fno-rtti \
 -fmessage-length=0 \
 -fno-exceptions \
 -fno-unwind-tables \
@@ -76,7 +90,6 @@ FLAGS :=\
 -funsigned-char \
 -fshort-wchar \
 -MMD \
--std=gnu++11 \
 -Wvla \
 -Wall \
 -Wextra \
@@ -87,21 +100,22 @@ FLAGS :=\
 -Wno-narrowing \
 -fno-delete-null-pointer-checks \
 -fomit-frame-pointer \
--fpermissive \
 -nostdlib \
 -ggdb \
 
 TGT_CFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(C_DEFS) $(INCLUDES) $(OPENCM3_DEFS)
 
-TGT_CXXFLAGS += $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(CXX_DEFS) $(INCLUDES) $(OPENCM3_DEFS)
+TGT_CXXFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(CXX_DEFS) $(INCLUDES) $(OPENCM3_DEFS)
+TGT_CXXFLAGS += -std=c++11 -std=gnu++11 -fno-rtti -fpermissive 
  
 TGT_ASFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(AS_DEFS) $(INCLUDES) $(OPENCM3_DEFS)
 
+# TEST flags, for now only for .cc files
+TESTLITE_CXXFLAGS 	= -std=c++11 -DTF_LITE_STATIC_MEMORY -O3 -DTF_LITE_DISABLE_X86_NEON 
 
 ######################################
 # Linker Flags and Libs
 ######################################
-#LIBS := -lc -lgcc -lm -lnosys
 LIBS := -Wl,--start-group -lc -lgcc -lm -lnosys -Wl,--end-group
 TGT_LDFLAGS += $(ARCH_FLAGS) \
 -nostartfiles \
@@ -177,34 +191,30 @@ all: $(BUILD_DIR)/firmware.elf $(BUILD_DIR)/firmware.bin
 	@printf "  SIZE\t$<\n"
 	$(Q)$(SIZE) $(BUILD_DIR)/firmware.elf
 
-#For checking macros, to use it write make print-VARIABLE
-print-%  : ; @echo $* = $($*)
-
-
 $(BUILD_DIR)/%.o: %.c
 	@printf "  CC\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(CC) $(TGT_CFLAGS) $(CFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $@ -c $<
+	$(Q)$(CC) $(TGT_CFLAGS) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/%.o: %.cxx
 	@printf "  CXX\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(CC) $(TGT_CXXFLAGS) $(CXXFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $@ -c $<
+	$(Q)$(CC) $(TGT_CXXFLAGS) $(CXXFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/%.o: %.cpp
 	@printf "  CXX\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(CXX) $(TGT_CXXFLAGS) $(CXXFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $@ -c $<
+	$(Q)$(CXX) $(TGT_CXXFLAGS) $(CXXFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/%.o: %.cc
 	@printf "  CXX\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(CXX) $(TGT_CXXFLAGS) $(CXXFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $@ -c $<
+	$(Q)$(CXX) $(TGT_CXXFLAGS) $(CXXFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/%.o: %.S
 	@printf "  AS\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(AS) $(TGT_ASFLAGS) $(ASFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $@ -c $<
+	$(Q)$(AS) $(TGT_ASFLAGS) $(ASFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/firmware.elf: $(OBJS) $(LDSCRIPT) $(LIBDEPS)
 	@printf "  LD\t$@\n"
@@ -213,6 +223,23 @@ $(BUILD_DIR)/firmware.elf: $(OBJS) $(LDSCRIPT) $(LIBDEPS)
 $(BUILD_DIR)/firmware.bin: $(BUILD_DIR)/firmware.elf
 	@printf "  OBJCOPY\t$@\n"
 	$(Q)$(OBJCOPY) -O binary -S $< $@
+
+# Test rules
+test: PREFIX = 
+test: $(TEST_BUILD_DIR)/test_firmware
+	@printf "  SIZE\t$<\n"
+	$(Q)$(SIZE) $(TEST_BUILD_DIR)/test_firmware
+	@./$(TEST_BUILD_DIR)/test_firmware
+
+$(TEST_BUILD_DIR)/test_firmware: $(TEST_OBJS)
+	@printf "  LD\t$@\n"
+	$(Q)$(LD) $(TESTLITE_CXXFLAGS) $(TEST_OBJS) $(TEST_INCLUDES) $(TEST_LDLIBS) -lm -o $@
+
+$(TEST_BUILD_DIR)/%.o: %.cc
+	@printf "  CXX\t$<\n"
+	@mkdir -p $(dir $@)
+	$(Q)$(CXX) $(TESTLITE_CXXFLAGS) $(TEST_INCLUDES) -o $@ -c $<
+
 
 # It is expected that a openocd.cfg file is in project folder
 flash: $(BUILD_DIR)/firmware.bin
@@ -234,6 +261,12 @@ clean:
 
 clean_all:
 	rm -rf $(BUILD_DIR) generated.* microlite_build
+
+clean_test:
+	rm -rf $(TEST_BUILD_DIR)
+
+clean_test_all:
+	rm -rf $(TEST_BUILD_DIR) testlite_build
 
 .PHONY: all clean flash
 -include $(OBJS:.o=.d)

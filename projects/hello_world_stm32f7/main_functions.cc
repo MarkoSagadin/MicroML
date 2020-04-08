@@ -14,7 +14,6 @@ limitations under the License.
 ==============================================================================*/
 
 #include "main_functions.h"
-
 #include "constants.h"
 #include "output_handler.h"
 #include "sine_model_data.h"
@@ -23,7 +22,6 @@ limitations under the License.
 #include "tensorflow/lite/micro/micro_interpreter.h"
 #include "tensorflow/lite/schema/schema_generated.h"
 #include "tensorflow/lite/version.h"
-#include "printf.h"
 
 // Globals, used for compatibility with Arduino-style sketches.
 namespace {
@@ -52,10 +50,10 @@ void setup() {
   // copying or parsing, it's a very lightweight operation.
   model = tflite::GetModel(g_sine_model_data);
   if (model->version() != TFLITE_SCHEMA_VERSION) {
-    error_reporter->Report(
-        "Model provided is schema version %d not equal "
-        "to supported version %d.",
-        model->version(), TFLITE_SCHEMA_VERSION);
+    TF_LITE_REPORT_ERROR(error_reporter,
+                         "Model provided is schema version %d not equal "
+                         "to supported version %d.",
+                         model->version(), TFLITE_SCHEMA_VERSION);
     return;
   }
 
@@ -71,7 +69,7 @@ void setup() {
   // Allocate memory from the tensor_arena for the model's tensors.
   TfLiteStatus allocate_status = interpreter->AllocateTensors();
   if (allocate_status != kTfLiteOk) {
-    error_reporter->Report("AllocateTensors() failed");
+    TF_LITE_REPORT_ERROR(error_reporter, "AllocateTensors() failed");
     return;
   }
 
@@ -99,8 +97,8 @@ void loop() {
   // Run inference, and report any error
   TfLiteStatus invoke_status = interpreter->Invoke();
   if (invoke_status != kTfLiteOk) {
-    error_reporter->Report("Invoke failed on x_val: %f\n",
-                           static_cast<double>(x_val));
+    TF_LITE_REPORT_ERROR(error_reporter, "Invoke failed on x_val: %f\n",
+                         static_cast<double>(x_val));
     return;
   }
 
@@ -109,8 +107,7 @@ void loop() {
 
   // Output the results. A custom HandleOutput function can be implemented
   // for each supported hardware target.
-  //HandleOutput(error_reporter, x_val, y_val);
-  printf("x_value: %.2f, y_value: %.2f\n", x_val, y_val);
+  HandleOutput(error_reporter, x_val, y_val);
 
   // Increment the inference_counter, and reset it if we have reached
   // the total number per cycle
