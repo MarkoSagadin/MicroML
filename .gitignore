@@ -12,3 +12,9 @@ tags
 
 # Ignore any .swp files anywhere
 *.swp
+
+# Ignore any .lock files anywhere
+*.lock
+
+# Ignore any .temp files anywhere
+*.temp
