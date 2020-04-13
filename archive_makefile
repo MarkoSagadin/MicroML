@@ -219,11 +219,12 @@ FLAGS :=\
 -fomit-frame-pointer \
 -nostdlib \
 -ggdb \
+-O3
 
 
 # Default flags
-MICROLITE_CFLAGS 	:= $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(C_DEFS)   -std=c11
-MICROLITE_CXXFLAGS 	:= $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(CXX_DEFS) -std=c++11 -fno-rtti -std=gnu++11 -fpermissive
+MICROLITE_CFLAGS 	:= $(ARCH_FLAGS) $(FLAGS) $(C_DEFS)   -std=c11
+MICROLITE_CXXFLAGS 	:= $(ARCH_FLAGS) $(FLAGS) $(CXX_DEFS) -std=c++11 -fno-rtti -std=gnu++11 -fpermissive
 
 # Test flags
 TESTLITE_CXXFLAGS 	= -std=c++11 -DTF_LITE_STATIC_MEMORY -O3 -DTF_LITE_DISABLE_X86_NEON 
