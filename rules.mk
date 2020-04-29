@@ -111,7 +111,7 @@ TGT_CXXFLAGS += -std=c++11 -std=gnu++11 -fno-rtti -fpermissive
 TGT_ASFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(AS_DEFS) $(INCLUDES) $(OPENCM3_DEFS)
 
 # TEST flags, for now only for .cc files
-TESTLITE_CXXFLAGS 	= -std=c++11 -DTF_LITE_STATIC_MEMORY -O3 -DTF_LITE_DISABLE_X86_NEON 
+TESTLITE_CXXFLAGS 	= -std=c++11 -DTF_LITE_STATIC_MEMORY -O3 -DTF_LITE_DISABLE_X86_NEON -Wno-narrowing
 
 ######################################
 # Linker Flags and Libs
