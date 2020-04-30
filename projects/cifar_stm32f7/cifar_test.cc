@@ -25,13 +25,16 @@ limitations under the License.
 #include "tensorflow/lite/micro/kernels/micro_ops.h"
 
 #include <stdio.h>
-
+#include <time.h>
 #include "cifar_model.h"
 #include "pictures/pictures.h"
 #include "model_settings.h"
 
-constexpr int tensor_arena_size = 45 * 1024;
+constexpr int tensor_arena_size = 50 * 1024;
 uint8_t tensor_arena[tensor_arena_size];
+
+clock_t start;
+clock_t end;
 
 void load_data(const signed char * data, TfLiteTensor * input)
 {
@@ -41,12 +44,16 @@ void load_data(const signed char * data, TfLiteTensor * input)
     }
 }
 
-void print_result(const char * title, TfLiteTensor * output)
+void print_result(const char * title, TfLiteTensor * output, clock_t duration)
 {
     printf("\n%s\n", title);
     printf("[[%f %f %f]]\n", output->data.f[0],
                              output->data.f[1],
                              output->data.f[2]);
+
+
+    printf("Inference time: %f ms", 
+            ((double) (end - start)) / CLOCKS_PER_SEC * 1000);
 }
 
 TF_LITE_MICRO_TESTS_BEGIN
@@ -73,22 +80,45 @@ TF_LITE_MICRO_TEST(TestInvoke) {
     // incur some penalty in code space for op implementations that are not
     // needed by this graph.
     //
-    tflite::ops::micro::AllOpsResolver micro_op_resolver;
+    //tflite::ops::micro::AllOpsResolver micro_op_resolver;
     
-    // Somehow below micro_op_resolver does not work, there is some error
-    // with CONV2D version
-    //tflite::MicroOpResolver<5> micro_op_resolver;
-    //micro_op_resolver.AddBuiltin(tflite::BuiltinOperator_DEPTHWISE_CONV_2D,
-    //                             tflite::ops::micro::Register_DEPTHWISE_CONV_2D());
-    //micro_op_resolver.AddBuiltin(tflite::BuiltinOperator_CONV_2D,
-    //                             tflite::ops::micro::Register_CONV_2D());
-    //micro_op_resolver.AddBuiltin(tflite::BuiltinOperator_AVERAGE_POOL_2D,
-    //                             tflite::ops::micro::Register_AVERAGE_POOL_2D());
-    //micro_op_resolver.AddBuiltin(tflite::BuiltinOperator_QUANTIZE,
-    //                             tflite::ops::micro::Register_QUANTIZE());
-    //micro_op_resolver.AddBuiltin(tflite::BuiltinOperator_DEQUANTIZE,
-    //                             tflite::ops::micro::Register_DEQUANTIZE());
+    // Below approach with MicroOpResolver is much better, we pull in only
+    // operation implementations that we need, so we save space. 
+    // To figure out which ops re needed just define micro_op_resolver and don't
+    // call any AddBultin ops. Make sure that number in definition of 
+    // micro_op_resolver matches the number of ops. Adding more versions of same
+    // op will demand larger number.
+    tflite::MicroOpResolver <6> micro_op_resolver;
+    micro_op_resolver.AddBuiltin(
+            tflite::BuiltinOperator_CONV_2D,
+            tflite::ops::micro::Register_CONV_2D(), 
+            3
+    );
 
+    micro_op_resolver.AddBuiltin(
+            tflite::BuiltinOperator_MAX_POOL_2D,
+            tflite::ops::micro::Register_MAX_POOL_2D(),
+            2
+    );
+    micro_op_resolver.AddBuiltin(
+            tflite::BuiltinOperator_RESHAPE, 
+            tflite::ops::micro::Register_RESHAPE()
+    );
+    micro_op_resolver.AddBuiltin(
+            tflite::BuiltinOperator_FULLY_CONNECTED, 
+            tflite::ops::micro::Register_FULLY_CONNECTED(), 
+            4
+    );
+    micro_op_resolver.AddBuiltin(
+            tflite::BuiltinOperator_SOFTMAX,
+            tflite::ops::micro::Register_SOFTMAX(), 
+            2
+    );
+    micro_op_resolver.AddBuiltin(
+            tflite::BuiltinOperator_DEQUANTIZE, 
+            tflite::ops::micro::Register_DEQUANTIZE(), 
+            2
+    );
 
     // Build an interpreter to run the model with.
     tflite::MicroInterpreter interpreter(model, 
@@ -120,17 +150,16 @@ TF_LITE_MICRO_TEST(TestInvoke) {
 
     // Copy an image with a person into the memory area used for the input.
     // It has to be signed char, data is in int8 format
-    // But we still have to feed it into network as float, this is TODO
-    
-
     load_data(picture0, input);
 
+    start = clock();
     // Run the model on this input and make sure it succeeds.
     TfLiteStatus invoke_status = interpreter.Invoke();
     if (invoke_status != kTfLiteOk) {
         TF_LITE_REPORT_ERROR(error_reporter, "Invoke failed\n");
     }
     TF_LITE_MICRO_EXPECT_EQ(kTfLiteOk, invoke_status);
+    end = clock();
 
     // Get the output from the model, and make sure it's the expected size and
     // type.
@@ -146,37 +175,50 @@ TF_LITE_MICRO_TEST(TestInvoke) {
     printf("Rows: %d\n",            output->dims->data[1]);
     printf("Output type: %d\n",     output->type);
 
-    print_result("Picture 0", output);
+    print_result("Picture 0", output, end-start);
 
     // Picture 1
     load_data(picture1, input);
+    start = clock();
     interpreter.Invoke();
+    end = clock();
     output = interpreter.output(0);
-    print_result("Picture 1", output);
+    print_result("Picture 1", output, end-start);
 
     // Picture 2
     load_data(picture2, input);
+    start = clock();
     interpreter.Invoke();
+    end = clock();
     output = interpreter.output(0);
-    print_result("Picture 2", output);
+    print_result("Picture 2", output, end-start);
 
     // Picture 3
     load_data(picture3, input);
+    start = clock();
     interpreter.Invoke();
+    end = clock();
     output = interpreter.output(0);
-    print_result("Picture 3", output);
+    print_result("Picture 3", output, end-start);
 
     // Picture 4
     load_data(picture4, input);
+    start = clock();
     interpreter.Invoke();
+    end = clock();
     output = interpreter.output(0);
-    print_result("Picture 4", output);
+    print_result("Picture 4", output, end-start);
 
     // Picture 5
+    
     load_data(picture5, input);
+    start = clock();
     interpreter.Invoke();
+    end = clock();
     output = interpreter.output(0);
-    print_result("Picture 5", output);
+    print_result("Picture 5", output, end-start);
+    printf("\n");
+
 }
 
 TF_LITE_MICRO_TESTS_END

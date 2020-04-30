@@ -29,12 +29,13 @@ void load_data(const signed char * data, TfLiteTensor * input)
     }
 }
 
-void print_result(const char * title, TfLiteTensor * output)
+void print_result(const char * title, TfLiteTensor * output, uint32_t duration)
 {
     printf("\n%s\n", title);
     printf("[[%f %f %f]]\n", output->data.f[0],
                              output->data.f[1],
                              output->data.f[2]);
+    printf("Inference time: %d ms", duration);
 }
 
 int main() 
@@ -60,8 +61,39 @@ int main()
                model->version(), TFLITE_SCHEMA_VERSION);
     }
 
-    tflite::ops::micro::AllOpsResolver micro_op_resolver;
+    tflite::MicroOpResolver <6> micro_op_resolver;
+    micro_op_resolver.AddBuiltin(
+            tflite::BuiltinOperator_CONV_2D,
+            tflite::ops::micro::Register_CONV_2D(), 
+            3
+    );
 
+    micro_op_resolver.AddBuiltin(
+            tflite::BuiltinOperator_MAX_POOL_2D,
+            tflite::ops::micro::Register_MAX_POOL_2D(),
+            2
+    );
+    micro_op_resolver.AddBuiltin(
+            tflite::BuiltinOperator_RESHAPE, 
+            tflite::ops::micro::Register_RESHAPE()
+    );
+    micro_op_resolver.AddBuiltin(
+            tflite::BuiltinOperator_FULLY_CONNECTED, 
+            tflite::ops::micro::Register_FULLY_CONNECTED(), 
+            4
+    );
+    micro_op_resolver.AddBuiltin(
+            tflite::BuiltinOperator_SOFTMAX,
+            tflite::ops::micro::Register_SOFTMAX(), 
+            2
+    );
+    micro_op_resolver.AddBuiltin(
+            tflite::BuiltinOperator_DEQUANTIZE, 
+            tflite::ops::micro::Register_DEQUANTIZE(), 
+            2
+    );
+
+    // Build an interpreter to run the model with.
     tflite::MicroInterpreter interpreter(model, 
                                         micro_op_resolver, 
                                         tensor_arena,
@@ -82,12 +114,14 @@ int main()
 
     load_data(picture0, input);
 
+    uint32_t start = millis();
     // Run the model on this input and make sure it succeeds.
     TfLiteStatus invoke_status = interpreter.Invoke();
     if (invoke_status != kTfLiteOk)
     {
         printf("Invoke failed\n");
     }
+    uint32_t end = millis();
 
     // Get the output from the model, and make sure it's the expected size and
     // type.
@@ -99,37 +133,50 @@ int main()
     printf("Rows: %d\n",            output->dims->data[1]);
     printf("Output type: %d\n",     output->type);
 
-    print_result("Picture 0", output);
+    print_result("Picture 0", output, end-start);
 
     // Picture 1
     load_data(picture1, input);
+    start = millis();
     interpreter.Invoke();
+    end = millis();
     output = interpreter.output(0);
-    print_result("Picture 1", output);
+    print_result("Picture 1", output, end-start);
 
     // Picture 2
     load_data(picture2, input);
+    start = millis();
     interpreter.Invoke();
+    end = millis();
     output = interpreter.output(0);
-    print_result("Picture 2", output);
+    print_result("Picture 2", output, end-start);
 
     // Picture 3
     load_data(picture3, input);
+    start = millis();
     interpreter.Invoke();
+    end = millis();
     output = interpreter.output(0);
-    print_result("Picture 3", output);
+    print_result("Picture 3", output, end-start);
 
     // Picture 4
     load_data(picture4, input);
+    start = millis();
     interpreter.Invoke();
+    end = millis();
     output = interpreter.output(0);
-    print_result("Picture 4", output);
+    print_result("Picture 4", output, end-start);
 
     // Picture 5
+    
     load_data(picture5, input);
+    start = millis();
     interpreter.Invoke();
+    end = millis();
     output = interpreter.output(0);
-    print_result("Picture 5", output);
+    print_result("Picture 5", output, end-start);
+
+
     while(1)
     {
     }
