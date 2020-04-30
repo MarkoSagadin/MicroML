@@ -1,4 +1,4 @@
-## Prerequsites
+## Prerequisites
 1. Download Oracle VM VirtualBox and install it
 2. Download Ubuntu Server 18.04.3 image file
 3. Download Putty
@@ -46,7 +46,7 @@ sudo ./VBoxLinuxAdditions.run
 6. Go to VM VirtualBox Manager, select virtual machine and go into Settings->Shared Folders
 7. Add a shared folder by clicking a plus button on the right, provide a folder path and check Auto-mount, click ok
 8. Run virtual machine in headless mode, connect to it over Putty
-9. We need to add us to a certian group so we can access the folder
+9. We need to add us to a certain group so we can access the folder
     sudo adduser <user> vboxsf
 10. Close and reconnect with putty
 11. You should be able to access to shared folder with `cd /media/sf_VM_shared`

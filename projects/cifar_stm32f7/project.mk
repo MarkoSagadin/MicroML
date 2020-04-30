@@ -12,6 +12,7 @@ DEBUG = -g
 # so do not include any routines that need hardware.
 # Explicitly define files used. For now only .cc files are supported 
 # Test routine is invoked with make test in project directory
+# Make sure to fiter out test files that will not be used in real application
 TESTFILES =  cifar_test.cc cifar_model.cc model_settings.cc \
 $(wildcard pictures/*.cc)
 TEST_LDLIBS = testlite_build/testlite.a
