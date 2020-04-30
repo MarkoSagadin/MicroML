@@ -7,6 +7,12 @@ tags
 # Ignore microlite_build folder in any directory
 **/microlite_build 
 
+# Ignore build folder in any directory
+**/test_build 
+
+# Ignore microlite_build folder in any directory
+**/testlite_build 
+
 # Ignore any .ld files anywhere
 *.ld
 

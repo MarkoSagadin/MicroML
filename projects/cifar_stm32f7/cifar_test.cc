@@ -36,16 +36,16 @@ void load_data(const signed char * data, TfLiteTensor * input)
 {
     for (int i = 0; i < input->bytes; ++i)
     {
-        input->data.f[i] = data[i];
+        input->data.int8[i] = data[i];
     }
 }
 
 void print_result(const char * title, TfLiteTensor * output)
 {
     printf("\n%s\n", title);
-    printf("Cat score: %f \n", output->data.f[0]);
-    printf("Dog score: %f \n", output->data.f[1]);
-    printf("Frog score: %f \n", output->data.f[2]);
+    printf("[[%f %f %f]]\n", output->data.f[0],
+                             output->data.f[1],
+                             output->data.f[2]);
 }
 
 TF_LITE_MICRO_TESTS_BEGIN
@@ -58,7 +58,7 @@ TF_LITE_MICRO_TEST(TestInvoke) {
 
     // Map the model into a usable data structure. This doesn't involve any
     // copying or parsing, it's a very lightweight operation.
-    const tflite::Model* model = ::tflite::GetModel(cifar_model_tflite);
+    const tflite::Model* model = ::tflite::GetModel(cifar_tflite);
     if (model->version() != TFLITE_SCHEMA_VERSION) {
         TF_LITE_REPORT_ERROR(error_reporter,
                 "Model provided is schema version %d not equal "
@@ -107,7 +107,7 @@ TF_LITE_MICRO_TEST(TestInvoke) {
     TF_LITE_MICRO_EXPECT_EQ(kNumRows, input->dims->data[1]);
     TF_LITE_MICRO_EXPECT_EQ(kNumCols, input->dims->data[2]);
     TF_LITE_MICRO_EXPECT_EQ(kNumChannels, input->dims->data[3]);
-    TF_LITE_MICRO_EXPECT_EQ(kTfLiteFloat32, input->type);
+    TF_LITE_MICRO_EXPECT_EQ(kTfLiteInt8, input->type);
     
     printf("Input:\n");
     printf("Dimension: %d\n", input->dims->size);
