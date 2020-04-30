@@ -13,12 +13,7 @@ DEBUG = -g
 # Explicitly define files used. For now only .cc files are supported 
 # Test routine is invoked with make test in project directory
 TESTFILES =  cifar_test.cc cifar_model.cc model_settings.cc \
-picture0.cc \
-picture1.cc \
-picture2.cc \
-picture3.cc \
-picture4.cc \
-picture5.cc 
+$(wildcard pictures/*.cc)
 TEST_LDLIBS = testlite_build/testlite.a
 
 # Source files are added here, wildcard function adds them automatically,
@@ -26,7 +21,7 @@ TEST_LDLIBS = testlite_build/testlite.a
 # example: driver/motor.c -> $(wildcard driver/*.c)
 CFILES = $(wildcard *.c)
 CXXFILES = $(wildcard *.cpp)
-CCFILES = $(filter-out hello_world_test.cc,$(wildcard *.cc)) # Needed to filter out testfiles
+CCFILES = $(filter-out cifar_test.cc,$(wildcard *.cc)) # Needed to filter out testfiles
 AFILES = $(wildcard *.s)
 # It is needed to add archived microlite library
 LDLIBS = microlite_build/microlite.a

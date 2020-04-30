@@ -15,7 +15,7 @@ limitations under the License.
 
 // #include "tensorflow/lite/c/common.h"
 #include "cifar_model.h"
-#include "pictures.h"
+#include "pictures/pictures.h"
 #include "model_settings.h"
 #include "tensorflow/lite/micro/kernels/all_ops_resolver.h"
 #include "tensorflow/lite/micro/micro_error_reporter.h"
