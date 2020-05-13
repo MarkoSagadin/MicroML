@@ -54,7 +54,7 @@ int main()
 
     // Map the model into a usable data structure. This doesn't involve any
     // copying or parsing, it's a very lightweight operation.
-    const tflite::Model* model = ::tflite::GetModel(cifar_tflite);
+    const tflite::Model* model = ::tflite::GetModel(cifar_quant_8bit_tflite);
     if (model->version() != TFLITE_SCHEMA_VERSION) {
         printf("Model provided is schema version %d not equal "
                "to supported version %d.\n",
