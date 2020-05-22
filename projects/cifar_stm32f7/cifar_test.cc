@@ -122,10 +122,10 @@ TF_LITE_MICRO_TEST(TestInvoke) {
 
     // Build an interpreter to run the model with.
     tflite::MicroInterpreter interpreter(model, 
-                                        micro_op_resolver, 
-                                        tensor_arena,
-                                        tensor_arena_size, 
-                                        error_reporter);
+                                         micro_op_resolver, 
+                                         tensor_arena,
+                                         tensor_arena_size, 
+                                         error_reporter);
     interpreter.AllocateTensors();
 
     // Get information about the memory area to use for the model's input.
