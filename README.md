@@ -17,10 +17,10 @@ Quick-start machine learning projects on microcontrollers with help of [TensorFl
 
 *\"The future of machine learning is tiny\" - Pete Warden* 
  
-As the tech lead of TenosorFlow Mobile Team said, microcontrollers will become increasingly important for machine learning applications. It seems that we are not far from the future where ML applications will be running on very small devices that require only batteries to work for months, even years. There are already few tools and frameworks that enable engineers to flash pre-trained neural networks on microcontrollers and execute them. 
+As the tech lead of TensorFlow Mobile Team said, microcontrollers will become increasingly important for machine learning applications. It seems that we are not far from the future where ML applications will be running on very small devices that require only batteries to work for months, even years. There are already a few tools and frameworks that enable engineers to flash pre-trained neural networks onto microcontrollers and execute them. 
 
-[TensorFlow Lite for Microcontrollers](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/lite/micro) is one of them. You create a pre-trained neural network on your host machine with help of TensorFlow Lite, quantize it and then flash it to your target platform. It already supports few microcontrollers out of the box such as Appolo3, Arduino Nano 33 BLE Sense, Arduino MKRZERO and few others.
-Developers also created few example projects that showcase its capibilities. 
+[TensorFlow Lite for Microcontrollers](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/lite/micro) is one of these. You create a pre-trained neural network on your host machine with help of TensorFlow Lite, quantize it and then flash it to your target platform. It already supports few microcontrollers out of the box such as Appolo3, Arduino Nano 33 BLE Sense, Arduino MKRZERO and few others.
+Developers have also created few example projects that showcase its capabilities. 
 
 In next chapters I will guide you through the whole process of setting up the MicroML repo. I will explain how the whole system works and how to configure it for your specific platform. 
 
@@ -29,11 +29,11 @@ In next chapters I will guide you through the whole process of setting up the Mi
 
 ### Windows
 
-I suggest you to create Ubuntu server with Oracle VM VirtualBox, create a shared folder between a guest and host machine. That way you can change the code with an editor of your choice and then switch to Ubuntu server to invoke different command line commands. There is a great tutorial on [youtube](https://www.youtube.com/watch?v=kYEzEFH5LiM) that guides you through the process while explaining the basics. I use exact same setup and it works as expected.  
+I suggest you to create an Ubuntu server with Oracle VM VirtualBox, create a shared folder between a guest and host machine. That way you can change the code with an editor of your choice and then switch to the Ubuntu server to invoke different command line commands. There is a great tutorial on [youtube](https://www.youtube.com/watch?v=kYEzEFH5LiM) that guides you through the process while explaining the basics. I use exact same setup and it works as expected.  
 
-I wrote down all neccessery steps in [VirtualBox_setup.md](https://github.com/SkobecSlo/MicroML/blob/master/VirtualBox_setup.md) file. They are almost the same as in the video, with minor differences.
+I wrote down all neccessary steps in [VirtualBox_setup.md](https://github.com/SkobecSlo/MicroML/blob/master/VirtualBox_setup.md) file. They are almost the same as in the video, with minor differences.
 
-I tried using TensorFlow Lite on Windows with help of Cygwin and Msys. This setup did not work as I was getting weird errors while trying to build a simple hello world example. 
+I tried using TensorFlow Lite on Windows with help of Cygwin and Msys. This setup did not work as I was getting weird errors while trying to build a simple `hello world` example. 
 
 ### Linux 
 
@@ -41,25 +41,25 @@ No special setup is needed, you might need to install tools that are listed unde
 
 ### MacOS
 
-Did not test my setup on any Mac machine, but it should not be that much different from Linux. I everything else fails, there is still an option to use VM VirtualBox. 
+Did not test my setup on any Mac machine, but it should not be that much different from Linux. If everything else fails on a Mac, there is still an option to use VM VirtualBox. 
 
 
 ## <a name="Installation-and-setup"></a> Installation and setup
 
 ### Clone repository
 
-Run below command to clone MicroML project and to initialize and update submodules:
+Run the command below to clone the MicroML project and to initialize and update submodules:
 
 `git clone --recurse-submodules https://github.com/SkobecSlo/MicroML.git`
 
-If you accidentally did only git clone then just move into MicroML directory and execute:
+If you accidentally did only `git clone` then just move into MicroML directory and execute:
 
 `git submodule update --init --recursive`
 
 ### TensorFlow setup 
 
 Before we can even compile a simple example for our target, we need to run a `hello_world` example that will be executed on our host machine.
-This is needed because makefiles written by TensorFlow team pull in several necessary repositories from third parties, which are missing by defualt. 
+This is needed because makefiles written by TensorFlow team pull in several external dependencies from third parties, which are missing by defualt. 
 After compilation these libraries can be found under `tensorflow/lite/micro/tools/make/downloads`. 
 
 To get them we first move inside `tensorflow` folder:
@@ -81,7 +81,7 @@ You can see program in action by running the following command:
 
 ### libopencm3 setup
 
-Libopencm3 will provide us with libraries for out targets, it will also generate necessary linker and startup files. Visit their GitHub page and make sure that your target is supported.
+libopencm3 will provide us with libraries for our targets, it will also generate the necessary linker and startup files. Visit the libopencm3 GitHub page [libopencm3](https://github.om/libopencm3/libopencm3) and make sure that your target is supported.
 
 To generate all necessary files just run following command inside MicroML's root directory:
 
@@ -97,11 +97,11 @@ If your project is using TensorFlow you need to run this command once before usi
 
 You also need need make sure that line `LDLIBS = microlite_build/microlite.a` is inside `project.mk` file.
 
-If you want to be able to run and test TensorFlow functions on your host machine without any microcontroller target you need to run this command before using general test commands:
+If you want to be able to run and test TensorFlow functions on your host machine without any microcontroller target, you need to run this command before using general test commands:
 
 `make -C tensorflow/ -f ../archive_makefile test PROJECT=<name of our project>`
 
-Source files that are used only for testing purposes should be added to `TESTFILES` variable and filtered out from normal source files in `project.mk` file. Example of this can be seen inside `cifar_stm32f7/project.mk`.
+Source files that are used only for testing purposes should be added to `TESTFILES` variable and filtered out from normal source files in `project.mk` file. An example of this can be seen inside `cifar_stm32f7/project.mk`.
 
 ### General commands
 
@@ -148,17 +148,17 @@ In `project` folder there are blinky and uart examples for two different MCUs th
 These are the two most simple examples that you can test on your devices to see how the library works.
 **They do not need Tensorflow library at all**, so they are perfect for testing new development boards.
 They are almost exact copy of what you can find in libopencm3 examples repository.
-Uart examples use excellent mpaland printf library that can be found on [GitHub](https://github.com/mpaland/printf).
+Uart examples use mpaland's excellent printf library that can be found on [GitHub](https://github.com/mpaland/printf).
 
-Of course some changes in the code will be needed to accommodate for a different pinout and an architecture.
+Of course some changes in the code will be needed to accommodate for a different pinout and/or architecture.
 
 ## <a name="Hello-world-example"></a> Hello world example
 
 Start with this example only after you completed TensorFlow setup and libopencm3 setup.
 
-This hello world example is exactly the same as hello world example mentioned in TensorFlow setup, but his time we will run it on a stm32f767zi microcontroller.
+This `hello world` example is exactly the same as `hello world` example mentioned in TensorFlow setup, but his time we will run it on a stm32f767zi microcontroller.
 
-Because this example needs access to TensorFlow functions we first need to create a microlite.a archive file. We do this by moving into main MicroMl directory and running:
+Because this example needs access to TensorFlow functions we first need to create a microlite.a archive file. We do this by moving into the main MicroMl directory and running:
 
 `make -C tensorflow/ -f ../archive_makefile PROJECT=hello_world_stm32f7`
 
@@ -175,14 +175,14 @@ Commands for building and flashing are exactly the same as before, if you run `m
 Congrats! You just ran your first neural net on a microcontroller!
 
 
-## <a name="Cifar-example"></a> Cifar example
+## <a name="Cifar-example"></a> CIFAR example
 
 Start with this example only after you completed TensorFlow setup and libopencm3 setup.
 
-This example runs a simple, 3 classes, image classification model that was trained on cifar dataset. 
+This example runs a simple, 3 classes, image classification model that was trained on CIFAR dataset. 
 It must be mentioned that the point of this example was not to create a very accurate model, but to ensure that I can create a simple model in Google Colab, convert it, quantize it and then run it on a microcontroller.
 
-Example loads cifar model and runs inference on six pictures. It outputs class probability for picture and how long did inference take.
+The example loads CIFAR model and runs inference on six pictures. It outputs class probability for each picture and how long did inference take.
 
 If you want to see program in action but you do not have a microcontroller near you, you have to run this in root directory of MicroML:
 
@@ -192,7 +192,7 @@ And then this inside project folder:
 
 `make test`
 
-If you want to run example on a microcontroller you have to run this in root directory of MicroMl:
+If you want to run example on a microcontroller you have to run this in root directory of MicroML:
 
 `make -C tensorflow/ -f ../archive_makefile PROJECT=cifar_stm32f7`
 
@@ -202,7 +202,7 @@ And then this inside project folder:
 
 ## <a name="Why-I-created-MicroML"></a> Why I created MicroML
 
-As I wanted to create a ML application on microcontoller for my master thesis, I decided to dive into TensorFlow and tried to make it work for my particular platform. I ran into a few problems while doing this, some of them stemmed from my lack of experience, others from the way TensorFlow was set to be used.
+As I wanted to create a ML application on microcontoller for my masters thesis, I decided to dive into TensorFlow and tried to make it work for my particular platform. I ran into a few problems while doing this, some of them stemmed from my lack of experience, others from the way TensorFlow was set to be used.
 
 Problems:
 - TensorFlow expects you to create your project inside their examples directory (at least that seemed the easiest way). This example directory is buried under many other directories, which was definitely something that I did not like. I wanted my application code and TensorFlow to be separate.
@@ -221,4 +221,4 @@ While researching I stumbled upon a very good project, [libopencm3](https://gith
 The libopencm3 project aims to create an open-source firmware library for various ARM Cortex-M microcontrollers.
 It supports a variety of different ARM microcontrollers and needs from user only the microcontroller's name tag to generate specific firmware libraries, startup code, linker scripts and compiler flags.
 
-MicroML combines Tensorflow Lite and libopencm3. Programmer first builds each module separately, then creates a microlite.a archive file for it's specific project. Then it compiles it's project code and links it against microlite.a file, final product are executable files which can be flashed on desired platform with help of programmer of your choice (combination of OpenOCD and ST-Link V2 did the job for me). 
+MicroML combines Tensorflow Lite and libopencm3. The developer first builds each module separately, then creates a microlite.a archive file for it's specific project. Then it compiles it's project code and links it against microlite.a file. The final product are executable files which can be flashed on desired platform with help of programmer of your choice (combination of OpenOCD and ST-Link V2 did the job for me). 
