@@ -35,7 +35,7 @@ THIRD_PARTY_DIR = $(TENSORFLOW_DIR)/tensorflow/lite/micro/tools/make/downloads
 OPENCM3_INC = $(OPENCM3_DIR)/include
 # Inclusion of library header files
 INCLUDES += $(patsubst %,-I%, . $(OPENCM3_INC) )
-INCLUDES := \
+INCLUDES += \
 -I. \
 -I$(THIRD_PARTY_DIR)/gemmlowp \
 -I$(THIRD_PARTY_DIR)/flatbuffers/include \
