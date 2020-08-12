@@ -1,45 +1,12 @@
 #include <errno.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/usart.h>
 #include <libopencm3/cm3/systick.h>
-#include "printf.h"
-
-extern "C" {
-    void sys_tick_handler(void);
-}
-
-void _putchar(char character)
-{
-    usart_send_blocking(USART3, character); /* USART6: Send byte. */
-}
-
-static void usart_setup(void)
-{
-	/* Setup USART2 parameters. */
-	usart_set_baudrate(USART3, 115200);
-	usart_set_databits(USART3, 8);
-	usart_set_stopbits(USART3, USART_STOPBITS_1);
-	usart_set_mode(USART3, USART_MODE_TX);
-	usart_set_parity(USART3, USART_PARITY_NONE);
-	usart_set_flow_control(USART3, USART_FLOWCONTROL_NONE);
-
-	/* Finally enable the USART. */
-	usart_enable(USART3);
-}
 
 static void clock_setup() {
-    // First, let's ensure that our clock is running off the high-speed internal
-    // oscillator (HSI) at 48MHz.
-    //rcc_clock_setup_in_hsi_out_48mhz();
-
-    // Since our LED is on GPIO bank A, we need to enable
+    // Since our LED is on GPIO bank B, we need to enable
     // the peripheral clock to this GPIO bank in order to use it.
-    rcc_periph_clock_enable(RCC_GPIOD);
     rcc_periph_clock_enable(RCC_GPIOB);
-
-    // In order to use our UART, we must enable the clock to it as well.
-    rcc_periph_clock_enable(RCC_USART3);
 }
 static void systick_setup() {
     // Set the systick clock source to our main clock
@@ -80,14 +47,11 @@ void delay(uint64_t duration) {
 }
 
 static void gpio_setup() {
-    // Our test LED is connected to Port A pin 11, so let's set it as output
+    // Our LEDs are connected to Port B pins 0, 7 and 14 so let's set them 
+    // as output
+    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO0);
     gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO7);
-
-	/* Setup GPIO pins for USART2 transmit. */
-	gpio_mode_setup(GPIOD, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO8);
-
-	/* Setup USART2 TX pin as alternate function. */
-	gpio_set_af(GPIOD, GPIO_AF7, GPIO8);
+    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO14);
 }
 
 int main() 
@@ -95,21 +59,19 @@ int main()
     clock_setup();
     systick_setup();
     gpio_setup();
-	usart_setup();
-    printf("FIRST OUTPUT\n");
 
     // Toggle the LED on and off forever
     while (1) 
     {
-        printf("HELLO WORLD\n");
-        printf("\n");
-		//usart_send_blocking(USART3, 'A'); /* USART6: Send byte. */
+        gpio_set(GPIOB, GPIO0);
         gpio_set(GPIOB, GPIO7);
-        delay(500);
+        gpio_set(GPIOB, GPIO14);
+        delay(100);
+        gpio_clear(GPIOB, GPIO0);
         gpio_clear(GPIOB, GPIO7);
-        delay(500);
+        gpio_clear(GPIOB, GPIO14);
+        delay(100);
     }
 
     return 0;
 }
-
