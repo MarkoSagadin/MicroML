@@ -15,10 +15,19 @@ limitations under the License.
 
 #include "tensorflow/lite/micro/examples/hello_world/output_handler.h"
 
-void HandleOutput(tflite::ErrorReporter* error_reporter, float x_value,
-                  float y_value) {
-  // Log the current X and Y values
-  TF_LITE_REPORT_ERROR(error_reporter, "x_value: %f, y_value: %f\n",
-                       static_cast<double>(x_value),
-                       static_cast<double>(y_value));
+#include "tensorflow/lite/micro/testing/micro_test.h"
+#include "tensorflow/lite/micro/testing/test_utils.h"
+
+TF_LITE_MICRO_TESTS_BEGIN
+
+TF_LITE_MICRO_TEST(TestCallability) {
+  tflite::MicroErrorReporter micro_error_reporter;
+  tflite::ErrorReporter* error_reporter = &micro_error_reporter;
+
+  // This will have external side-effects (like printing to the debug console
+  // or lighting an LED) that are hard to observe, so the most we can do is
+  // make sure the call doesn't crash.
+  HandleOutput(error_reporter, 0, 0);
 }
+
+TF_LITE_MICRO_TESTS_END

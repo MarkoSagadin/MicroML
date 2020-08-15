@@ -17,7 +17,7 @@ limitations under the License.
 // xxd -i sine_model.tflite > sine_model_data.cc
 // See the README for a full description of the creation process.
 
-#include "tensorflow/lite/micro/examples/hello_world/sine_model_data.h"
+#include "sine_model_data.h"
 
 // We need to keep the data array aligned on some architectures.
 #ifdef __has_attribute
