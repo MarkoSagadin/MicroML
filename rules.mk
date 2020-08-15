@@ -37,11 +37,13 @@ OPENCM3_INC = $(OPENCM3_DIR)/include
 INCLUDES += $(patsubst %,-I%, . $(OPENCM3_INC) )
 INCLUDES += \
 -I. \
+-I$(TENSORFLOW_DIR) \
 -I$(THIRD_PARTY_DIR)/gemmlowp \
 -I$(THIRD_PARTY_DIR)/flatbuffers/include \
 -I$(THIRD_PARTY_DIR)/kissfft \
 -I$(THIRD_PARTY_DIR)/ruy \
--I$(TENSORFLOW_DIR)
+-I$(THIRD_PARTY_DIR)/cmsis/CMSIS/Core/Include/ \
+-I$(THIRD_PARTY_DIR)/cmsis/CMSIS/DSP/Include/  \
 
 TEST_INCLUDES := \
 -I. \
@@ -75,6 +77,7 @@ TEST_OBJS = $(TESTFILES:%.cc=$(TEST_BUILD_DIR)/%.o)
 CXX_DEFS :=  \
 -DNDEBUG \
 -DTF_LITE_STATIC_MEMORY \
+-DGEMMLOWP_ALLOW_SLOW_SCALAR_FALLBACK 
 
 
 ######################################
@@ -93,10 +96,15 @@ FLAGS :=\
 -Wvla \
 -Wall \
 -Wextra \
--Wno-unused-parameter \
+-Wshadow  \
 -Wno-missing-field-initializers \
 -Wno-write-strings \
 -Wno-sign-compare \
+-Wno-type-limits \
+-Wdouble-promotion \
+-Wunused-variable  \
+-Wno-unused-parameter \
+-Wunused-function  \
 -Wno-narrowing \
 -fno-delete-null-pointer-checks \
 -fomit-frame-pointer \
@@ -106,7 +114,7 @@ FLAGS :=\
 TGT_CFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(C_DEFS) $(INCLUDES) $(OPENCM3_DEFS) -std=c11
 
 TGT_CXXFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(CXX_DEFS) $(INCLUDES) $(OPENCM3_DEFS)
-TGT_CXXFLAGS += -std=c++11 -std=gnu++11 -fno-rtti -fpermissive 
+TGT_CXXFLAGS += -std=c++11 -std=gnu++11 -fno-rtti -fpermissive -fno-threadsafe-statics -fno-use-cxa-atexit
  
 TGT_ASFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(AS_DEFS) $(INCLUDES) $(OPENCM3_DEFS)
 
@@ -145,7 +153,9 @@ TGT_LDFLAGS += $(ARCH_FLAGS) \
 -T$(LDSCRIPT) $(LIBS) \
 -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref \
 -Wl,--gc-sections \
--Wl,--no-wchar-size-warning
+-Wl,--no-wchar-size-warning \
+-Wl,--gc-sections \
+#-Wl,--entry,Reset_Handler \
 
 ifeq ($(V),99)
 TGT_LDFLAGS += -Wl,--print-gc-sections

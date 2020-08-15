@@ -493,9 +493,9 @@ void spi_read16(uint16_t * data, uint16_t num_words)
                                         // taken into account otherwise
     int i = 0;
     // Get all packets except last one
-    for(uint16_t i = 0; i < num_words-1; i++)
+    for(uint16_t index = 0; index < num_words-1; index++)
     {
-            data[i] = spi_read(SPI1);
+            data[index] = spi_read(SPI1);
     }
 
     // To get last transmitted packet, we have to do stop sequence

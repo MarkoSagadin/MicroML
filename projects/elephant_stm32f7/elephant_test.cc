@@ -13,16 +13,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#include "tensorflow/lite/c/common.h"
-#include "tensorflow/lite/micro/kernels/all_ops_resolver.h"
+#include "tensorflow/lite/micro/all_ops_resolver.h"
+#include "tensorflow/lite/micro/testing/micro_test.h"
+#include "tensorflow/lite/micro/kernels/micro_ops.h"
 #include "tensorflow/lite/micro/micro_error_reporter.h"
 #include "tensorflow/lite/micro/micro_interpreter.h"
-#include "tensorflow/lite/micro/testing/micro_test.h"
+#include "tensorflow/lite/micro/micro_mutable_op_resolver.h"
 #include "tensorflow/lite/schema/schema_generated.h"
 #include "tensorflow/lite/version.h"
-
-#include "tensorflow/lite/micro/micro_mutable_op_resolver.h"
-#include "tensorflow/lite/micro/kernels/micro_ops.h"
+#include "tensorflow/lite/c/common.h"
 
 #include <stdio.h>
 #include <time.h>
@@ -30,8 +29,18 @@ limitations under the License.
 #include "images/images.h"
 #include "model_settings.h"
 
-constexpr int tensor_arena_size = 200 * 1024;
-uint8_t tensor_arena[tensor_arena_size];
+// Globals, used for compatibility with Arduino-style sketches.
+namespace {
+    tflite::ErrorReporter* error_reporter = nullptr;
+    const tflite::Model* model = nullptr;
+    tflite::MicroInterpreter* interpreter = nullptr;
+    TfLiteTensor* input = nullptr;
+
+    // An area of memory to use for input, output, and intermediate arrays.
+    constexpr int kTensorArenaSize = 200 * 1024;
+    static uint8_t tensor_arena[kTensorArenaSize];
+}
+
 
 clock_t start;
 clock_t end;
@@ -47,9 +56,10 @@ void load_data(const signed char * data, TfLiteTensor * input)
 void print_result(const char * title, TfLiteTensor * output, clock_t duration)
 {
     printf("\n%s\n", title);
-    printf("[[%f %f %f]]\n", output->data.f[0],
-                             output->data.f[1],
-                             output->data.f[2]);
+    printf("[[%f %f %f %f]]\n", output->data.f[0],
+                                output->data.f[1],
+                                output->data.f[2],
+                                output->data.f[3]);
 
 
     printf("Inference time: %f ms", 
@@ -66,12 +76,13 @@ TF_LITE_MICRO_TEST(TestInvoke) {
 
     // Map the model into a usable data structure. This doesn't involve any
     // copying or parsing, it's a very lightweight operation.
-    const tflite::Model* model = ::tflite::GetModel(full_quant_tflite);
+    model = tflite::GetModel(full_quant_tflite);
     if (model->version() != TFLITE_SCHEMA_VERSION) {
         TF_LITE_REPORT_ERROR(error_reporter,
                 "Model provided is schema version %d not equal "
                 "to supported version %d.\n",
                 model->version(), TFLITE_SCHEMA_VERSION);
+        return 0;
     }
 
     // Pull in only the operation implementations we need.
@@ -82,54 +93,38 @@ TF_LITE_MICRO_TEST(TestInvoke) {
     //
     //tflite::ops::micro::AllOpsResolver micro_op_resolver;
     
-    // Below approach with MicroOpResolver is much better, we pull in only
+    // Below approach with MicroMutableOpResolver is much better, we pull in only
     // operation implementations that we need, so we save space. 
     // To figure out which ops re needed just define micro_op_resolver and don't
     // call any AddBultin ops. Make sure that number in definition of 
     // micro_op_resolver matches the number of ops. Adding more versions of same
     // op will demand larger number.
-    tflite::MicroOpResolver <6> micro_op_resolver;
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_CONV_2D,
-            tflite::ops::micro::Register_CONV_2D(), 
-            3
-    );
+    static tflite::MicroMutableOpResolver<6> micro_op_resolver;
+    micro_op_resolver.AddConv2D();
+    micro_op_resolver.AddMaxPool2D();
+    micro_op_resolver.AddReshape();
+    micro_op_resolver.AddFullyConnected();
+    micro_op_resolver.AddSoftmax();
+    micro_op_resolver.AddDequantize();
 
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_MAX_POOL_2D,
-            tflite::ops::micro::Register_MAX_POOL_2D(),
-            2
-    );
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_RESHAPE, 
-            tflite::ops::micro::Register_RESHAPE()
-    );
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_FULLY_CONNECTED, 
-            tflite::ops::micro::Register_FULLY_CONNECTED(), 
-            4
-    );
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_SOFTMAX,
-            tflite::ops::micro::Register_SOFTMAX(), 
-            2
-    );
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_DEQUANTIZE, 
-            tflite::ops::micro::Register_DEQUANTIZE(), 
-            2
-    );
 
     // Build an interpreter to run the model with.
-    tflite::MicroInterpreter interpreter(model, 
-                                        micro_op_resolver, 
-                                        tensor_arena,
-                                        tensor_arena_size, 
-                                        error_reporter);
-    interpreter.AllocateTensors();
+    static tflite::MicroInterpreter static_interpreter(model, 
+                                                       micro_op_resolver, 
+                                                       tensor_arena,
+                                                       kTensorArenaSize, 
+                                                       error_reporter);
+    interpreter = &static_interpreter;
+
+    // Allocate memory from the tensor_arena for the model's tensors.
+    TfLiteStatus allocate_status = interpreter->AllocateTensors();
+    if (allocate_status != kTfLiteOk) {
+        TF_LITE_REPORT_ERROR(error_reporter, "AllocateTensors() failed");
+        return 0;
+    }
 
     // Get information about the memory area to use for the model's input.
-    TfLiteTensor* input = interpreter.input(0);
+    TfLiteTensor* input = interpreter->input(0);
 
     // Make sure the input has the properties we expect.
     TF_LITE_MICRO_EXPECT_NE(nullptr, input);
@@ -154,7 +149,7 @@ TF_LITE_MICRO_TEST(TestInvoke) {
 
     start = clock();
     // Run the model on this input and make sure it succeeds.
-    TfLiteStatus invoke_status = interpreter.Invoke();
+    TfLiteStatus invoke_status = interpreter->Invoke();
     if (invoke_status != kTfLiteOk) {
         TF_LITE_REPORT_ERROR(error_reporter, "Invoke failed\n");
     }
@@ -163,7 +158,7 @@ TF_LITE_MICRO_TEST(TestInvoke) {
 
     // Get the output from the model, and make sure it's the expected size and
     // type.
-    TfLiteTensor* output = interpreter.output(0);
+    TfLiteTensor* output = interpreter->output(0);
     TF_LITE_MICRO_EXPECT_EQ(2, output->dims->size);
     TF_LITE_MICRO_EXPECT_EQ(1, output->dims->data[0]);
     TF_LITE_MICRO_EXPECT_EQ(4, output->dims->data[1]);
@@ -177,14 +172,40 @@ TF_LITE_MICRO_TEST(TestInvoke) {
 
     print_result("Picture 0", output, end-start);
 
-    load_data(image0, input);
+    load_data(image1, input);
     start = clock();
-    interpreter.Invoke();
+    interpreter->Invoke();
     end = clock();
-    output = interpreter.output(0);
+    output = interpreter->output(0);
     print_result("Image 1", output, end-start);
 
+    load_data(image2, input);
+    start = clock();
+    interpreter->Invoke();
+    end = clock();
+    output = interpreter->output(0);
+    print_result("Image 2", output, end-start);
 
+    load_data(image3, input);
+    start = clock();
+    interpreter->Invoke();
+    end = clock();
+    output = interpreter->output(0);
+    print_result("Image 3", output, end-start);
+
+    load_data(image4, input);
+    start = clock();
+    interpreter->Invoke();
+    end = clock();
+    output = interpreter->output(0);
+    print_result("Image 4", output, end-start);
+
+    load_data(image5, input);
+    start = clock();
+    interpreter->Invoke();
+    end = clock();
+    output = interpreter->output(0);
+    print_result("Image 5", output, end-start);
 }
 
 TF_LITE_MICRO_TESTS_END
