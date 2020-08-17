@@ -38,17 +38,17 @@ void load_data(const signed char * data, TfLiteTensor * input)
     }
 }
 
-void print_result(const char * title, TfLiteTensor * output, uint32_t duration)
-{
-    printf("\n%s\n", title);
-    printf("[[%f %f %f %f]]\n", output->data.f[0],
-                                output->data.f[1],
-                                output->data.f[2],
-                                output->data.f[3]);
-                                
-
-    printf("Inference time: %d ms", duration);
-}
+//void print_result(const char * title, TfLiteTensor * output, uint32_t duration)
+//{
+//    printf("\n%s\n", title);
+//    printf("[[%f %f %f]]\n", output->data.f[0],
+//                                output->data.f[1],
+//                                output->data.f[2]);
+//                                //output->data.f[3]);
+//                                
+//
+//    printf("Inference time: %d ms\n", duration);
+//}
 
 int main() 
 {
@@ -117,7 +117,7 @@ int main()
     {
         printf("Invoke failed\n");
     }
-    //uint32_t end = millis();
+    uint32_t end = millis();
 
     // Get the output from the model, and make sure it's the expected size and
     // type.
@@ -132,55 +132,47 @@ int main()
     //print_result("Picture 0", output, end-start);
 
 
-    load_data(image1, input);
-    start = millis();
-    interpreter->Invoke();
-    //end = millis();
-    uint32_t dur0 = millis() - start;
-    //output = interpreter->output(0);
-    //print_result("Image 1", output, end-start);
+    while(1)
+    {
+        load_data(image1, input);
+        start = millis();
+        printf("start: %d\n", start);
+        interpreter->Invoke();
+        end = millis();
+        printf("end: %d\n", end);
+        output = interpreter->output(0);
+        printf("Time needed: %d\n", end-start);
+        //print_result("Image 1", output, end-start);
+    }
 
-    load_data(image2, input);
-    start = millis();
-    interpreter->Invoke();
+    //load_data(image2, input);
+    //start = millis();
+    //interpreter->Invoke();
     //end = millis();
-    uint32_t dur1 = millis() - start;
     //output = interpreter->output(0);
     //print_result("Image 2", output, end-start);
 
-    load_data(image3, input);
-    start = millis();
-    interpreter->Invoke();
+    //load_data(image3, input);
+    //start = millis();
+    //interpreter->Invoke();
     //end = millis();
-    uint32_t dur2 = millis() - start;
     //output = interpreter->output(0);
     //print_result("Image 3", output, end-start);
 
-    load_data(image4, input);
-    start = millis();
-    interpreter->Invoke();
+    //load_data(image4, input);
+    //start = millis();
+    //interpreter->Invoke();
     //end = millis();
-    uint32_t dur3 = millis() - start;
     //output = interpreter->output(0);
     //print_result("Image 4", output, end-start);
 
-    load_data(image5, input);
-    start = millis();
-    interpreter->Invoke();
+    //load_data(image5, input);
+    //start = millis();
+    //interpreter->Invoke();
     //end = millis();
-    uint32_t dur4 = millis() - start;
     //output = interpreter->output(0);
     //print_result("Image 5", output, end-start);
 
-
-    printf("Inference time: %d ms\n", dur0);
-    printf("Inference time: %d ms\n", dur1);
-    printf("Inference time: %d ms\n", dur2);
-    printf("Inference time: %d ms\n", dur3);
-    printf("Inference time: %d ms\n", dur4);
-    while(1)
-    {
-    }
     
     return 0;
 }
