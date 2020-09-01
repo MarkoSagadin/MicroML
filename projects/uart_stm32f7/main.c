@@ -24,7 +24,8 @@ static void usart_setup(void)
 	usart_enable(USART3);
 }
 
-static void clock_setup() {
+static void clock_setup() 
+{
     // First, let's ensure that our clock is running off the high-speed internal
     // oscillator (HSI) at 48MHz.
     //rcc_clock_setup_in_hsi_out_48mhz();
@@ -37,7 +38,9 @@ static void clock_setup() {
     // In order to use our UART, we must enable the clock to it as well.
     rcc_periph_clock_enable(RCC_USART3);
 }
-static void systick_setup() {
+
+static void systick_setup() 
+{
     // Set the systick clock source to our main clock
     systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
     // Clear the Current Value Register so that we start at 0
@@ -55,14 +58,16 @@ static void systick_setup() {
 // Note that it needs to be volatile since we're modifying it from an interrupt.
 static volatile uint64_t _millis = 0;
 
-uint64_t millis() {
+uint64_t millis() 
+{
     return _millis;
 }
 
 // This is our interrupt handler for the systick reload interrupt.
 // The full list of interrupt services routines that can be implemented is
 // listed in libopencm3/include/libopencm3/stm32/f0/nvic.h
-void sys_tick_handler(void) {
+void sys_tick_handler(void) 
+{
     // Increment our monotonic clock
     _millis++;
 }
@@ -70,12 +75,14 @@ void sys_tick_handler(void) {
  * Delay for a real number of milliseconds
  */
 
-void delay(uint64_t duration) {
+void delay(uint64_t duration) 
+{
     const uint64_t until = millis() + duration;
     while (millis() < until);
 }
 
-static void gpio_setup() {
+static void gpio_setup()
+{
     // Our test LED is connected to Port A pin 11, so let's set it as output
     gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO7);
 
