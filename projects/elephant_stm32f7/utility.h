@@ -41,6 +41,7 @@ uint64_t micros();
 void sys_tick_handler();
 void delay(uint64_t duration);
 void delay_us(uint64_t duration);
+uint32_t dwt_cycles_to_ms(uint32_t dwt_cycles);
 
 #ifdef __cplusplus
 }

@@ -535,7 +535,7 @@ uint64_t millis()
  *
  * @return  Time alive in microseconds
  *
- * @note    Explanation on implementation, we first get ms and turn them in us,
+ * @note    Explanation of implementation, we first get ms and turn them into us,
  *          then we get number of cycles left in systick timer, and turn that 
  *          into us. Last part might not make sense, but only because it was 
  *          simplified to avoid unnecessary math operations. 
@@ -591,4 +591,17 @@ void delay_us(uint64_t duration)
 {
     const uint64_t until = micros() + duration;
     while (micros() < until);
+}
+
+/*!
+ * @brief                   Converts dwt cycles to milliseconds
+ *
+ * @param[in] dwt_cycles
+ *
+ * @return                  TIme in milliseconds
+ */
+uint32_t dwt_cycles_to_ms(uint32_t dwt_cycles)
+{
+    // 48 represents the clock frequency in MHz
+    return dwt_cycles * (1.0f / (g_clock_mhz * 1000.0f)) ;
 }

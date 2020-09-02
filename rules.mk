@@ -93,6 +93,7 @@ FLAGS :=\
 -funsigned-char \
 -fshort-wchar \
 -MMD \
+-MP \
 -Wvla \
 -Wall \
 -Wextra \
@@ -109,7 +110,8 @@ FLAGS :=\
 -fno-delete-null-pointer-checks \
 -fomit-frame-pointer \
 -nostdlib \
--ggdb \
+-g3 \
+-fno-common \
 
 TGT_CFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(C_DEFS) $(INCLUDES) $(OPENCM3_DEFS) -std=c11
 
@@ -125,36 +127,45 @@ TESTLITE_CXXFLAGS 	= -std=c++11 -DTF_LITE_STATIC_MEMORY -O3 -DTF_LITE_DISABLE_X8
 # Linker Flags and Libs
 ######################################
 LIBS := -Wl,--start-group -lc -lgcc -lm -lnosys -Wl,--end-group
-TGT_LDFLAGS += $(ARCH_FLAGS) \
+TGT_LDFLAGS +=  \
+$(ARCH_FLAGS) \
 -nostartfiles \
 -specs=nano.specs \
--fno-rtti \
--fmessage-length=0 \
 --specs=nosys.specs \
--fno-exceptions \
--fno-unwind-tables \
--fno-builtin \
--ffunction-sections \
--fdata-sections \
--funsigned-char \
--MMD \
--std=gnu++11 \
--Wvla \
--Wall \
--Wextra \
--Wno-unused-parameter \
--Wno-missing-field-initializers \
--Wno-write-strings \
--Wno-sign-compare \
--fno-delete-null-pointer-checks \
--fomit-frame-pointer \
--fpermissive \
 -L$(OPENCM3_DIR)/lib \
 -T$(LDSCRIPT) $(LIBS) \
 -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref \
 -Wl,--gc-sections \
 -Wl,--no-wchar-size-warning \
--Wl,--gc-sections \
+-O3 \
+-funsigned-char \
+-ffunction-sections \
+-fdata-sections \
+-g3 \
+-fno-common \
+-static  \
+-flto \
+
+#-fno-rtti \
+#-fmessage-length=0 \
+#-fno-exceptions \
+#-fno-unwind-tables \
+#-fno-builtin \
+#-ffunction-sections \
+#-fdata-sections \
+#-funsigned-char \
+#-MMD \
+#-std=gnu++11 \
+#-Wvla \
+#-Wall \
+#-Wextra \
+#-Wno-unused-parameter \
+#-Wno-missing-field-initializers \
+#-Wno-write-strings \
+#-Wno-sign-compare \
+#-fno-delete-null-pointer-checks \
+#-fomit-frame-pointer \
+#-fpermissive \
 #-Wl,--entry,Reset_Handler \
 
 ifeq ($(V),99)
@@ -226,7 +237,7 @@ $(BUILD_DIR)/%.o: %.S
 	@mkdir -p $(dir $@)
 	$(Q)$(AS) $(TGT_ASFLAGS) $(ASFLAGS) $(CPPFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/firmware.elf: $(OBJS) $(LDSCRIPT) $(LIBDEPS)
+$(BUILD_DIR)/firmware.elf: $(OBJS) $(LDSCRIPT) $(LIBDEPS) microlite_build/microlite.a
 	@printf "  LD\t$@\n"
 	$(Q)$(LD) $(OBJS) $(TGT_LDFLAGS) $(INCLUDES) $(LDLIBS) -o $@
 
@@ -234,7 +245,7 @@ $(BUILD_DIR)/firmware.bin: $(BUILD_DIR)/firmware.elf
 	@printf "  OBJCOPY\t$@\n"
 	$(Q)$(OBJCOPY) -O binary -S $< $@
 
-# Test rules
+# Test rules, clear prefix first, so we can use native gcc
 test: PREFIX = 
 test: $(TEST_BUILD_DIR)/test_firmware
 	@printf "  SIZE\t$<\n"
@@ -278,6 +289,6 @@ clean_test:
 clean_test_all:
 	rm -rf $(TEST_BUILD_DIR) testlite_build
 
-.PHONY: all clean flash
+.PHONY: all clean flash monitor
 -include $(OBJS:.o=.d)
 

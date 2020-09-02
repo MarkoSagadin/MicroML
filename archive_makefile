@@ -173,13 +173,22 @@ tensorflow/lite/micro/kernels/cmsis-nn/mul.cc \
 tensorflow/lite/micro/kernels/cmsis-nn/pooling.cc \
 tensorflow/lite/micro/kernels/cmsis-nn/softmax.cc \
 
-#tensorflow/lite/micro/kernels/add.cc \
 #tensorflow/lite/micro/kernels/conv.cc \
+#tensorflow/lite/micro/kernels/add.cc \
 #tensorflow/lite/micro/kernels/portable_optimized/depthwise_conv.cc \
 #tensorflow/lite/micro/kernels/fully_connected.cc \
 #tensorflow/lite/micro/kernels/mul.cc \
 #tensorflow/lite/micro/kernels/pooling.cc \
 #tensorflow/lite/micro/kernels/softmax.cc \
+
+
+
+
+
+
+
+
+
 
 
 CMSIS_NN_PATH := tensorflow/lite/micro/tools/make/downloads/cmsis//CMSIS/NN/Source
@@ -300,17 +309,8 @@ CXX_DEFS :=  \
 # Compiler Flags
 ######################################
 FLAGS :=\
--fmessage-length=0 \
--fno-exceptions \
--fno-unwind-tables \
--fno-builtin \
--ffunction-sections \
--fdata-sections \
--funsigned-char \
--fshort-wchar \
--MMD \
--Wvla \
 -Wall \
+-Wvla \
 -Wextra \
 -Wshadow  \
 -Wno-missing-field-initializers \
@@ -321,7 +321,16 @@ FLAGS :=\
 -Wunused-variable  \
 -Wno-unused-parameter \
 -Wunused-function  \
+-ffunction-sections \
+-fdata-sections \
 -fno-delete-null-pointer-checks \
+-fno-builtin \
+-funsigned-char \
+-fshort-wchar \
+-MMD \
+-fmessage-length=0 \
+-fno-exceptions \
+-fno-unwind-tables \
 -fomit-frame-pointer \
 -nostdlib \
 -ggdb \
