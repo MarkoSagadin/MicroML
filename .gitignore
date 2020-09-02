@@ -4,6 +4,9 @@ tags
 # Ignore build folder in any directory
 **/build 
 
+# Ignore mx_build folder in any directory
+**/mx_build 
+
 # Ignore microlite_build folder in any directory
 **/microlite_build 
 
