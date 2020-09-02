@@ -112,9 +112,6 @@ static void gpio_setup() {
 	gpio_set_af(GPIOD, GPIO_AF7, GPIO8);
 }
 
-// Needed to be here to prevent compilation errors
-void* __dso_handle;
-
 int main(int argc, char* argv[]) {
 
     clock_setup();
