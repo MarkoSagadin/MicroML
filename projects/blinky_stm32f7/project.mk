@@ -12,8 +12,8 @@ DEBUG = -g
 # if you are going to create seperate folders you have to add them by yourself.
 # example: driver/motor.c -> $(wildcard driver/*.c)
 CFILES = $(wildcard *.c)
-CXXFILES = $(wildcard *.cpp)
-CXXFILES += $(wildcard *.cc)
+CXXFILES = $(wildcard *.cpp) 
+CCFILES = $(wildcard *.cc)
 AFILES = $(wildcard *.s)
 
 # If you add new folders do not forget to update the INCLUDES!
