@@ -268,6 +268,7 @@ INCLUDES := \
 -I$(THIRD_PARTY_DIR)/ruy \
 -I$(THIRD_PARTY_DIR)/cmsis/CMSIS/Core/Include/ \
 -I$(THIRD_PARTY_DIR)/cmsis/CMSIS/DSP/Include/  \
+-I$(PROJECT_PATH)
 
 
 ######################################
@@ -302,35 +303,20 @@ CXX_DEFS :=  \
 ######################################
 FLAGS :=\
 -Wall \
--Wvla \
--Wextra \
--Wshadow  \
--Wno-missing-field-initializers \
--Wno-write-strings \
+-Wno-strict-aliasing \
 -Wno-sign-compare \
--Wno-type-limits \
--Wdouble-promotion \
--Wunused-variable  \
--Wno-unused-parameter \
--Wunused-function  \
--ffunction-sections \
 -fdata-sections \
--fno-delete-null-pointer-checks \
--fno-builtin \
+-ffunction-sections \
+-Wno-narrowing\
 -funsigned-char \
--fshort-wchar \
--MMD \
+-nostdlib \
 -fmessage-length=0 \
--fno-exceptions \
 -fno-unwind-tables \
 -fomit-frame-pointer \
--nostdlib \
--ggdb \
 -O3
 
-
 # Default flags
-MICROLITE_CFLAGS 	:= $(ARCH_FLAGS) $(FLAGS) $(C_DEFS)   -std=c12
+MICROLITE_CFLAGS 	:= $(ARCH_FLAGS) $(FLAGS) $(C_DEFS)   -std=c11
 MICROLITE_CXXFLAGS 	:= $(ARCH_FLAGS) $(FLAGS) $(CXX_DEFS) -std=c++11 -fno-rtti -std=gnu++11 -fpermissive -fno-threadsafe-statics -fno-use-cxa-atexit 
 
 # Test flags
@@ -342,7 +328,7 @@ TESTLITE_CFLAGS 	= -DTF_LITE_STATIC_MEMORY -O3 -DTF_LITE_DISABLE_X86_NEON
 ######################################
 
 #default all rules
-$(MICROLITE_LIB): $(MICROLITE_LIB_OBJS) $(MICROLITE_BUILD_PATH)
+$(MICROLITE_LIB): $(MICROLITE_LIB_OBJS) $(MICROLITE_BUILD_PATH) archive_makefile
 	@printf "  AR\t$<\n"
 	@mkdir -p $(dir $@)
 	$(Q)$(AR) -r $@ $(MICROLITE_LIB_OBJS) 

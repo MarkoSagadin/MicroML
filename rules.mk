@@ -84,34 +84,17 @@ CXX_DEFS :=  \
 # Compiler Flags
 ######################################
 FLAGS :=\
--fmessage-length=0 \
--fno-exceptions \
--fno-unwind-tables \
--fno-builtin \
--ffunction-sections \
--fdata-sections \
--funsigned-char \
--fshort-wchar \
--MMD \
--MP \
--Wvla \
 -Wall \
--Wextra \
--Wshadow  \
--Wno-missing-field-initializers \
--Wno-write-strings \
+-Wno-strict-aliasing \
 -Wno-sign-compare \
--Wno-type-limits \
--Wdouble-promotion \
--Wunused-variable  \
--Wno-unused-parameter \
--Wunused-function  \
--Wno-narrowing \
--fno-delete-null-pointer-checks \
--fomit-frame-pointer \
+-fdata-sections \
+-ffunction-sections \
+-Wno-narrowing\
+-funsigned-char \
 -nostdlib \
--g3 \
--fno-common \
+-fmessage-length=0 \
+-fno-unwind-tables \
+-fomit-frame-pointer \
 
 TGT_CFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(C_DEFS) $(INCLUDES) $(OPENCM3_DEFS) -std=c11
 
@@ -131,7 +114,7 @@ TGT_LDFLAGS +=  \
 $(ARCH_FLAGS) \
 -nostartfiles \
 -specs=nano.specs \
---specs=nosys.specs \
+-specs=nosys.specs \
 -L$(OPENCM3_DIR)/lib \
 -T$(LDSCRIPT) $(LIBS) \
 -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref \
@@ -141,7 +124,6 @@ $(ARCH_FLAGS) \
 -funsigned-char \
 -ffunction-sections \
 -fdata-sections \
--g3 \
 -fno-common \
 -static  \
 -flto \

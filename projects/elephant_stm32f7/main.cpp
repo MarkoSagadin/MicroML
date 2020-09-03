@@ -25,10 +25,9 @@ namespace {
     TfLiteTensor* input = nullptr;
 
     // An area of memory to use for input, output, and intermediate arrays.
-    constexpr int kTensorArenaSize = 200 * 1024;
-    alignas(16) static uint8_t tensor_arena[kTensorArenaSize];
+    constexpr int kTensorArenaSize = 250 * 1024;
+    static uint8_t tensor_arena[kTensorArenaSize];
 }
-
 
 void load_data(const signed char * data, TfLiteTensor * input)
 {
@@ -141,7 +140,6 @@ int main()
 
     print_result(error_reporter, "Picture 0", output, dwt_cycles_to_ms(end-start));
 
-
     while(1)
     {
         load_data(image1, input);
@@ -152,7 +150,7 @@ int main()
         print_result(error_reporter, "Image 1", output, dwt_cycles_to_ms(end-start));
     }
 
-        //printf("Time needed: %d\n", end-start);
+    //printf("Time needed: %d\n", end-start);
     //load_data(image2, input);
     //start = millis();
     //interpreter->Invoke();
