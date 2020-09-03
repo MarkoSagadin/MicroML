@@ -5,12 +5,12 @@
 UART_HandleTypeDef huart3;
 
 void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
 
 void _putchar(char character)
 {
-    HAL_UART_Transmit(&huart3, &character, 1, 0xffffff);
+    uint8_t c = (uint8_t)character;
+    HAL_UART_Transmit(&huart3, &c, 1, 0xffffff);
 }
 
 uint32_t dwt_cycles_to_ms(uint32_t dwt_cycles);
