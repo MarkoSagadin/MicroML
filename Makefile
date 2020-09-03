@@ -16,7 +16,7 @@ print-%  : ; @echo $* = $($*)
 # building variables
 ######################################
 # debug build?
-DEBUG = 1
+DEBUG = 0
 # optimization
 OPT = -O3
 
@@ -242,7 +242,7 @@ BIN = $(CP) -O binary -S
 CPU = -mcpu=cortex-m7
 
 # fpu
-FPU = -mfpu=fpv5-d16
+FPU = -mfpu=fpv5-sp-d16
 
 # float-abi
 FLOAT-ABI = -mfloat-abi=hard
@@ -277,13 +277,31 @@ INCLUDES =  \
 -I$(THIRD_PARTY_DIR)/cmsis/CMSIS/Core/Include/ \
 -I$(THIRD_PARTY_DIR)/cmsis/CMSIS/DSP/Include/  \
 
-#-Itensorflow/third_party/eigen3 \
-#-Itensorflow/third_party \
-
 # compile gcc flags
 ASFLAGS = $(MCU) $(OPT) -Wall -fdata-sections -ffunction-sections
 
-CFLAGS = $(MCU) $(C_DEFS) $(OPT) -Wall -fdata-sections -ffunction-sections -Wno-narrowing
+CFLAGS = \
+$(MCU) \
+$(C_DEFS) \
+$(OPT) \
+-Wall \
+-Wno-strict-aliasing \
+-Wno-sign-compare \
+-fdata-sections \
+-ffunction-sections \
+-Wno-narrowing\
+-funsigned-char \
+-nostdlib \
+-fmessage-length=0 \
+-fno-unwind-tables \
+-fomit-frame-pointer \
+
+# Bad boy here horrible increase in inference time 5 seconds plus
+# -fno-builtin			
+# Some other bad boys, but only minor increases in time
+#-fno-delete-null-pointer-checks \
+#-fshort-wchar \
+#-fno-exceptions \
 
 ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
@@ -291,7 +309,7 @@ endif
 
 
 # Generate dependency information
-CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
+#CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 
 CXXFLAGS = $(CFLAGS) $(CXX_DEFS) -std=c++11 -std=gnu++11 \
 -fno-rtti -fpermissive -fno-threadsafe-statics -fno-use-cxa-atexit
@@ -329,12 +347,12 @@ vpath %.s $(sort $(dir $(SOURCES)))
 $(BUILD_DIR)/%.o: %.cc Makefile | $(BUILD_DIR)
 	@printf "  CXX\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(CXX) -c $(CXXFLAGS) $(INCLUDES) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cc=.lst)) $< -o $@
+	$(Q)$(CXX) -c $(CXXFLAGS) $(INCLUDES) $< -o $@
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
 	@printf "  CC\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(CC) -c $(CFLAGS) $(INCLUDES) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	$(Q)$(CC) -c $(CFLAGS) $(INCLUDES) -std=c11	$< -o $@
 
 $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
 	@printf "  AS\t$<\n"
@@ -378,4 +396,7 @@ clean:
 -include $(OBJECTS:.o=.d)
 .PHONY: all clean flash monitor
 
+# Some dependency stuff, keep it here for now, you might need it later
+#$(Q)$(CXX) -c $(CXXFLAGS) $(INCLUDES) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cc=.lst)) $< -o $@
+#$(Q)$(CC) -c $(CFLAGS) $(INCLUDES) -std=c11	-Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 # *** EOF ***

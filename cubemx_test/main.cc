@@ -36,7 +36,7 @@ namespace {
     TfLiteTensor* input = nullptr;
 
     // An area of memory to use for input, output, and intermediate arrays.
-    constexpr int kTensorArenaSize = 200 * 1024;
+    constexpr int kTensorArenaSize = 250 * 1024;
     static uint8_t tensor_arena[kTensorArenaSize];
 }
 
@@ -156,11 +156,6 @@ int main(void)
     TF_LITE_REPORT_ERROR(error_reporter, "Rows: %d",            output->dims->data[1]);
     TF_LITE_REPORT_ERROR(error_reporter, "Output type: %d",     output->type);
 
-    print_result(error_reporter, "Picture 0", output, dwt_cycles_to_ms(end-start));
-    print_result(error_reporter, "Picture 0", output, dwt_cycles_to_ms(end-start));
-    print_result(error_reporter, "Picture 0", output, dwt_cycles_to_ms(end-start));
-    print_result(error_reporter, "Picture 0", output, dwt_cycles_to_ms(end-start));
-    print_result(error_reporter, "Picture 0", output, dwt_cycles_to_ms(end-start));
     print_result(error_reporter, "Picture 0", output, dwt_cycles_to_ms(end-start));
 
     while(1)

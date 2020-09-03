@@ -330,7 +330,7 @@ FLAGS :=\
 
 
 # Default flags
-MICROLITE_CFLAGS 	:= $(ARCH_FLAGS) $(FLAGS) $(C_DEFS)   -std=c11
+MICROLITE_CFLAGS 	:= $(ARCH_FLAGS) $(FLAGS) $(C_DEFS)   -std=c12
 MICROLITE_CXXFLAGS 	:= $(ARCH_FLAGS) $(FLAGS) $(CXX_DEFS) -std=c++11 -fno-rtti -std=gnu++11 -fpermissive -fno-threadsafe-statics -fno-use-cxa-atexit 
 
 # Test flags
