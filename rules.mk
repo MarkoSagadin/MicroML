@@ -95,6 +95,7 @@ FLAGS :=\
 -fmessage-length=0 \
 -fno-unwind-tables \
 -fomit-frame-pointer \
+-fno-common \
 
 TGT_CFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(C_DEFS) $(INCLUDES) $(OPENCM3_DEFS) -std=c11
 
@@ -126,7 +127,6 @@ $(ARCH_FLAGS) \
 -fdata-sections \
 -fno-common \
 -static  \
--flto \
 
 #-fno-rtti \
 #-fmessage-length=0 \

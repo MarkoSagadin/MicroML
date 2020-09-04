@@ -1,10 +1,10 @@
-######################################
+################################################################################
 # General Instructions
 ######################################
 # To generate microlite.a file for your particular project you have 
 # to run the following command from main directory:
 #
-# make -C tensorflow/ -f ../archive_makefile PROJECT=<name_of_your_project>
+# make -f archive_makefile PROJECT=<name_of_your_project>
 #
 # This will create microlite.a file for your target system, which will be
 # included in the linking process. 
@@ -313,6 +313,7 @@ FLAGS :=\
 -fmessage-length=0 \
 -fno-unwind-tables \
 -fomit-frame-pointer \
+-fno-common \
 -O3
 
 # Default flags
