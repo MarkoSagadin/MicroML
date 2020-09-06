@@ -1,6 +1,6 @@
-######################################
-# Make Verbosity
-######################################
+################################################################################
+# Make Verbosity															   #
+################################################################################
 # Be silent per default, but 'make V=1' will show all compiler calls.
 # If you want, V=99 will print out all sorts of things.
 V?=0
@@ -12,9 +12,9 @@ endif
 #For checking macros, to use it write make print-VARIABLE
 print-%  : ; @echo $* = $($*)
 
-###################################### 
-# Tool paths
-######################################
+################################################################################
+# Tool paths																   #
+################################################################################
 PREFIX	?= arm-none-eabi-
 CC	= $(PREFIX)gcc
 CXX = $(PREFIX)g++
@@ -27,9 +27,10 @@ SIZE	= $(PREFIX)size
 OPENOCD = openocd
 MINICOM = minicom
 
-###################################### 
-# Includes
-######################################
+
+################################################################################
+# Includes																	   #
+################################################################################
 TENSORFLOW_DIR = ../../tensorflow
 THIRD_PARTY_DIR = $(TENSORFLOW_DIR)/tensorflow/lite/micro/tools/make/downloads
 OPENCM3_INC = $(OPENCM3_DIR)/include
@@ -45,20 +46,10 @@ INCLUDES += \
 -I$(THIRD_PARTY_DIR)/cmsis/CMSIS/Core/Include/ \
 -I$(THIRD_PARTY_DIR)/cmsis/CMSIS/DSP/Include/  \
 
-TEST_INCLUDES := \
--I. \
--I$(THIRD_PARTY_DIR) \
--I$(THIRD_PARTY_DIR)/gemmlowp \
--I$(THIRD_PARTY_DIR)/flatbuffers/include \
--I$(THIRD_PARTY_DIR)/kissfft \
--I$(THIRD_PARTY_DIR)/ruy \
--I$(TENSORFLOW_DIR)
 
-
-
-######################################
-# OBJECTS and BINS
-######################################
+################################################################################
+# Objects and binaries														   #
+################################################################################
 # Default
 OBJS = $(CFILES:%.c=$(BUILD_DIR)/%.o)
 OBJS += $(CXXFILES:%.cpp=$(BUILD_DIR)/%.o)
@@ -71,18 +62,19 @@ GENERATED_BINS = firmware.elf firmware.bin firmware.map
 TEST_OBJS = $(TESTFILES:%.cc=$(TEST_BUILD_DIR)/%.o)
  
 
-######################################
-# Defines
-######################################
+################################################################################
+# Defines																	   #
+################################################################################
+C_DEFS :=
 CXX_DEFS :=  \
 -DNDEBUG \
 -DTF_LITE_STATIC_MEMORY \
 -DGEMMLOWP_ALLOW_SLOW_SCALAR_FALLBACK 
 
 
-######################################
-# Compiler Flags
-######################################
+################################################################################
+# Compiler Flags															   #
+################################################################################
 FLAGS :=\
 -Wall \
 -Wno-strict-aliasing \
@@ -96,62 +88,40 @@ FLAGS :=\
 -fno-unwind-tables \
 -fomit-frame-pointer \
 -fno-common \
+$(ARCH_FLAGS) \
+$(OPT) \
+$(CPPFLAGS) # These come from libopencm3
 
-TGT_CFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(C_DEFS) $(INCLUDES) $(OPENCM3_DEFS) -std=c11
+C_FLAGS := $(FLAGS) $(C_DEFS) -std=c11 
+CXX_FLAGS := $(FLAGS) $(CXX_DEFS) -std=c++11 -std=gnu++11 \
+	-fno-rtti -fpermissive -fno-threadsafe-statics -fno-use-cxa-atexit
+AS_FLAGS := $(FLAGS)
 
-TGT_CXXFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(CXX_DEFS) $(INCLUDES) $(OPENCM3_DEFS)
-TGT_CXXFLAGS += -std=c++11 -std=gnu++11 -fno-rtti -fpermissive -fno-threadsafe-statics -fno-use-cxa-atexit
- 
-TGT_ASFLAGS := $(ARCH_FLAGS) $(OPT) $(DEBUG) $(FLAGS) $(AS_DEFS) $(INCLUDES) $(OPENCM3_DEFS)
 
-# TEST flags, for now only for .cc files
-TESTLITE_CXXFLAGS 	= -std=c++11 -DTF_LITE_STATIC_MEMORY -O3 -DTF_LITE_DISABLE_X86_NEON -Wno-narrowing
-
-######################################
-# Linker Flags and Libs
-######################################
+################################################################################
+# Linker Flags and Lib			    										   #
+################################################################################
 LIBS := -Wl,--start-group -lc -lgcc -lm -lnosys -Wl,--end-group
-TGT_LDFLAGS +=  \
+LDFLAGS +=  \
 $(ARCH_FLAGS) \
 -nostartfiles \
 -specs=nano.specs \
 -specs=nosys.specs \
 -L$(OPENCM3_DIR)/lib \
--T$(LDSCRIPT) $(LIBS) \
+-T$(LDSCRIPT) \
+$(LIBS) \
 -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref \
 -Wl,--gc-sections \
 -Wl,--no-wchar-size-warning \
--O3 \
 -funsigned-char \
 -ffunction-sections \
 -fdata-sections \
 -fno-common \
 -static  \
-
-#-fno-rtti \
-#-fmessage-length=0 \
-#-fno-exceptions \
-#-fno-unwind-tables \
-#-fno-builtin \
-#-ffunction-sections \
-#-fdata-sections \
-#-funsigned-char \
-#-MMD \
-#-std=gnu++11 \
-#-Wvla \
-#-Wall \
-#-Wextra \
-#-Wno-unused-parameter \
-#-Wno-missing-field-initializers \
-#-Wno-write-strings \
-#-Wno-sign-compare \
-#-fno-delete-null-pointer-checks \
-#-fomit-frame-pointer \
-#-fpermissive \
-#-Wl,--entry,Reset_Handler \
+$(OPT) \
 
 ifeq ($(V),99)
-TGT_LDFLAGS += -Wl,--print-gc-sections
+LDFLAGS += -Wl,--print-gc-sections
 endif
 
 # error if not using linker script generator
@@ -171,9 +141,9 @@ LDLIBS += -l$(OPENCM3_LIB)
 endif
 
 
-######################################
-# Extra
-######################################
+################################################################################
+# Extra																		   #
+################################################################################
 # Burn in legacy hell fortran modula pascal yacc idontevenwat
 .SUFFIXES:
 .SUFFIXES: .c .S .h .o .cxx .cpp .cc .elf .bin
@@ -186,9 +156,9 @@ endif
 %: SCCS/s.%
 
 
-######################################
-# Rules
-######################################
+################################################################################
+# Rules																		   #
+################################################################################
 
 all: $(BUILD_DIR)/firmware.elf $(BUILD_DIR)/firmware.bin
 	@printf "  SIZE\t$<\n"
@@ -197,31 +167,31 @@ all: $(BUILD_DIR)/firmware.elf $(BUILD_DIR)/firmware.bin
 $(BUILD_DIR)/%.o: %.c
 	@printf "  CC\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(CC) $(TGT_CFLAGS) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
+	$(Q)$(CC) $(C_FLAGS) $(INCLUDES) -o $@ -c $<
 
 $(BUILD_DIR)/%.o: %.cxx
 	@printf "  CXX\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(CC) $(TGT_CXXFLAGS) $(CXXFLAGS) $(CPPFLAGS) -o $@ -c $<
+	$(Q)$(CC) $(CXX_FLAGS) $(INCLUDES) -o $@ -c $<
 
 $(BUILD_DIR)/%.o: %.cpp
 	@printf "  CXX\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(CXX) $(TGT_CXXFLAGS) $(CXXFLAGS) $(CPPFLAGS) -o $@ -c $<
+	$(Q)$(CXX) $(CXX_FLAGS) $(INCLUDES) -o $@ -c $<
 
 $(BUILD_DIR)/%.o: %.cc
 	@printf "  CXX\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(CXX) $(TGT_CXXFLAGS) $(CXXFLAGS) $(CPPFLAGS) -o $@ -c $<
+	$(Q)$(CXX) $(CXX_FLAGS) $(INCLUDES) -o $@ -c $<
 
 $(BUILD_DIR)/%.o: %.S
 	@printf "  AS\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(AS) $(TGT_ASFLAGS) $(ASFLAGS) $(CPPFLAGS) -o $@ -c $<
+	$(Q)$(AS) $(AS_FLAGS) $(INCLUDES) -o $@ -c $<
 
 $(BUILD_DIR)/firmware.elf: $(OBJS) $(LDSCRIPT) $(LIBDEPS) microlite_build/microlite.a
 	@printf "  LD\t$@\n"
-	$(Q)$(LD) $(OBJS) $(TGT_LDFLAGS) $(INCLUDES) $(LDLIBS) -o $@
+	$(Q)$(LD) $(OBJS) $(LDFLAGS) $(INCLUDES) $(LDLIBS) -o $@
 
 $(BUILD_DIR)/firmware.bin: $(BUILD_DIR)/firmware.elf
 	@printf "  OBJCOPY\t$@\n"
@@ -236,12 +206,12 @@ test: $(TEST_BUILD_DIR)/test_firmware
 
 $(TEST_BUILD_DIR)/test_firmware: $(TEST_OBJS)
 	@printf "  LD\t$@\n"
-	$(Q)$(LD) $(TESTLITE_CXXFLAGS) $(TEST_OBJS) $(TEST_INCLUDES) $(TEST_LDLIBS) -lm -o $@
+	$(Q)$(LD) $(TESTLITE_CXXFLAGS) $(TEST_OBJS) -lm -o $@
 
 $(TEST_BUILD_DIR)/%.o: %.cc
 	@printf "  CXX\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(CXX) $(TESTLITE_CXXFLAGS) $(TEST_INCLUDES) -o $@ -c $<
+	$(Q)$(CXX) $(TESTLITE_CXXFLAGS) -o $@ -c $<
 
 
 # It is expected that a openocd.cfg file is in project folder
