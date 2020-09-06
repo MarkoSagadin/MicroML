@@ -1,6 +1,6 @@
 ################################################################################
-# General Instructions
-######################################
+# General Instructions														   #
+################################################################################
 # To generate microlite.a file for your particular project you have 
 # to run the following command from main directory:
 #
@@ -11,52 +11,52 @@
 # Variable PROJECT has to match to the name of your project folder inside 
 # projects directory. 
 
-
-######################################
-# Instructions for testing
-######################################
+################################################################################
+# Instructions for testing													   #
+################################################################################
 # To avoid unnecessary flashing, we can test hardware independent 
 # parts of code on development machine. 
-# To compile test files add them to TESTFILES variable in specific projects project.mk file
-# We also need to create separate archive file for testing, we will call it testlite.a
+# To compile test files add them to TESTFILES variable in specific projects 
+# project.mk file . We also need to create separate archive file for testing, 
+# we will call it testlite.a.
 # To create it run following command from main directory:
 #
-# make -C tensorflow/ -f ../archive_makefile test PROJECT=<name_of_your_project>
+# make -f archive_makefile test PROJECT=<name_of_your_project>
 #
 # This will create testlite.a file for your development system, which will be
 # included in the linking process. 
 # Variable PROJECT has to match to the name of your project folder inside 
 # projects directory. 
-######################################
-# Build directory
-######################################
+
+################################################################################
+# Build directory															   #
+################################################################################
 PROJECT_PATH = projects/$(PROJECT)
 
 # Microcontroller specific
-MICROLITE_BUILD_PATH = $(PROJECT_PATH)/microlite_build
-MICROLITE_LIB = $(MICROLITE_BUILD_PATH)/microlite.a
+MICROLITE_BUILD = $(PROJECT_PATH)/microlite_build
+MICROLITE_LIB = $(MICROLITE_BUILD)/microlite.a
 
 # Test, development machine specific
-TESTLITE_BUILD_PATH  = $(PROJECT_PATH)/testlite_build
-TESTLITE_LIB = $(TESTLITE_BUILD_PATH)/testlite.a
+TESTLITE_BUILD  = $(PROJECT_PATH)/testlite_build
+TESTLITE_LIB = $(TESTLITE_BUILD)/testlite.a
 
-######################################
-# Project selection 
-######################################
+################################################################################
+# Project selection 														   #
+################################################################################
 DIRECTORIES = $(sort $(dir $(wildcard projects/*/)))
 PROJECT ?= 0
 
-#Path to libopen, needed by genlink-config.mk
+# Path to libopen, needed by genlink-config.mk
 OPENCM3_DIR = libopencm3
 
 ifneq (,$(findstring $(PROJECT),$(DIRECTORIES)))
-#Project was found in projects directory, lets include its project.mk file
+# Project was found in projects directory, lets include its project.mk file
 include projects/$(PROJECT)/project.mk
 
-#Include configuration for linker file, we also get our arch_flags from here
+# Include configuration for linker file, we also get our arch_flags from here
 include libopencm3/mk/genlink-config.mk
 
-#Everything is done, lets go to the main rule or to test rule
 all: $(MICROLITE_LIB)
 # Clean up PREFIX variable
 test : PREFIX =
@@ -69,9 +69,9 @@ test:
 	@echo Project was not found, exiting!
 endif
 
-######################################
-# Make Verbosity
-######################################
+################################################################################
+# Make Verbosity															   #
+################################################################################
 # Be silent per default, but 'make V=1' will show all compiler calls.
 # If you want, V=99 will print out all sorts of things.
 V?=0
@@ -84,9 +84,9 @@ endif
 print-%  : ; @echo $* = $($*)
 
 
-###################################### 
-# Tool paths
-######################################
+################################################################################
+# Tool paths																   #
+################################################################################
 PREFIX	?= arm-none-eabi-
 CC		= $(PREFIX)gcc
 CXX 	= $(PREFIX)g++
@@ -97,10 +97,10 @@ OBJCOPY	= $(PREFIX)objcopy
 OBJDUMP	= $(PREFIX)objdump
 
 
-######################################
-# All sources, .c, .cc, .s files
-######################################
-MICROLITE_LIB_SRCS := \
+################################################################################
+# All sources, .c, .cc, .s files											   #
+################################################################################
+MICROLITE_SRC := \
 tensorflow/tensorflow/lite/micro/all_ops_resolver.cc \
 tensorflow/tensorflow/lite/micro/memory_helpers.cc \
 tensorflow/tensorflow/lite/micro/micro_allocator.cc \
@@ -185,7 +185,7 @@ tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/softmax.cc \
 
 
 CMSIS_NN_PATH := tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis//CMSIS/NN/Source
-MICROLITE_LIB_SRCS += \
+MICROLITE_SRC += \
 ${CMSIS_NN_PATH}/BasicMathFunctions/arm_elementwise_mul_s8.c \
 ${CMSIS_NN_PATH}/BasicMathFunctions/arm_elementwise_add_s8.c \
 ${CMSIS_NN_PATH}/FullyConnectedFunctions/arm_fully_connected_q7_opt.c \
@@ -255,9 +255,10 @@ ${CMSIS_NN_PATH}/SoftmaxFunctions/arm_softmax_q7.c \
 ${CMSIS_NN_PATH}/SoftmaxFunctions/arm_softmax_with_batch_q7.c \
 ${CMSIS_NN_PATH}/ReshapeFunctions/arm_reshape_s8.c \
 
-######################################
-# INCLUDES
-######################################
+
+################################################################################
+# Includes																	   #
+################################################################################
 THIRD_PARTY_DIR = tensorflow/tensorflow/lite/micro/tools/make/downloads
 INCLUDES := \
 -Itensorflow \
@@ -271,25 +272,18 @@ INCLUDES := \
 -I$(PROJECT_PATH)
 
 
-######################################
-# Objects
-######################################
-#default
-MICROLITE_LIB_OBJS := \
-$(addprefix $(MICROLITE_BUILD_PATH)/, $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(MICROLITE_LIB_SRCS))))
+################################################################################
+# Objects																	   #
+################################################################################
+MICROLITE_RAW_OBJS := $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(MICROLITE_SRC)))
+MICROLITE_OBJS := $(addprefix $(MICROLITE_BUILD)/, $(MICROLITE_RAW_OBJS))
+vpath %.c $(sort $(dir $(MICROLITE_SRC)))
+vpath %.cc $(sort $(dir $(MICROLITE_SRC)))
 
-vpath %.c $(sort $(dir $(MICROLITE_LIB_SRCS)))
-vpath %.cc $(sort $(dir $(MICROLITE_LIB_SRCS)))
 
-#test
-TESTLITE_LIB_OBJS := \
-$(addprefix $(TESTLITE_BUILD_PATH)/, $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(MICROLITE_LIB_SRCS))))
-vpath %.c $(sort $(dir $(MICROLITE_LIB_SRCS)))
-vpath %.cc $(sort $(dir $(MICROLITE_LIB_SRCS)))
-
-######################################
-# Defines
-######################################
+################################################################################
+# Defines																	   #
+################################################################################
 C_DEFS := 
 
 CXX_DEFS :=  \
@@ -298,9 +292,10 @@ CXX_DEFS :=  \
 -DGEMMLOWP_ALLOW_SLOW_SCALAR_FALLBACK 
 #-DTF_LITE_MCU_DEBUG_LOG
 
-######################################
-# Compiler Flags
-######################################
+
+################################################################################
+# Compiler Flags 															   #
+################################################################################
 FLAGS :=\
 -Wall \
 -Wno-strict-aliasing \
@@ -318,50 +313,52 @@ FLAGS :=\
 
 # Default flags
 MICROLITE_CFLAGS 	:= $(ARCH_FLAGS) $(FLAGS) $(C_DEFS)   -std=c11
-MICROLITE_CXXFLAGS 	:= $(ARCH_FLAGS) $(FLAGS) $(CXX_DEFS) -std=c++11 -fno-rtti -std=gnu++11 -fpermissive -fno-threadsafe-statics -fno-use-cxa-atexit 
+MICROLITE_CXXFLAGS 	:= $(ARCH_FLAGS) $(FLAGS) $(CXX_DEFS) \
+	-std=c++11 -std=gnu++11 \
+	-fno-rtti -fpermissive -fno-threadsafe-statics -fno-use-cxa-atexit 
 
 # Test flags
 TESTLITE_CXXFLAGS 	= -std=c++11 -DTF_LITE_STATIC_MEMORY -O3 -DTF_LITE_DISABLE_X86_NEON 
 TESTLITE_CFLAGS 	= -DTF_LITE_STATIC_MEMORY -O3 -DTF_LITE_DISABLE_X86_NEON 
 
-######################################
-# Rules 
-######################################
+################################################################################
+# Rules			 															   #
+################################################################################
 
 #default all rules
-$(MICROLITE_LIB): $(MICROLITE_LIB_OBJS) $(MICROLITE_BUILD_PATH) archive_makefile
+$(MICROLITE_LIB): $(MICROLITE_OBJS) $(MICROLITE_BUILD) archive_makefile
 	@printf "  AR\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(AR) -r $@ $(MICROLITE_LIB_OBJS) 
+	$(Q)$(AR) -r $@ $(MICROLITE_OBJS) 
 
-$(MICROLITE_BUILD_PATH)/%.o: %.c
+$(MICROLITE_BUILD)/%.o: %.c
 	@printf "  CC\t$<\n"
 	@mkdir -p $(dir $@)
 	$(Q)$(CC) $(MICROLITE_CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(MICROLITE_BUILD_PATH)/%.o: %.cc
+$(MICROLITE_BUILD)/%.o: %.cc
 	@printf "  CXX\t$<\n"
 	@mkdir -p $(dir $@)
 	$(Q)$(CXX) $(MICROLITE_CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 #test rules
-$(TESTLITE_LIB): $(TESTLITE_LIB_OBJS)
+$(TESTLITE_LIB): $(MICROLITE_OBJS)
 	@printf "  AR\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(AR) -r $@ $(TESTLITE_LIB_OBJS) 
+	$(Q)$(AR) -r $@ $(MICROLITE_OBJS) 
 
-$(TESTLITE_BUILD_PATH)/%.o: %.c
+$(TESTLITE_BUILD)/%.o: %.c
 	@printf "  CC\t$<\n"
 	@mkdir -p $(dir $@)
 	$(Q)$(CC) $(TESTLITE_CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(TESTLITE_BUILD_PATH)/%.o: %.cc
+$(TESTLITE_BUILD)/%.o: %.cc
 	@printf "  CXX\t$<\n"
 	@mkdir -p $(dir $@)
 	$(Q)$(CXX) $(TESTLITE_CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(MICROLITE_BUILD_PATH):
+$(MICROLITE_BUILD):
 	mkdir $@		
 
 clean:
-	rm -rf $(MICROLITE_BUILD_PATH) 
+	rm -rf $(MICROLITE_BUILD) 
