@@ -46,369 +46,373 @@ PROJECT := mbed
 ###############################################################################
 # Objects and Paths
 
-OBJECTS += ./mbed-os/cmsis/TARGET_CORTEX_M/mbed_tz_context.o
-OBJECTS += ./mbed-os/drivers/source/AnalogIn.o
-OBJECTS += ./mbed-os/drivers/source/AnalogOut.o
-OBJECTS += ./mbed-os/drivers/source/BusIn.o
-OBJECTS += ./mbed-os/drivers/source/BusInOut.o
-OBJECTS += ./mbed-os/drivers/source/BusOut.o
-OBJECTS += ./mbed-os/drivers/source/CAN.o
-OBJECTS += ./mbed-os/drivers/source/DigitalIn.o
-OBJECTS += ./mbed-os/drivers/source/DigitalInOut.o
-OBJECTS += ./mbed-os/drivers/source/DigitalOut.o
-OBJECTS += ./mbed-os/drivers/source/Ethernet.o
-OBJECTS += ./mbed-os/drivers/source/FlashIAP.o
-OBJECTS += ./mbed-os/drivers/source/I2C.o
-OBJECTS += ./mbed-os/drivers/source/I2CSlave.o
-OBJECTS += ./mbed-os/drivers/source/InterruptIn.o
-OBJECTS += ./mbed-os/drivers/source/InterruptManager.o
-OBJECTS += ./mbed-os/drivers/source/MbedCRC.o
-OBJECTS += ./mbed-os/drivers/source/PortIn.o
-OBJECTS += ./mbed-os/drivers/source/PortInOut.o
-OBJECTS += ./mbed-os/drivers/source/PortOut.o
-OBJECTS += ./mbed-os/drivers/source/PwmOut.o
-OBJECTS += ./mbed-os/drivers/source/QSPI.o
-OBJECTS += ./mbed-os/drivers/source/RawSerial.o
-OBJECTS += ./mbed-os/drivers/source/ResetReason.o
-OBJECTS += ./mbed-os/drivers/source/SPI.o
-OBJECTS += ./mbed-os/drivers/source/SPISlave.o
-OBJECTS += ./mbed-os/drivers/source/Serial.o
-OBJECTS += ./mbed-os/drivers/source/SerialBase.o
-OBJECTS += ./mbed-os/drivers/source/SerialWireOutput.o
-OBJECTS += ./mbed-os/drivers/source/TableCRC.o
-OBJECTS += ./mbed-os/drivers/source/Ticker.o
-OBJECTS += ./mbed-os/drivers/source/Timeout.o
-OBJECTS += ./mbed-os/drivers/source/Timer.o
-OBJECTS += ./mbed-os/drivers/source/TimerEvent.o
-OBJECTS += ./mbed-os/drivers/source/UARTSerial.o
-OBJECTS += ./mbed-os/drivers/source/Watchdog.o
-OBJECTS += ./mbed-os/features/storage/blockdevice/BufferedBlockDevice.o
-OBJECTS += ./mbed-os/features/storage/blockdevice/ChainingBlockDevice.o
-OBJECTS += ./mbed-os/features/storage/blockdevice/ExhaustibleBlockDevice.o
-OBJECTS += ./mbed-os/features/storage/blockdevice/FlashSimBlockDevice.o
-OBJECTS += ./mbed-os/features/storage/blockdevice/HeapBlockDevice.o
-OBJECTS += ./mbed-os/features/storage/blockdevice/MBRBlockDevice.o
-OBJECTS += ./mbed-os/features/storage/blockdevice/ObservingBlockDevice.o
-OBJECTS += ./mbed-os/features/storage/blockdevice/ProfilingBlockDevice.o
-OBJECTS += ./mbed-os/features/storage/blockdevice/ReadOnlyBlockDevice.o
-OBJECTS += ./mbed-os/features/storage/blockdevice/SlicingBlockDevice.o
-OBJECTS += ./mbed-os/hal/LowPowerTickerWrapper.o
-OBJECTS += ./mbed-os/hal/mbed_critical_section_api.o
-OBJECTS += ./mbed-os/hal/mbed_flash_api.o
-OBJECTS += ./mbed-os/hal/mbed_gpio.o
-OBJECTS += ./mbed-os/hal/mbed_gpio_irq.o
-OBJECTS += ./mbed-os/hal/mbed_itm_api.o
-OBJECTS += ./mbed-os/hal/mbed_lp_ticker_api.o
-OBJECTS += ./mbed-os/hal/mbed_lp_ticker_wrapper.o
-OBJECTS += ./mbed-os/hal/mbed_pinmap_common.o
-OBJECTS += ./mbed-os/hal/mbed_pinmap_default.o
-OBJECTS += ./mbed-os/hal/mbed_ticker_api.o
-OBJECTS += ./mbed-os/hal/mbed_us_ticker_api.o
-OBJECTS += ./mbed-os/hal/mpu/mbed_mpu_v7m.o
-OBJECTS += ./mbed-os/hal/mpu/mbed_mpu_v8m.o
-OBJECTS += ./mbed-os/hal/usb/mbed_usb_phy.o
-OBJECTS += ./mbed-os/platform/SysTimer.o
-OBJECTS += ./mbed-os/platform/cxxsupport/mstd_mutex.o
-OBJECTS += ./mbed-os/platform/mbed_os_timer.o
-OBJECTS += ./mbed-os/platform/mbed_thread.o
-OBJECTS += ./mbed-os/platform/source/ATCmdParser.o
-OBJECTS += ./mbed-os/platform/source/CThunkBase.o
-OBJECTS += ./mbed-os/platform/source/CallChain.o
-OBJECTS += ./mbed-os/platform/source/CriticalSectionLock.o
-OBJECTS += ./mbed-os/platform/source/DeepSleepLock.o
-OBJECTS += ./mbed-os/platform/source/FileBase.o
-OBJECTS += ./mbed-os/platform/source/FileHandle.o
-OBJECTS += ./mbed-os/platform/source/FilePath.o
-OBJECTS += ./mbed-os/platform/source/FileSystemHandle.o
-OBJECTS += ./mbed-os/platform/source/LocalFileSystem.o
-OBJECTS += ./mbed-os/platform/source/Stream.o
-OBJECTS += ./mbed-os/platform/source/TARGET_CORTEX_M/TOOLCHAIN_GCC/except.o
-OBJECTS += ./mbed-os/platform/source/TARGET_CORTEX_M/mbed_fault_handler.o
-OBJECTS += ./mbed-os/platform/source/mbed_alloc_wrappers.o
-OBJECTS += ./mbed-os/platform/source/mbed_application.o
-OBJECTS += ./mbed-os/platform/source/mbed_assert.o
-OBJECTS += ./mbed-os/platform/source/mbed_atomic_impl.o
-OBJECTS += ./mbed-os/platform/source/mbed_board.o
-OBJECTS += ./mbed-os/platform/source/mbed_critical.o
-OBJECTS += ./mbed-os/platform/source/mbed_error.o
-OBJECTS += ./mbed-os/platform/source/mbed_error_hist.o
-OBJECTS += ./mbed-os/platform/source/mbed_interface.o
-OBJECTS += ./mbed-os/platform/source/mbed_mem_trace.o
-OBJECTS += ./mbed-os/platform/source/mbed_mktime.o
-OBJECTS += ./mbed-os/platform/source/mbed_mpu_mgmt.o
-OBJECTS += ./mbed-os/platform/source/mbed_poll.o
-OBJECTS += ./mbed-os/platform/source/mbed_power_mgmt.o
-OBJECTS += ./mbed-os/platform/source/mbed_retarget.o
-OBJECTS += ./mbed-os/platform/source/mbed_rtc_time.o
-OBJECTS += ./mbed-os/platform/source/mbed_sdk_boot.o
-OBJECTS += ./mbed-os/platform/source/mbed_semihost_api.o
-OBJECTS += ./mbed-os/platform/source/mbed_stats.o
-OBJECTS += ./mbed-os/platform/source/mbed_wait_api_no_rtos.o
-OBJECTS += ./mbed-os/platform/source/mbed_wait_api_rtos.o
-OBJECTS += ./mbed-os/platform/source/minimal-printf/mbed_printf_armlink_overrides.o
-OBJECTS += ./mbed-os/platform/source/minimal-printf/mbed_printf_implementation.o
-OBJECTS += ./mbed-os/platform/source/minimal-printf/mbed_printf_wrapper.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/TARGET_STM32F767xI/TARGET_NUCLEO_F767ZI/PeripheralPins.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/TARGET_STM32F767xI/TARGET_NUCLEO_F767ZI/system_clock.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/TARGET_STM32F767xI/device/TOOLCHAIN_GCC_ARM/startup_stm32f767xx.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/analogin_device.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/analogout_device.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_adc.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_adc_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_can.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_can_legacy.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_cec.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_cortex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_crc.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_crc_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_cryp.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_cryp_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dac.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dac_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dcmi.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dcmi_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dfsdm.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dma.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dma2d.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dma_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dsi.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_eth.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_flash.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_flash_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_gpio.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_hash.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_hash_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_hcd.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_i2c.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_i2c_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_i2s.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_irda.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_iwdg.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_jpeg.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_lptim.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_ltdc.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_ltdc_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_mdios.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_mmc.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_nand.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_nor.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_pcd.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_pcd_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_pwr.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_pwr_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_qspi.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_rcc.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_rcc_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_rng.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_rtc.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_rtc_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_sai.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_sai_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_sd.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_sdram.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_smartcard.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_smartcard_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_smbus.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_spdifrx.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_spi.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_spi_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_sram.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_tim.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_tim_ex.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_uart.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_usart.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_wwdg.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_adc.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_crc.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_dac.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_dma.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_dma2d.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_exti.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_fmc.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_gpio.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_i2c.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_lptim.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_pwr.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_rcc.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_rng.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_rtc.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_sdmmc.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_spi.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_tim.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_usart.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_usb.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_utils.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/system_stm32f7xx.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/flash_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/gpio_irq_device.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/pwmout_device.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/serial_device.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/spi_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/USBPhy_STM32.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/analogin_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/analogout_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/can_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/gpio_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/gpio_irq_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/hal_tick_overrides.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/i2c_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/lp_ticker.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/mbed_crc_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/mbed_overrides.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/pinmap.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/port_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/pwmout_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/qspi_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/reset_reason.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/rtc_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/serial_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/sleep.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/stm_spi_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/trng_api.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/us_ticker.o
-OBJECTS += ./mbed-os/targets/TARGET_STM/watchdog_api.o
+#OBJECTS += ./mbed-os/cmsis/TARGET_CORTEX_M/mbed_tz_context.o
+#OBJECTS += ./mbed-os/drivers/source/AnalogIn.o
+#OBJECTS += ./mbed-os/drivers/source/AnalogOut.o
+#OBJECTS += ./mbed-os/drivers/source/BusIn.o
+#OBJECTS += ./mbed-os/drivers/source/BusInOut.o
+#OBJECTS += ./mbed-os/drivers/source/BusOut.o
+#OBJECTS += ./mbed-os/drivers/source/CAN.o
+#OBJECTS += ./mbed-os/drivers/source/DigitalIn.o
+#OBJECTS += ./mbed-os/drivers/source/DigitalInOut.o
+#OBJECTS += ./mbed-os/drivers/source/DigitalOut.o
+#OBJECTS += ./mbed-os/drivers/source/Ethernet.o
+#OBJECTS += ./mbed-os/drivers/source/FlashIAP.o
+#OBJECTS += ./mbed-os/drivers/source/I2C.o
+#OBJECTS += ./mbed-os/drivers/source/I2CSlave.o
+#OBJECTS += ./mbed-os/drivers/source/InterruptIn.o
+#OBJECTS += ./mbed-os/drivers/source/InterruptManager.o
+#OBJECTS += ./mbed-os/drivers/source/MbedCRC.o
+#OBJECTS += ./mbed-os/drivers/source/PortIn.o
+#OBJECTS += ./mbed-os/drivers/source/PortInOut.o
+#OBJECTS += ./mbed-os/drivers/source/PortOut.o
+#OBJECTS += ./mbed-os/drivers/source/PwmOut.o
+#OBJECTS += ./mbed-os/drivers/source/QSPI.o
+#OBJECTS += ./mbed-os/drivers/source/RawSerial.o
+#OBJECTS += ./mbed-os/drivers/source/ResetReason.o
+#OBJECTS += ./mbed-os/drivers/source/SPI.o
+#OBJECTS += ./mbed-os/drivers/source/SPISlave.o
+#OBJECTS += ./mbed-os/drivers/source/Serial.o
+#OBJECTS += ./mbed-os/drivers/source/SerialBase.o
+#OBJECTS += ./mbed-os/drivers/source/SerialWireOutput.o
+#OBJECTS += ./mbed-os/drivers/source/TableCRC.o
+#OBJECTS += ./mbed-os/drivers/source/Ticker.o
+#OBJECTS += ./mbed-os/drivers/source/Timeout.o
+#OBJECTS += ./mbed-os/drivers/source/Timer.o
+#OBJECTS += ./mbed-os/drivers/source/TimerEvent.o
+#OBJECTS += ./mbed-os/drivers/source/UARTSerial.o
+#OBJECTS += ./mbed-os/drivers/source/Watchdog.o
+#OBJECTS += ./mbed-os/features/storage/blockdevice/BufferedBlockDevice.o
+#OBJECTS += ./mbed-os/features/storage/blockdevice/ChainingBlockDevice.o
+#OBJECTS += ./mbed-os/features/storage/blockdevice/ExhaustibleBlockDevice.o
+#OBJECTS += ./mbed-os/features/storage/blockdevice/FlashSimBlockDevice.o
+#OBJECTS += ./mbed-os/features/storage/blockdevice/HeapBlockDevice.o
+#OBJECTS += ./mbed-os/features/storage/blockdevice/MBRBlockDevice.o
+#OBJECTS += ./mbed-os/features/storage/blockdevice/ObservingBlockDevice.o
+#OBJECTS += ./mbed-os/features/storage/blockdevice/ProfilingBlockDevice.o
+#OBJECTS += ./mbed-os/features/storage/blockdevice/ReadOnlyBlockDevice.o
+#OBJECTS += ./mbed-os/features/storage/blockdevice/SlicingBlockDevice.o
+#OBJECTS += ./mbed-os/hal/LowPowerTickerWrapper.o
+#OBJECTS += ./mbed-os/hal/mbed_critical_section_api.o
+#OBJECTS += ./mbed-os/hal/mbed_flash_api.o
+#OBJECTS += ./mbed-os/hal/mbed_gpio.o
+#OBJECTS += ./mbed-os/hal/mbed_gpio_irq.o
+#OBJECTS += ./mbed-os/hal/mbed_itm_api.o
+#OBJECTS += ./mbed-os/hal/mbed_lp_ticker_api.o
+#OBJECTS += ./mbed-os/hal/mbed_lp_ticker_wrapper.o
+#OBJECTS += ./mbed-os/hal/mbed_pinmap_common.o
+#OBJECTS += ./mbed-os/hal/mbed_pinmap_default.o
+#OBJECTS += ./mbed-os/hal/mbed_ticker_api.o
+#OBJECTS += ./mbed-os/hal/mbed_us_ticker_api.o
+#OBJECTS += ./mbed-os/hal/mpu/mbed_mpu_v7m.o
+#OBJECTS += ./mbed-os/hal/mpu/mbed_mpu_v8m.o
+#OBJECTS += ./mbed-os/hal/usb/mbed_usb_phy.o
+#OBJECTS += ./mbed-os/platform/SysTimer.o
+#OBJECTS += ./mbed-os/platform/cxxsupport/mstd_mutex.o
+#OBJECTS += ./mbed-os/platform/mbed_os_timer.o
+#OBJECTS += ./mbed-os/platform/mbed_thread.o
+#OBJECTS += ./mbed-os/platform/source/ATCmdParser.o
+#OBJECTS += ./mbed-os/platform/source/CThunkBase.o
+#OBJECTS += ./mbed-os/platform/source/CallChain.o
+#OBJECTS += ./mbed-os/platform/source/CriticalSectionLock.o
+#OBJECTS += ./mbed-os/platform/source/DeepSleepLock.o
+#OBJECTS += ./mbed-os/platform/source/FileBase.o
+#OBJECTS += ./mbed-os/platform/source/FileHandle.o
+#OBJECTS += ./mbed-os/platform/source/FilePath.o
+#OBJECTS += ./mbed-os/platform/source/FileSystemHandle.o
+#OBJECTS += ./mbed-os/platform/source/LocalFileSystem.o
+#OBJECTS += ./mbed-os/platform/source/Stream.o
+#OBJECTS += ./mbed-os/platform/source/TARGET_CORTEX_M/TOOLCHAIN_GCC/except.o
+#OBJECTS += ./mbed-os/platform/source/TARGET_CORTEX_M/mbed_fault_handler.o
+#OBJECTS += ./mbed-os/platform/source/mbed_alloc_wrappers.o
+#OBJECTS += ./mbed-os/platform/source/mbed_application.o
+#OBJECTS += ./mbed-os/platform/source/mbed_assert.o
+#OBJECTS += ./mbed-os/platform/source/mbed_atomic_impl.o
+#OBJECTS += ./mbed-os/platform/source/mbed_board.o
+#OBJECTS += ./mbed-os/platform/source/mbed_critical.o
+#OBJECTS += ./mbed-os/platform/source/mbed_error.o
+#OBJECTS += ./mbed-os/platform/source/mbed_error_hist.o
+#OBJECTS += ./mbed-os/platform/source/mbed_interface.o
+#OBJECTS += ./mbed-os/platform/source/mbed_mem_trace.o
+#OBJECTS += ./mbed-os/platform/source/mbed_mktime.o
+#OBJECTS += ./mbed-os/platform/source/mbed_mpu_mgmt.o
+#OBJECTS += ./mbed-os/platform/source/mbed_poll.o
+#OBJECTS += ./mbed-os/platform/source/mbed_power_mgmt.o
+#OBJECTS += ./mbed-os/platform/source/mbed_retarget.o
+#OBJECTS += ./mbed-os/platform/source/mbed_rtc_time.o
+#OBJECTS += ./mbed-os/platform/source/mbed_sdk_boot.o
+#OBJECTS += ./mbed-os/platform/source/mbed_semihost_api.o
+#OBJECTS += ./mbed-os/platform/source/mbed_stats.o
+#OBJECTS += ./mbed-os/platform/source/mbed_wait_api_no_rtos.o
+#OBJECTS += ./mbed-os/platform/source/mbed_wait_api_rtos.o
+#OBJECTS += ./mbed-os/platform/source/minimal-printf/mbed_printf_armlink_overrides.o
+#OBJECTS += ./mbed-os/platform/source/minimal-printf/mbed_printf_implementation.o
+#OBJECTS += ./mbed-os/platform/source/minimal-printf/mbed_printf_wrapper.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/TARGET_STM32F767xI/TARGET_NUCLEO_F767ZI/PeripheralPins.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/TARGET_STM32F767xI/TARGET_NUCLEO_F767ZI/system_clock.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/TARGET_STM32F767xI/device/TOOLCHAIN_GCC_ARM/startup_stm32f767xx.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/analogin_device.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/analogout_device.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_adc.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_adc_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_can.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_can_legacy.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_cec.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_cortex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_crc.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_crc_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_cryp.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_cryp_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dac.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dac_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dcmi.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dcmi_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dfsdm.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dma.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dma2d.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dma_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_dsi.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_eth.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_flash.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_flash_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_gpio.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_hash.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_hash_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_hcd.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_i2c.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_i2c_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_i2s.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_irda.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_iwdg.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_jpeg.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_lptim.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_ltdc.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_ltdc_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_mdios.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_mmc.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_nand.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_nor.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_pcd.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_pcd_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_pwr.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_pwr_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_qspi.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_rcc.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_rcc_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_rng.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_rtc.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_rtc_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_sai.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_sai_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_sd.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_sdram.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_smartcard.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_smartcard_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_smbus.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_spdifrx.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_spi.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_spi_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_sram.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_tim.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_tim_ex.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_uart.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_usart.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_hal_wwdg.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_adc.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_crc.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_dac.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_dma.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_dma2d.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_exti.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_fmc.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_gpio.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_i2c.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_lptim.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_pwr.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_rcc.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_rng.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_rtc.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_sdmmc.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_spi.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_tim.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_usart.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_usb.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/stm32f7xx_ll_utils.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/device/system_stm32f7xx.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/flash_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/gpio_irq_device.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/pwmout_device.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/serial_device.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/TARGET_STM32F7/spi_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/USBPhy_STM32.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/analogin_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/analogout_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/can_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/gpio_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/gpio_irq_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/hal_tick_overrides.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/i2c_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/lp_ticker.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/mbed_crc_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/mbed_overrides.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/pinmap.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/port_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/pwmout_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/qspi_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/reset_reason.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/rtc_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/serial_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/sleep.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/stm_spi_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/trng_api.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/us_ticker.o
+#OBJECTS += ./mbed-os/targets/TARGET_STM/watchdog_api.o
 
-OBJECTS += ./tensorflow/tensorflow/lite/c/common.o
-OBJECTS += ./tensorflow/tensorflow/lite/core/api/error_reporter.o
-OBJECTS += ./tensorflow/tensorflow/lite/core/api/flatbuffer_conversions.o
-OBJECTS += ./tensorflow/tensorflow/lite/core/api/op_resolver.o
-OBJECTS += ./tensorflow/tensorflow/lite/core/api/tensor_utils.o
-OBJECTS += ./tensorflow/tensorflow/lite/kernels/internal/quantization_util.o
-OBJECTS += ./tensorflow/tensorflow/lite/kernels/kernel_util.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/all_ops_resolver.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/benchmarks/keyword_scrambled_model_data.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/activations.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/arg_min_max.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/ceil.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/circular_buffer.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/add.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/conv.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/depthwise_conv.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/fully_connected.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/mul.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/pooling.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/softmax.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/comparisons.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/concatenation.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/dequantize.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/elementwise.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/ethosu.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/floor.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/l2norm.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/logical.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/logistic.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/maximum_minimum.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/neg.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/pack.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/pad.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/prelu.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/quantize.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/reduce.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/reshape.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/resize_nearest_neighbor.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/round.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/split.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/strided_slice.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/sub.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/svdf.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/tanh.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/unpack.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/mbed/debug_log.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/memory_helpers.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/memory_planner/greedy_memory_planner.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/memory_planner/linear_memory_planner.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_allocator.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_error_reporter.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_interpreter.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_optional_debug_tools.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_profiler.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_string.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_time.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_utils.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/recording_micro_allocator.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/recording_simple_memory_allocator.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/simple_memory_allocator.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/test_helpers.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/testing/test_conv_model.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/testing/test_utils.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q15.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ActivationFunctions/arm_relu6_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ActivationFunctions/arm_relu_q7.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_add_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_w.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_x.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_y.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1x1_HWC_q7_fast_nonsquare.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1x1_s8_fast.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q15_basic.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q15_fast.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q15_fast_nonsquare.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_RGB.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_basic.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_basic_nonsquare.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast_nonsquare.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_3x3_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_u8_basic_ver1.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_separable_conv_HWC_q7.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_separable_conv_HWC_q7_nonsquare.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_depthwise_conv_s8_core.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15_reordered.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_mat_q7_vec_q15.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_mat_q7_vec_q15_opt.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q7.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q7_opt.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_accumulate_q7_to_q15.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_padded_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_1x_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mult_nt_t_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mult_q15.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mult_q7.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_vec_mat_mult_t_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nntables.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_no_shift.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/PoolingFunctions/arm_max_pool_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/PoolingFunctions/arm_max_pool_s8_opt.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_q15.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_q7.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_s8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_u8.o
-OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.o
+#OBJECTS += ./tensorflow/tensorflow/lite/c/common.o
+#OBJECTS += ./tensorflow/tensorflow/lite/core/api/error_reporter.o
+#OBJECTS += ./tensorflow/tensorflow/lite/core/api/flatbuffer_conversions.o
+#OBJECTS += ./tensorflow/tensorflow/lite/core/api/op_resolver.o
+#OBJECTS += ./tensorflow/tensorflow/lite/core/api/tensor_utils.o
+#OBJECTS += ./tensorflow/tensorflow/lite/kernels/internal/quantization_util.o
+#OBJECTS += ./tensorflow/tensorflow/lite/kernels/kernel_util.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/all_ops_resolver.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/benchmarks/keyword_scrambled_model_data.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/activations.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/arg_min_max.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/ceil.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/circular_buffer.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/add.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/conv.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/depthwise_conv.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/fully_connected.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/mul.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/pooling.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/softmax.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/comparisons.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/concatenation.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/dequantize.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/elementwise.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/ethosu.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/floor.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/l2norm.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/logical.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/logistic.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/maximum_minimum.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/neg.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/pack.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/pad.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/prelu.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/quantize.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/reduce.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/reshape.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/resize_nearest_neighbor.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/round.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/split.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/strided_slice.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/sub.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/svdf.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/tanh.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/kernels/unpack.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/memory_helpers.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/memory_planner/greedy_memory_planner.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/memory_planner/linear_memory_planner.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_allocator.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_error_reporter.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_interpreter.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_optional_debug_tools.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_profiler.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_string.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_time.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/micro_utils.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/recording_micro_allocator.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/recording_simple_memory_allocator.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/simple_memory_allocator.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/test_helpers.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/testing/test_conv_model.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/testing/test_utils.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q15.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ActivationFunctions/arm_relu6_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ActivationFunctions/arm_relu_q7.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_add_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_w.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_x.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_y.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1x1_HWC_q7_fast_nonsquare.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1x1_s8_fast.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q15_basic.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q15_fast.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q15_fast_nonsquare.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_RGB.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_basic.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_basic_nonsquare.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast_nonsquare.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_3x3_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_u8_basic_ver1.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_separable_conv_HWC_q7.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_separable_conv_HWC_q7_nonsquare.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_depthwise_conv_s8_core.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15_reordered.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_mat_q7_vec_q15.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_mat_q7_vec_q15_opt.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q7.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q7_opt.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_accumulate_q7_to_q15.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_padded_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_1x_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mult_nt_t_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mult_q15.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mult_q7.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nn_vec_mat_mult_t_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_nntables.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_no_shift.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/PoolingFunctions/arm_max_pool_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/PoolingFunctions/arm_max_pool_s8_opt.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_q15.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_q7.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_s8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_u8.o
+#OBJECTS += ./tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.o
+#
+#OBJECTS += ./projects/mbed_test/constants.o
+#OBJECTS += ./projects/mbed_test/full_quant_model.o
+#OBJECTS += ./projects/mbed_test/images/images.o
+#OBJECTS += ./projects/mbed_test/main.o
+#OBJECTS += ./projects/mbed_test/printf.o
+#OBJECTS += ./projects/mbed_test/sys_init.o
+#OBJECTS += ./projects/mbed_test/utility.o
+#OBJECTS += ./projects/mbed_test/model_settings.o
+#OBJECTS += ./projects/mbed_test/debug_log.o
 
-OBJECTS += ./projects/mbed_test/constants.o
-OBJECTS += ./projects/mbed_test/full_quant_model.o
-OBJECTS += ./projects/mbed_test/images/images.o
-OBJECTS += ./projects/mbed_test/main.o
-OBJECTS += ./projects/mbed_test/main_functions.o
-OBJECTS += ./projects/mbed_test/output_handler.o
 
-
+OBJECTS += ./projects/uart_stm32f7/main.o
+OBJECTS += ./projects/uart_stm32f7/printf.o
 
 
 
@@ -528,7 +532,7 @@ INCLUDE_PATHS += -I..//home/skobec/work/hello_world/mbed/mbed-os
 
 LIBRARY_PATHS :=
 LIBRARIES :=
-LINKER_SCRIPT ?= .././mbed-os/targets/TARGET_STM/TARGET_STM32F7/TARGET_STM32F767xI/device/TOOLCHAIN_GCC_ARM/STM32F767xI.ld
+#LINKER_SCRIPT ?= .././mbed-os/targets/TARGET_STM/TARGET_STM32F7/TARGET_STM32F767xI/device/TOOLCHAIN_GCC_ARM/STM32F767xI.ld
 
 # Objects and Paths
 ###############################################################################
@@ -751,6 +755,8 @@ CXX_FLAGS += -DMBED_RAM_SIZE=0x60000
 CXX_FLAGS += -DMBED_RAM1_START=0x20000000
 CXX_FLAGS += -DMBED_RAM1_SIZE=0x20000
 CXX_FLAGS += -Wno-narrowing
+CXX_FLAGS += -fno-use-cxa-atexit
+CXX_FLAGS += -fno-threadsafe-statics
 
 ASM_FLAGS += -x
 ASM_FLAGS += assembler-with-cpp
@@ -903,10 +909,50 @@ ASM_FLAGS += -mthumb
 ASM_FLAGS += -mfpu=fpv5-sp-d16
 ASM_FLAGS += -mfloat-abi=hard
 ASM_FLAGS += -Wno-narrowing
+ 
+
+C_FLAGS   += -DSTM32F7 -DSTM32F7CCM -DSTM32F767ZI -I.././libopencm3/include
+CXX_FLAGS += -DSTM32F7 -DSTM32F7CCM -DSTM32F767ZI -I.././libopencm3/include
+ASM_FLAGS += -DSTM32F7 -DSTM32F7CCM -DSTM32F767ZI -I.././libopencm3/include
+
+INCLUDE_PATHS += -I.././libopencm3/include
+INCLUDE_PATHS += -I.././libopencm3/lib
+LDLIBS := .././libopencm3/lib/libopencm3_stm32f7.a
+LDSCRIPT := ../projects/mbed_test/linker_script.ld
 
 
-LD_FLAGS :=-Wl,--gc-sections -Wl,--wrap,main -Wl,--wrap,_malloc_r -Wl,--wrap,_free_r -Wl,--wrap,_realloc_r -Wl,--wrap,_memalign_r -Wl,--wrap,_calloc_r -Wl,--wrap,exit -Wl,--wrap,atexit -Wl,-n -mcpu=cortex-m7 -mthumb -mfpu=fpv5-sp-d16 -mfloat-abi=hard -DMBED_ROM_START=0x8000000 -DMBED_ROM_SIZE=0x200000 -DMBED_ROM1_START=0x200000 -DMBED_ROM1_SIZE=0x200000 -DMBED_RAM_START=0x20020000 -DMBED_RAM_SIZE=0x60000 -DMBED_RAM1_START=0x20000000 -DMBED_RAM1_SIZE=0x20000 -DMBED_BOOT_STACK_SIZE=4096 
-LD_SYS_LIBS :=-Wl,--start-group -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys  -Wl,--end-group
+
+#LD_FLAGS :=-Wl,--gc-sections -Wl,-n -mcpu=cortex-m7 -mthumb -mfpu=fpv5-sp-d16 -mfloat-abi=hard -DMBED_ROM_START=0x8000000 -DMBED_ROM_SIZE=0x200000 -DMBED_ROM1_START=0x200000 -DMBED_ROM1_SIZE=0x200000 -DMBED_RAM_START=0x20020000 -DMBED_RAM_SIZE=0x60000 -DMBED_RAM1_START=0x20000000 -DMBED_RAM1_SIZE=0x20000 -DMBED_BOOT_STACK_SIZE=4096 
+#LD_FLAGS += \
+#-nostartfiles \
+#-specs=nano.specs \
+#-specs=nosys.specs
+#
+#LD_FLAGS +=-Wl,--start-group -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys  -Wl,--end-group
+
+ARCH_FLAGS := -mcpu=cortex-m7
+ARCH_FLAGS += -mthumb
+ARCH_FLAGS += -mfpu=fpv5-sp-d16
+ARCH_FLAGS += -mfloat-abi=hard
+
+LIBS := -Wl,--start-group -lc -lgcc -lm -lnosys -Wl,--end-group
+
+LDFLAGS +=  \
+$(ARCH_FLAGS) \
+-nostartfiles \
+-specs=nano.specs \
+-specs=nosys.specs \
+-L$(OPENCM3_DIR)/lib \
+-T$(LDSCRIPT) \
+-Wl,--start-group -lc -lgcc -lm -lnosys -Wl,--end-group \
+-Wl,--gc-sections \
+-Wl,--no-wchar-size-warning \
+-funsigned-char \
+-ffunction-sections \
+-fdata-sections \
+-fno-common \
+-static  \
+$(OPT) \
 
 # Tools and Flags
 ###############################################################################
@@ -948,16 +994,20 @@ all: $(PROJECT).bin $(PROJECT).hex size
 	+@echo "Compile: $(notdir $<)"
 	@$(CPP) $(CXX_FLAGS) $(INCLUDE_PATHS) -o $@ $<
 
-$(PROJECT).link_script.ld: $(LINKER_SCRIPT)
-	@$(PREPROC) $< -o $@
+#$(PROJECT).link_script.ld: $(LINKER_SCRIPT)
+#Jk	@$(PREPROC) $< -o $@
 
 
+#$(PROJECT).elf: $(OBJECTS) $(SYS_OBJECTS) $(PROJECT).link_script.ld 
 
-$(PROJECT).elf: $(OBJECTS) $(SYS_OBJECTS) $(PROJECT).link_script.ld 
-	+@echo "$(filter %.o, $^)" > .link_options.txt
-	+@echo "link: $(notdir $@)"
-	@$(LD) $(LD_FLAGS) -T $(filter-out %.o, $^) $(LIBRARY_PATHS) --output $@ @.link_options.txt $(LIBRARIES) $(LD_SYS_LIBS)
+#+@echo "$(filter %.o, $^)" > .link_options.txt
 
+	#+@echo "link: $(notdir $@)"
+	#@$(LD) $(LD_FLAGS) -T$(LINKER_SCRIPT) $(LIBRARIES) $(OBJECTS) $(INCLUDE_PATHS)
+
+$(PROJECT).elf: $(OBJECTS)
+	@printf "  LD\t$@\n"
+	@$(LD) $(OBJECTS) $(LDFLAGS) $(INCLUDE_PATHS) $(LDLIBS) -o $@
 
 $(PROJECT).bin: $(PROJECT).elf
 	$(ELF2BIN) -O binary $< $@
@@ -968,11 +1018,11 @@ $(PROJECT).hex: $(PROJECT).elf
 
 
 # It is expected that a openocd.cfg file is in project folder
-flash: $(PROJECT).elf
-	openocd
+flash:
+	openocd -f ../openocd.cfg
 
 monitor: $(PROJECT).elf
-	openocd
+	openocd -f ../openocd.cfg
 	minicom -b 9600
 
 
