@@ -20,6 +20,7 @@ limitations under the License.
 #include "tensorflow/lite/schema/schema_generated.h"
 #include "tensorflow/lite/version.h"
 
+#include "printf.h"
 #include "sys_init.h"
 #include "utility.h"
 #include "full_quant_model.h"
@@ -62,19 +63,16 @@ int inference_count = 0;
 // Create an area of memory to use for input, output, and intermediate arrays.
 // Minimum arena size, at the time of writing. After allocating tensors
 // you can retrieve this value by invoking interpreter.arena_used_bytes().
-//
-//const int kModelArenaSize = 2468;
-//// Extra headroom for model + alignment + future interpreter changes.
-//const int kExtraArenaSize = 560 + 16 + 100;
-//const int kTensorArenaSize = kModelArenaSize + kExtraArenaSize;
-//uint8_t tensor_arena[kTensorArenaSize];
-
 const int kTensorArenaSize = 200 * 1024;
 static uint8_t tensor_arena[kTensorArenaSize];
 }  // namespace
 
 // The name of this function is important for Arduino compatibility.
 int main() {
+  clock_setup();
+  //systick_setup();
+  usart_setup();
+  gpio_setup();
 
   DWT_LAR |= 0xC5ACCE55;           
   dwt_enable_cycle_counter();
@@ -83,6 +81,10 @@ int main() {
   // NOLINTNEXTLINE(runtime-global-variables)
   static tflite::MicroErrorReporter micro_error_reporter;
   error_reporter = &micro_error_reporter;
+  TF_LITE_REPORT_ERROR(error_reporter, "We are alive and well");
+  TF_LITE_REPORT_ERROR(error_reporter, "We are alive and well");
+  TF_LITE_REPORT_ERROR(error_reporter, "We are alive and well");
+  TF_LITE_REPORT_ERROR(error_reporter, "We are alive and well");
   TF_LITE_REPORT_ERROR(error_reporter, "We are alive and well");
 
   // Map the model into a usable data structure. This doesn't involve any
