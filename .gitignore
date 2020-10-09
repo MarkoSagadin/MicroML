@@ -3,6 +3,7 @@ tags
 
 # Ignore build folder in any directory
 **/build 
+**/BUILD
 
 # Ignore mx_build folder in any directory
 **/mx_build 
