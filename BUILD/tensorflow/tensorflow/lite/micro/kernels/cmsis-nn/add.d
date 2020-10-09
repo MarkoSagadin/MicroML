@@ -1,0 +1,27 @@
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/add.o: \
+ ../tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/add.cc \
+ .././mbed_config.h \
+ .././tensorflow/tensorflow/lite/kernels/internal/reference/add.h \
+ .././third_party/gemmlowp/fixedpoint/fixedpoint.h \
+ .././third_party/gemmlowp/fixedpoint/../internal/detect_platform.h \
+ .././tensorflow/tensorflow/lite/kernels/internal/common.h \
+ .././tensorflow/tensorflow/lite/kernels/internal/cppmath.h \
+ .././tensorflow/tensorflow/lite/kernels/internal/optimized/neon_check.h \
+ .././tensorflow/tensorflow/lite/kernels/internal/types.h \
+ .././tensorflow/tensorflow/lite/kernels/internal/compatibility.h \
+ .././tensorflow/tensorflow/lite/kernels/op_macros.h \
+ .././tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Include/arm_nnfunctions.h \
+ .././tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Include/arm_nnsupportfunctions.h \
+ .././tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/DSP/Include/arm_math.h \
+ .././mbed-os/cmsis/TARGET_CORTEX_M/cmsis_compiler.h \
+ .././mbed-os/cmsis/TARGET_CORTEX_M/cmsis_gcc.h \
+ .././tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/DSP/Include/arm_common_tables.h \
+ .././tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Include/arm_nn_tables.h \
+ .././tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/NN/Include/arm_nn_types.h \
+ .././tensorflow/tensorflow/lite/c/builtin_op_data.h \
+ .././tensorflow/tensorflow/lite/c/common.h \
+ .././tensorflow/tensorflow/lite/kernels/internal/quantization_util.h \
+ .././tensorflow/tensorflow/lite/kernels/internal/reference/integer_ops/add.h \
+ .././tensorflow/tensorflow/lite/kernels/internal/reference/process_broadcast_shapes.h \
+ .././tensorflow/tensorflow/lite/kernels/internal/tensor_ctypes.h \
+ .././tensorflow/tensorflow/lite/kernels/kernel_util.h

@@ -10,12 +10,12 @@
 #include "tensorflow/lite/c/common.h"
 
 // Includes connected with micro
-#include "sys_init.h"
-#include "utility.h"
+//#include "sys_init.h"
+//#include "utility.h"
 #include "full_quant_model.h"
 #include "images/images.h"
 #include "model_settings.h"
-#include <libopencm3/cm3/dwt.h>
+//#include <libopencm3/cm3/dwt.h>
 
 // Globals, used for compatibility with Arduino-style sketches.
 namespace {
