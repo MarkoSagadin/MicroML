@@ -25,7 +25,7 @@ namespace {
     TfLiteTensor* input = nullptr;
 
     // An area of memory to use for input, output, and intermediate arrays.
-    constexpr int kTensorArenaSize = 200 * 1024;
+    const int kTensorArenaSize = 200 * 1024;
     static uint8_t tensor_arena[kTensorArenaSize];
 }
 
@@ -81,14 +81,15 @@ int main()
             model->version(), TFLITE_SCHEMA_VERSION);
     }
 
-    static tflite::MicroMutableOpResolver<6> micro_op_resolver;
+    static tflite::MicroMutableOpResolver<8> micro_op_resolver;
     micro_op_resolver.AddConv2D();
     micro_op_resolver.AddMaxPool2D();
     micro_op_resolver.AddReshape();
     micro_op_resolver.AddFullyConnected();
     micro_op_resolver.AddSoftmax();
     micro_op_resolver.AddDequantize();
-
+    micro_op_resolver.AddMul();
+    micro_op_resolver.AddAdd();
     // Build an interpreter to run the model with.
     static tflite::MicroInterpreter static_interpreter(model, 
                                                        micro_op_resolver, 
