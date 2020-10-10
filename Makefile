@@ -4,6 +4,17 @@
 ###############################################################################
 # Boiler-plate
 
+################################################################################
+# Make Verbosity															   #
+################################################################################
+# Be silent per default, but 'make V=1' will show all compiler calls.
+# If you want, V=99 will print out all sorts of things.
+V?=0
+ifeq ($(V),0)
+Q	:= @
+NULL	:= 2>/dev/null
+endif
+
 # cross-platform directory manipulation
 ifeq ($(shell echo $$OS),$$OS)
     MAKEDIR = if not exist "$(1)" mkdir "$(1)"
@@ -642,7 +653,7 @@ C_FLAGS += -DMBED_RAM_START=0x20020000
 C_FLAGS += -DMBED_RAM_SIZE=0x60000
 C_FLAGS += -DMBED_RAM1_START=0x20000000
 C_FLAGS += -DMBED_RAM1_SIZE=0x20000
-C_FLAGS += -Wno-narrowing
+C_FLAGS += -Wno-narrowing 				# Had to be added
 
 CXX_FLAGS += -std=gnu++14
 CXX_FLAGS += -fno-rtti
@@ -750,8 +761,8 @@ CXX_FLAGS += -DMBED_RAM_SIZE=0x60000
 CXX_FLAGS += -DMBED_RAM1_START=0x20000000
 CXX_FLAGS += -DMBED_RAM1_SIZE=0x20000
 CXX_FLAGS += -Wno-narrowing
-CXX_FLAGS += -fno-use-cxa-atexit
-CXX_FLAGS += -fno-threadsafe-statics
+CXX_FLAGS += -fno-use-cxa-atexit			# Had to be added othervise it doenst compile for libopencm
+CXX_FLAGS += -fno-threadsafe-statics        # Had to be added othervise it doenst compile for libopencm
 
 ASM_FLAGS += -x
 ASM_FLAGS += assembler-with-cpp
@@ -906,6 +917,7 @@ ASM_FLAGS += -mfloat-abi=hard
 ASM_FLAGS += -Wno-narrowing
  
 
+# Libopen specific
 C_FLAGS   += -DSTM32F7 -DSTM32F7CCM -DSTM32F767ZI -I.././libopencm3/include
 CXX_FLAGS += -DSTM32F7 -DSTM32F7CCM -DSTM32F767ZI -I.././libopencm3/include
 ASM_FLAGS += -DSTM32F7 -DSTM32F7CCM -DSTM32F767ZI -I.././libopencm3/include
@@ -962,47 +974,32 @@ all: $(PROJECT).bin $(PROJECT).hex size
 .s.o:
 	+@$(call MAKEDIR,$(dir $@))
 	+@echo "Assemble: $(notdir $<)"
-  
-	@$(AS) -c $(ASM_FLAGS) -o $@ $<
-  
-
+	$(Q)$(AS) -c $(ASM_FLAGS) -o $@ $<
 
 .S.o:
 	+@$(call MAKEDIR,$(dir $@))
 	+@echo "Assemble: $(notdir $<)"
-  
-	@$(AS) -c $(ASM_FLAGS) -o $@ $<
+	$(Q)$(AS) -c $(ASM_FLAGS) -o $@ $<
   
 
 .c.o:
 	+@$(call MAKEDIR,$(dir $@))
 	+@echo "Compile: $(notdir $<)"
-	@$(CC) $(C_FLAGS) $(INCLUDE_PATHS) -o $@ $<
+	$(Q)$(CC) $(C_FLAGS) $(INCLUDE_PATHS) -o $@ $<
 
 .cpp.o:
 	+@$(call MAKEDIR,$(dir $@))
 	+@echo "Compile: $(notdir $<)"
-	@$(CPP) $(CXX_FLAGS) $(INCLUDE_PATHS) -o $@ $<
+	$(Q)$(CPP) $(CXX_FLAGS) $(INCLUDE_PATHS) -o $@ $<
 
 .cc.o:
 	+@$(call MAKEDIR,$(dir $@))
 	+@echo "Compile: $(notdir $<)"
-	@$(CPP) $(CXX_FLAGS) $(INCLUDE_PATHS) -o $@ $<
-
-#$(PROJECT).link_script.ld: $(LINKER_SCRIPT)
-#Jk	@$(PREPROC) $< -o $@
-
-
-#$(PROJECT).elf: $(OBJECTS) $(SYS_OBJECTS) $(PROJECT).link_script.ld 
-
-#+@echo "$(filter %.o, $^)" > .link_options.txt
-
-	#+@echo "link: $(notdir $@)"
-	#@$(LD) $(LD_FLAGS) -T$(LINKER_SCRIPT) $(LIBRARIES) $(OBJECTS) $(INCLUDE_PATHS)
+	$(Q)$(CPP) $(CXX_FLAGS) $(INCLUDE_PATHS) -o $@ $<
 
 $(PROJECT).elf: $(OBJECTS)
 	@printf "  LD\t$@\n"
-	@$(LD) $(OBJECTS) $(LDFLAGS) $(INCLUDE_PATHS) $(LDLIBS) -o $@
+	$(Q)$(LD) $(OBJECTS) $(LDFLAGS) $(INCLUDE_PATHS) $(LDLIBS) -o $@
 
 $(PROJECT).bin: $(PROJECT).elf
 	$(ELF2BIN) -O binary $< $@
