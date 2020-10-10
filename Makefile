@@ -750,7 +750,7 @@ CXX_FLAGS += -DMBED_RAM_SIZE=0x60000
 CXX_FLAGS += -DMBED_RAM1_START=0x20000000
 CXX_FLAGS += -DMBED_RAM1_SIZE=0x20000
 CXX_FLAGS += -Wno-narrowing
-#CXX_FLAGS += -fno-use-cxa-atexit
+CXX_FLAGS += -fno-use-cxa-atexit
 CXX_FLAGS += -fno-threadsafe-statics
 
 ASM_FLAGS += -x
