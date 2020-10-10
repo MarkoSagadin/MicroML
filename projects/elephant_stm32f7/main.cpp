@@ -42,14 +42,12 @@ void print_result(tflite::ErrorReporter* error_reporter,
                   TfLiteTensor * output, 
                   uint32_t duration)
 {
-    TF_LITE_REPORT_ERROR(error_reporter, "\n%s", title);
-    TF_LITE_REPORT_ERROR(error_reporter, "[[%f %f %f %f]]", output->data.f[0],
+    printf("\n%s\n", title);
+    printf("[[%f %f %f %f]]\n", output->data.f[0],
                                                               output->data.f[1],
                                                               output->data.f[2],
                                                               output->data.f[3]);
-                                
-
-    TF_LITE_REPORT_ERROR(error_reporter, "Inference time: %d ms", duration);
+    printf("Inference time: %d ms\n", duration);
 }
 
 
@@ -90,6 +88,7 @@ int main()
     micro_op_resolver.AddDequantize();
     micro_op_resolver.AddMul();
     micro_op_resolver.AddAdd();
+
     // Build an interpreter to run the model with.
     static tflite::MicroInterpreter static_interpreter(model, 
                                                        micro_op_resolver, 
@@ -139,48 +138,46 @@ int main()
     TF_LITE_REPORT_ERROR(error_reporter, "Rows: %d",            output->dims->data[1]);
     TF_LITE_REPORT_ERROR(error_reporter, "Output type: %d",     output->type);
 
-    print_result(error_reporter, "Picture 0", output, dwt_cycles_to_ms(end-start));
+    print_result(error_reporter, "Image 0", output, dwt_cycles_to_ms(end-start));
+
+    load_data(image1, input);
+    start = dwt_read_cycle_counter();
+    interpreter->Invoke();
+    end = dwt_read_cycle_counter();
+    output = interpreter->output(0);
+    print_result(error_reporter, "Image 1", output, dwt_cycles_to_ms(end-start));
+
+    load_data(image2, input);
+    start = dwt_read_cycle_counter();
+    interpreter->Invoke();
+    end = dwt_read_cycle_counter();
+    output = interpreter->output(0);
+    print_result(error_reporter, "Image 2", output, dwt_cycles_to_ms(end-start));
+
+    load_data(image3, input);
+    start = dwt_read_cycle_counter();
+    interpreter->Invoke();
+    end = dwt_read_cycle_counter();
+    output = interpreter->output(0);
+    print_result(error_reporter, "Image 3", output, dwt_cycles_to_ms(end-start));
+
+    load_data(image4, input);
+    start = dwt_read_cycle_counter();
+    interpreter->Invoke();
+    end = dwt_read_cycle_counter();
+    output = interpreter->output(0);
+    print_result(error_reporter, "Image 4", output, dwt_cycles_to_ms(end-start));
+
+    load_data(image5, input);
+    start = dwt_read_cycle_counter();
+    interpreter->Invoke();
+    end = dwt_read_cycle_counter();
+    output = interpreter->output(0);
+    print_result(error_reporter, "Image 5", output, dwt_cycles_to_ms(end-start));
 
     while(1)
-    {
-        load_data(image1, input);
-        start = dwt_read_cycle_counter();
-        interpreter->Invoke();
-        end = dwt_read_cycle_counter();
-        output = interpreter->output(0);
-        print_result(error_reporter, "Image 1", output, dwt_cycles_to_ms(end-start));
-    }
+    {}    
 
-    //printf("Time needed: %d\n", end-start);
-    //load_data(image2, input);
-    //start = millis();
-    //interpreter->Invoke();
-    //end = millis();
-    //output = interpreter->output(0);
-    //print_result("Image 2", output, end-start);
-
-    //load_data(image3, input);
-    //start = millis();
-    //interpreter->Invoke();
-    //end = millis();
-    //output = interpreter->output(0);
-    //print_result("Image 3", output, end-start);
-
-    //load_data(image4, input);
-    //start = millis();
-    //interpreter->Invoke();
-    //end = millis();
-    //output = interpreter->output(0);
-    //print_result("Image 4", output, end-start);
-
-    //load_data(image5, input);
-    //start = millis();
-    //interpreter->Invoke();
-    //end = millis();
-    //output = interpreter->output(0);
-    //print_result("Image 5", output, end-start);
-
-    
     return 0;
 }
 
