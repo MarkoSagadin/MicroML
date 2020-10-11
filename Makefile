@@ -15,6 +15,11 @@ Q	:= @
 NULL	:= 2>/dev/null
 endif
 
+# debug build?
+DEBUG = 0
+# optimization
+OPT = -O3
+
 # cross-platform directory manipulation
 ifeq ($(shell echo $$OS),$$OS)
     MAKEDIR = if not exist "$(1)" mkdir "$(1)"
@@ -421,7 +426,6 @@ OBJECTS += ./projects/mbed_test/utility.o
 OBJECTS += ./projects/mbed_test/model_settings.o
 OBJECTS += ./projects/mbed_test/debug_log.o
 
-
 INCLUDE_PATHS += -I../.
 INCLUDE_PATHS += -I.././mbed-os
 INCLUDE_PATHS += -I.././mbed-os/cmsis
@@ -637,8 +641,6 @@ C_FLAGS += -funsigned-char
 C_FLAGS += -MMD
 C_FLAGS += -fno-delete-null-pointer-checks
 C_FLAGS += -fomit-frame-pointer
-C_FLAGS += -O3
-#C_FLAGS += -g
 C_FLAGS += -DMBED_DEBUG
 C_FLAGS += -DMBED_TRAP_ERRORS_ENABLED=1
 C_FLAGS += -mcpu=cortex-m7
@@ -744,8 +746,6 @@ CXX_FLAGS += -funsigned-char
 CXX_FLAGS += -MMD
 CXX_FLAGS += -fno-delete-null-pointer-checks
 CXX_FLAGS += -fomit-frame-pointer
-CXX_FLAGS += -O3
-#CXX_FLAGS += -g
 CXX_FLAGS += -DMBED_DEBUG
 CXX_FLAGS += -DMBED_TRAP_ERRORS_ENABLED=1
 CXX_FLAGS += -mcpu=cortex-m7
@@ -906,8 +906,6 @@ ASM_FLAGS += -funsigned-char
 ASM_FLAGS += -MMD
 ASM_FLAGS += -fno-delete-null-pointer-checks
 ASM_FLAGS += -fomit-frame-pointer
-ASM_FLAGS += -O3
-#ASM_FLAGS += -g
 ASM_FLAGS += -DMBED_DEBUG
 ASM_FLAGS += -DMBED_TRAP_ERRORS_ENABLED=1
 ASM_FLAGS += -mcpu=cortex-m7
@@ -918,9 +916,15 @@ ASM_FLAGS += -Wno-narrowing
  
 
 # Libopen specific
-C_FLAGS   += -DSTM32F7 -DSTM32F7CCM -DSTM32F767ZI -I.././libopencm3/include
-CXX_FLAGS += -DSTM32F7 -DSTM32F7CCM -DSTM32F767ZI -I.././libopencm3/include
-ASM_FLAGS += -DSTM32F7 -DSTM32F7CCM -DSTM32F767ZI -I.././libopencm3/include
+C_FLAGS   += -DSTM32F7 -DSTM32F7CCM -DSTM32F767ZI -I.././libopencm3/include $(OPT)
+CXX_FLAGS += -DSTM32F7 -DSTM32F7CCM -DSTM32F767ZI -I.././libopencm3/include $(OPT)
+ASM_FLAGS += -DSTM32F7 -DSTM32F7CCM -DSTM32F767ZI -I.././libopencm3/include $(OPT)
+
+ifeq ($(DEBUG), 1)
+CFLAGS += -g -gdwarf-2
+CXXFLAGS += -g -gdwarf-2
+ASM_FLAGS += -g -gdwarf-2
+endif
 
 INCLUDE_PATHS += -I.././libopencm3/include
 INCLUDE_PATHS += -I.././libopencm3/lib

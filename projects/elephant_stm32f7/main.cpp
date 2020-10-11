@@ -10,12 +10,13 @@
 #include "tensorflow/lite/c/common.h"
 
 // Includes connected with micro
-//#include "sys_init.h"
-//#include "utility.h"
+#include "sys_init.h"
+#include "utility.h"
+#include "fastfast.h"
 #include "full_quant_model.h"
 #include "images/images.h"
 #include "model_settings.h"
-//#include <libopencm3/cm3/dwt.h>
+#include <libopencm3/cm3/dwt.h>
 
 // Globals, used for compatibility with Arduino-style sketches.
 namespace {
@@ -54,7 +55,12 @@ void print_result(tflite::ErrorReporter* error_reporter,
 
 
 int main() 
-{
+{  
+  SCB_EnableICache();
+  SCB_EnableDCache();
+  __HAL_FLASH_ART_ENABLE();
+  __HAL_FLASH_PREFETCH_BUFFER_ENABLE();
+
     clock_setup();
     //systick_setup();
     usart_setup();

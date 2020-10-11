@@ -27,6 +27,7 @@ limitations under the License.
 #include "images/images.h"
 #include "model_settings.h"
 #include <libopencm3/cm3/dwt.h>
+#include "fastfast.h"
 
 void load_data(const signed char * data, TfLiteTensor * input)
 {
@@ -69,6 +70,10 @@ static uint8_t tensor_arena[kTensorArenaSize];
 
 // The name of this function is important for Arduino compatibility.
 int main() {
+  SCB_EnableICache();
+  SCB_EnableDCache();
+  __HAL_FLASH_ART_ENABLE();
+  __HAL_FLASH_PREFETCH_BUFFER_ENABLE();
   clock_setup();
   //systick_setup();
   usart_setup();
