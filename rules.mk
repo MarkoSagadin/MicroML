@@ -136,9 +136,9 @@ GENERATED_BINS += $(LDSCRIPT)
 endif
 
 # Linker script generator fills this in for us.
-ifeq (,$(DEVICE))
-LDLIBS += -l$(OPENCM3_LIB)
-endif
+#ifeq (,$(DEVICE))
+#LDLIBS += -l$(OPENCM3_LIB)
+#endif
 
 
 ################################################################################
@@ -189,9 +189,9 @@ $(BUILD_DIR)/%.o: %.S
 	@mkdir -p $(dir $@)
 	$(Q)$(AS) $(AS_FLAGS) $(INCLUDES) -o $@ -c $<
 
-$(BUILD_DIR)/firmware.elf: $(OBJS) $(LDSCRIPT) $(LIBDEPS) microlite_build/microlite.a
+$(BUILD_DIR)/firmware.elf: $(OBJS) $(LDSCRIPT) $(LIBDEPS)
 	@printf "  LD\t$@\n"
-	$(Q)$(LD) $(OBJS) $(LDFLAGS) $(INCLUDES) $(LDLIBS) -o $@
+	$(Q)$(LD) $(OBJS) $(LDFLAGS) $(INCLUDES) $(LIBDEPS) -o $@
 
 $(BUILD_DIR)/firmware.bin: $(BUILD_DIR)/firmware.elf
 	@printf "  OBJCOPY\t$@\n"

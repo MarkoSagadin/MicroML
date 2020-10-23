@@ -22,13 +22,13 @@ TEST_LDLIBS = testlite_build/testlite.a
 # Source files are added here, wildcard function adds them automatically,
 # if you are going to create seperate folders you have to add them by yourself.
 # example: driver/motor.c -> $(wildcard driver/*.c)
-CFILES = $(wildcard *.c)
-CXXFILES = $(wildcard *.cpp)
-CCFILES = $(filter-out $(TESTMAIN), $(wildcard *.cc)) $(IMAGEFILES)
-AFILES = $(wildcard *.s)
+CFILES   := $(wildcard *.c)
+CXXFILES := $(wildcard *.cpp)
+CCFILES  := $(filter-out $(TESTMAIN), $(wildcard *.cc)) $(IMAGEFILES)
+AFILES   := $(wildcard *.s)
 
 # It is needed to add archived microlite library
-LDLIBS = microlite_build/microlite.a
+LIBDEPS := microlite_build/microlite.a
 
 
 # If you add new folders do not forget to update the INCLUDES!

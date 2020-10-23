@@ -15,7 +15,9 @@ CFILES = $(wildcard *.c)
 CXXFILES = $(wildcard *.cpp)
 CCFILES = $(wildcard *.cc)
 AFILES = $(wildcard *.s)
-LDLIBS = microlite_build/microlite.a
+
+# It is needed to add archived microlite library
+LIBDEPS := microlite_build/microlite.a
 
 # If you add new folders do not forget to update the INCLUDES!
 INCLUDES += $(patsubst %,-I%, . $(SHARED_DIR))

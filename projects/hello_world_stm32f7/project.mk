@@ -22,9 +22,9 @@ CFILES = $(wildcard *.c)
 CXXFILES = $(wildcard *.cpp)
 CCFILES = $(filter-out hello_world_test.cc output_handler_test.cc,$(wildcard *.cc)) # Needed to filter out testfiles
 AFILES = $(wildcard *.s)
-# It is needed to add archived microlite library
-LDLIBS = microlite_build/microlite.a
 
+# It is needed to add archived microlite library
+LIBDEPS := microlite_build/microlite.a
 
 # If you add new folders do not forget to update the INCLUDES!
 INCLUDES += $(patsubst %,-I%, . $(SHARED_DIR))

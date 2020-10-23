@@ -29,9 +29,9 @@ In next chapters I will guide you through the whole process of setting up the Mi
 
 ### Windows
 
-I suggest you to create an Ubuntu server with Oracle VM VirtualBox, create a shared folder between a guest and host machine. That way you can change the code with an editor of your choice and then switch to the Ubuntu server to invoke different command line commands. There is a great tutorial on [youtube](https://www.youtube.com/watch?v=kYEzEFH5LiM) that guides you through the process while explaining the basics. I use exact same setup and it works as expected.  
+I suggest you to create an Ubuntu server with Oracle VM VirtualBox, then create a shared folder between a guest and host machine. That way you can change the code with an editor of your choice and then switch to the Ubuntu server to invoke make commands. There is a great tutorial on [youtube](https://www.youtube.com/watch?v=kYEzEFH5LiM) that guides you through the process while explaining the basics. I use exact same setup and it works as expected.  
 
-I wrote down all neccessary steps in [VirtualBox_setup.md](https://github.com/SkobecSlo/MicroML/blob/master/VirtualBox_setup.md) file. They are almost the same as in the video, with minor differences.
+I wrote down all necessary steps in [VirtualBox_setup.md](https://github.com/SkobecSlo/MicroML/blob/master/VirtualBox_setup.md) file. They are almost the same as in the video, with minor differences.
 
 I tried using TensorFlow Lite on Windows with help of Cygwin and Msys. This setup did not work as I was getting weird errors while trying to build a simple `hello world` example. 
 
@@ -95,7 +95,7 @@ If your project is using TensorFlow you need to run this command once before usi
 
 `make -C tensorflow/ -f ../archive_makefile PROJECT=<name of our project>`
 
-You also need need make sure that line `LDLIBS = microlite_build/microlite.a` is inside `project.mk` file.
+You also need need make sure that line `LIBDEPS = microlite_build/microlite.a` is inside `project.mk` file.
 
 If you want to be able to run and test TensorFlow functions on your host machine without any microcontroller target, you need to run this command before using general test commands:
 
