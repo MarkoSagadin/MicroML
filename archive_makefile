@@ -182,8 +182,6 @@ tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/softmax.cc \
 #tensorflow/tensorflow/lite/micro/kernels/softmax.cc \
 
 
-
-
 CMSIS_NN_PATH := tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis//CMSIS/NN/Source
 MICROLITE_SRC += \
 ${CMSIS_NN_PATH}/BasicMathFunctions/arm_elementwise_mul_s8.c \
@@ -277,6 +275,8 @@ INCLUDES := \
 ################################################################################
 MICROLITE_RAW_OBJS := $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(MICROLITE_SRC)))
 MICROLITE_OBJS := $(addprefix $(MICROLITE_BUILD)/, $(MICROLITE_RAW_OBJS))
+TESTLITE_RAW_OBJS := $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(MICROLITE_SRC)))
+TESTLITE_OBJS := $(addprefix $(TESTLITE_BUILD)/, $(TESTLITE_RAW_OBJS))
 vpath %.c $(sort $(dir $(MICROLITE_SRC)))
 vpath %.cc $(sort $(dir $(MICROLITE_SRC)))
 
@@ -342,10 +342,10 @@ $(MICROLITE_BUILD)/%.o: %.cc
 	$(Q)$(CXX) $(MICROLITE_CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 #test rules
-$(TESTLITE_LIB): $(MICROLITE_OBJS)
+$(TESTLITE_LIB): $(TESTLITE_OBJS)
 	@printf "  AR\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(AR) -r $@ $(MICROLITE_OBJS) 
+	$(Q)$(AR) -r $@ $(TESTLITE_OBJS) 
 
 $(TESTLITE_BUILD)/%.o: %.c
 	@printf "  CC\t$<\n"
@@ -359,6 +359,3 @@ $(TESTLITE_BUILD)/%.o: %.cc
 
 $(MICROLITE_BUILD):
 	mkdir $@		
-
-clean:
-	rm -rf $(MICROLITE_BUILD) 

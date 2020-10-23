@@ -277,14 +277,6 @@ bool get_picture(uint16_t frame[60][82])
 }
 
 
-
-
-
-
-
-
-
-
 /*!
  * @brief                   Sends get command to FLIR module
  *
@@ -698,7 +690,7 @@ static uint32_t flir_millis()
 
 
 /*!
- * @brief               Used to decode enum for shutter positionk
+ * @brief               Used to decode enum for shutter position
  *
  * @param[in] position  of enum type  
  *

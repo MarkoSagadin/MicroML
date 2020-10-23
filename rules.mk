@@ -97,6 +97,9 @@ CXX_FLAGS := $(FLAGS) $(CXX_DEFS) -std=c++11 -std=gnu++11 \
 	-fno-rtti -fpermissive -fno-threadsafe-statics -fno-use-cxa-atexit
 AS_FLAGS := $(FLAGS)
 
+# Test flags
+TESTLITE_CXXFLAGS 	= -std=c++11 -DTF_LITE_STATIC_MEMORY -Wno-narrowing
+TESTLITE_CXXFLAGS  += -O3 -DTF_LITE_DISABLE_X86_NEON 
 
 ################################################################################
 # Linker Flags and Lib			    										   #
@@ -211,7 +214,7 @@ $(TEST_BUILD_DIR)/test_firmware: $(TEST_OBJS)
 $(TEST_BUILD_DIR)/%.o: %.cc
 	@printf "  CXX\t$<\n"
 	@mkdir -p $(dir $@)
-	$(Q)$(CXX) $(TESTLITE_CXXFLAGS) -o $@ -c $<
+	$(Q)$(CXX) $(TESTLITE_CXXFLAGS) $(INCLUDES) -o $@ -c $<
 
 
 # It is expected that a openocd.cfg file is in project folder
