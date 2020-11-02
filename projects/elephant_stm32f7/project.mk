@@ -6,7 +6,7 @@ DEVICE = stm32f767zi
 
 # General settings
 OPT = -O3
-DEBUG = -g
+DEBUG = 
 
 # Source test files, currently only testing on development machine is available,
 # so do not include any routines that need hardware.

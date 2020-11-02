@@ -45,9 +45,9 @@ void print_result(tflite::ErrorReporter* error_reporter,
 {
     printf("\n%s\n", title);
     printf("[[%f %f %f %f]]\n", output->data.f[0],
-                                                              output->data.f[1],
-                                                              output->data.f[2],
-                                                              output->data.f[3]);
+                                output->data.f[1],
+                                output->data.f[2],
+                                output->data.f[3]);
     printf("Inference time: %d ms\n", duration);
 }
 
