@@ -1,18 +1,44 @@
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/usart.h>
+#include <libopencm3/stm32/i2c.h>
+#include <libopencm3/stm32/spi.h>
+#include <libopencm3/cm3/systick.h>
+#include <libopencm3/cm3/dwt.h>
 #include "sys_init.h"
-
+#include "fastflash.h"
+#include "printf.h"
 void _putchar(char character)
 {
-    usart_send_blocking(USART3, character); /* USART3: Send byte. */
+    usart_send_blocking(USART3, character);
 }
 
 // Our clock frequency in MHz, it has to be set manually by programmer in clock setup
 // It is used for calculating micros in utility.c
 volatile uint8_t g_clock_mhz = 0;
 
+void system_setup()
+{
+    clock_setup();
+    usart_setup();
+    gpio_setup();
+    i2c_setup();
+    spi_setup();
+    enable_fastflash();
+
+#ifdef SYSTICK_TIMER
+    systick_setup();
+#else
+    dwt_setup();
+#endif
+
+}
+
+
 void clock_setup()
 {
     // First, let's ensure that our clock is running off the high-speed internal
-    // oscillator (HSI) at 48MHz.
+    // oscillator (HSI) at 216MHz.
     rcc_clock_setup_hsi(&rcc_3v3[RCC_CLOCK_3V3_216MHZ]);
 
     g_clock_mhz = 216;     // Has to be the same as our clock in Mhz
@@ -128,23 +154,37 @@ void spi_setup()
 void usart_setup(void)
 {
     // In order to use our UART, we must enable the clock to it as well.
+    rcc_periph_clock_enable(RCC_USART2);
     rcc_periph_clock_enable(RCC_USART3);
     rcc_periph_clock_enable(RCC_GPIOD);
 
 	/* Setup GPIO pins for USART3 transmit. */
-	gpio_mode_setup(GPIOD, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO8);
-	gpio_set_af(GPIOD, GPIO_AF7, GPIO8);
+	gpio_mode_setup(GPIOD, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO8 | GPIO9);
+	gpio_set_af(GPIOD, GPIO_AF7, GPIO8 | GPIO9);
+
+	/* Setup GPIO pins for USART2 transmit. */
+	gpio_mode_setup(GPIOD, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO5 | GPIO6);
+	gpio_set_af(GPIOD, GPIO_AF7, GPIO5 | GPIO6);
 
 	/* Setup USART3 parameters. */
 	usart_set_baudrate(USART3, 115200);
 	usart_set_databits(USART3, 8);
 	usart_set_stopbits(USART3, USART_STOPBITS_1);
-	usart_set_mode(USART3, USART_MODE_TX);
+	usart_set_mode(USART3, USART_MODE_TX_RX);
 	usart_set_parity(USART3, USART_PARITY_NONE);
 	usart_set_flow_control(USART3, USART_FLOWCONTROL_NONE);
 
+	/* Setup USART2 parameters. */
+	usart_set_baudrate(USART2, 115200);
+	usart_set_databits(USART2, 8);
+	usart_set_stopbits(USART2, USART_STOPBITS_1);
+	usart_set_mode(USART2, USART_MODE_TX_RX);
+	usart_set_parity(USART2, USART_PARITY_NONE);
+	usart_set_flow_control(USART2, USART_FLOWCONTROL_NONE);
+
 	/* Finally enable the USART. */
 	usart_enable(USART3);
+	usart_enable(USART2);
 }
 
 void systick_setup() 
@@ -162,8 +202,16 @@ void systick_setup()
     systick_counter_enable();
 }
 
+void dwt_setup()
+{
+    DWT_LAR |= 0xC5ACCE55;           
+    dwt_enable_cycle_counter();
+}
+
 void gpio_setup() 
 {
     rcc_periph_clock_enable(RCC_GPIOB);
+    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO0);
+    gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO7);
     gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO14);
 }

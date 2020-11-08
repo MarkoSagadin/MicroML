@@ -1,10 +1,11 @@
-#include "flir.h"
-#include "utility.h"
+#include <libopencm3/stm32/gpio.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include "system_setup/utility.h"
+#include "system_setup/printf.h"
+#include "flir.h"
 
 static uint8_t last_flir_error = LEP_OK;
-
 
 // Low level commands
 static bool wait_busy_bit(uint16_t timeout);
