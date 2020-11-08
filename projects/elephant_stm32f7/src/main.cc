@@ -20,14 +20,10 @@
 
 // Globals, used for compatibility with Arduino-style sketches.
 namespace {
-    tflite::ErrorReporter* error_reporter = nullptr;
-    const tflite::Model* model = nullptr;
-    tflite::MicroInterpreter* interpreter = nullptr;
-    TfLiteTensor* input = nullptr;
-
     // An area of memory to use for input, output, and intermediate arrays.
-    const int kTensorArenaSize = 200 * 1024;
-    static uint8_t tensor_arena[kTensorArenaSize];
+    const int kTensorArenaSize = 197480;
+ 
+    alignas(16) uint8_t tensor_arena[kTensorArenaSize];
 }
 
 void load_data(const signed char * data, TfLiteTensor * input)
@@ -73,7 +69,7 @@ int main()
 
     // Map the model into a usable data structure. This doesn't involve any
     // copying or parsing, it's a very lightweight operation.
-    model = tflite::GetModel(full_quant_tflite);
+    const tflite::Model* model = tflite::GetModel(full_quant_tflite);
     if (model->version() != TFLITE_SCHEMA_VERSION) 
     {
         TF_LITE_REPORT_ERROR(error_reporter, 
@@ -98,7 +94,7 @@ int main()
                                                        kTensorArenaSize, 
                                                        error_reporter);
 
-    interpreter = &static_interpreter;
+    tflite::MicroInterpreter* interpreter = &static_interpreter;
 
     // Allocate memory from the tensor_arena for the model's tensors.
     TfLiteStatus allocate_status = interpreter->AllocateTensors();
@@ -107,7 +103,7 @@ int main()
         TF_LITE_REPORT_ERROR(error_reporter, "AllocateTensors() failed");
         return 0;
     }
-
+    printf("Size of the used memory in bytes: %d\n", interpreter->arena_used_bytes());
     // Get information about the memory area to use for the model's input.
     TfLiteTensor* input = interpreter->input(0);
 

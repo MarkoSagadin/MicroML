@@ -309,7 +309,7 @@ FLAGS :=\
 -fno-unwind-tables \
 -fomit-frame-pointer \
 -fno-common \
--O3
+-O3\
 
 # Default flags
 MICROLITE_CFLAGS 	:= $(ARCH_FLAGS) $(FLAGS) $(C_DEFS)   -std=c11

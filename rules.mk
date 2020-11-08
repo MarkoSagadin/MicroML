@@ -90,6 +90,7 @@ FLAGS :=\
 -fno-common \
 $(ARCH_FLAGS) \
 $(OPT) \
+$(DEBUG) \
 $(CPPFLAGS) # These come from libopencm3
 
 C_FLAGS := $(FLAGS) $(C_DEFS) -std=c11 
@@ -122,6 +123,7 @@ $(LIBS) \
 -fno-common \
 -static  \
 $(OPT) \
+$(DEBUG) 
 
 ifeq ($(V),99)
 LDFLAGS += -Wl,--print-gc-sections
@@ -163,9 +165,12 @@ endif
 # Rules																		   #
 ################################################################################
 
+# All command will also call get_size script, right now we are hardcoding 
+# flash and ram values, however this should be auto generated
 all: $(BUILD_DIR)/firmware.elf $(BUILD_DIR)/firmware.bin
 	@printf "  SIZE\t$<\n"
-	$(Q)$(SIZE) $(BUILD_DIR)/firmware.elf
+	$(Q)bash ../../get_size.sh $(BUILD_DIR)/firmware.elf 0x200000 0x60000
+	#$(Q)$(SIZE) $(BUILD_DIR)/firmware.elf
 
 $(BUILD_DIR)/%.o: %.c
 	@printf "  CC\t$<\n"
@@ -220,7 +225,8 @@ $(TEST_BUILD_DIR)/%.o: %.cc
 # It is expected that a openocd.cfg file is in project folder
 flash: $(BUILD_DIR)/firmware.bin
 	@printf "  SIZE\t$<\n"
-	$(Q)$(SIZE) $(BUILD_DIR)/firmware.elf
+	$(Q)bash ../../get_size.sh $(BUILD_DIR)/firmware.elf 0x200000 0x60000
+	#$(Q)$(SIZE) $(BUILD_DIR)/firmware.elf
 	@printf "  OPENOCD\t$<\n"
 	$(Q)$(OPENOCD)
 
