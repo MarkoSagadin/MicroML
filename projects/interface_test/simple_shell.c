@@ -53,6 +53,7 @@ static shell_cmd parse_command(char * buf, uint16_t len)
 {
     if (0 == strncmp("BLINK", buf, len)) return BLINK;
     if (0 == strncmp("ML", buf, len))    return ML;
+    if (0 == strncmp("FLIR", buf, len))  return FLIR;
 
     return INVALID_CMD;
 }

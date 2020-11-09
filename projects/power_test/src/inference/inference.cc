@@ -32,7 +32,9 @@ namespace {
 }
 
 
-static void load_test_data(const signed char * data, TfLiteTensor * input);
+static void load_test_data(TfLiteTensor * input, const signed char * data);
+static void load_data(TfLiteTensor * input, uint16_t frame[60][82]);
+
 static void print_result(tflite::ErrorReporter* error_reporter,
                          const char * title,
                          TfLiteTensor * output, 
@@ -100,10 +102,11 @@ bool inference_setup()
     return true;
 }
 
-bool inference_exe()
+bool inference_exe(uint16_t frame[60][82])
 {
     printf("\nExecuting ML\n");
-    load_test_data(image1, input);
+    //load_test_data(input, image1);
+    load_data(input, frame);
 
     uint32_t start = millis();
     TfLiteStatus invoke_status = interpreter->Invoke();
@@ -126,11 +129,27 @@ void get_inference_results(char * buf, uint16_t max_len)
                                                             duration);
 }
 
-static void load_test_data(const signed char * data, TfLiteTensor * input)
+static void load_test_data(TfLiteTensor * input, const signed char * data)
 {
     for (int i = 0; i < input->bytes; ++i)
     {
         input->data.int8[i] = data[i];
+    }
+}
+
+static void load_data(TfLiteTensor * input, uint16_t frame[60][82])
+{
+
+    /* Explanation: frame is pointer of pointers, to make pointer arithemetic 
+     * work on element to element basis we cast it to uint16_t*, then we can
+     * move around this array simply by changing i.
+     * We then diference the pointer to get the actual value and then cast it to
+     * int16_t, subtract the mean, and cast again, this time to int8_t, as this 
+     * is expected by interpreter.
+     * */
+    for (int i = 0; i < input->bytes; ++i)
+    {
+        input->data.int8[i] = (int8_t)(((int16_t)*((uint16_t *)frame + i)) - 128);
     }
 }
 

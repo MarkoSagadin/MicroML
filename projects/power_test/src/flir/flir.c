@@ -210,11 +210,11 @@ bool get_flir_telemetry()
 }
 
 // Frame commands
-bool get_picture(uint16_t frame[60][82])
+bool get_flir_image(uint16_t frame[60][82])
 {
     state_e state = INIT;
     uint8_t frame_row = 0;
-
+    volatile const uint64_t init_delay = 185;  
     while(1)
     {
         switch(state)
@@ -222,7 +222,7 @@ bool get_picture(uint16_t frame[60][82])
             case INIT:
                 enable_flir_cs();
                 disable_flir_cs();
-                delay(185);
+                delay(init_delay);
                 enable_flir_cs();
                 state = OUT_OF_SYNC;
                 break;
@@ -270,7 +270,6 @@ bool get_picture(uint16_t frame[60][82])
                     flir_print("Expected frame_row: %d\n", frame_row);
                     flir_print("What we got:        %d\n", (frame[frame_row][0] & 0x00FF));
                     disable_flir_cs();
-                    return false;
                     delay(10);
                     frame_row = 0;
                     state = INIT;
@@ -283,6 +282,20 @@ bool get_picture(uint16_t frame[60][82])
                 break;
         }
     }
+}
+
+/*!
+ * @brief           Prepares FLIR for communication
+ *
+ *
+ * @note            Camera needs atleast 700 ms to boot up after power up.
+ */
+void flir_setup()
+{
+    delay(750);
+    set_flir_agc(1);
+    set_flir_telemetry(1);
+
 }
 
 

@@ -28,6 +28,10 @@ typedef enum
 #define FLIR_DEBUG
 #define FLIR_PRINT
 
+//Frame commands
+void flir_setup();
+bool get_flir_image(uint16_t frame[60][82]);
+
 //General settings, set and get functions
 void display_flir_serial();
 
@@ -39,10 +43,6 @@ bool get_flir_agc();
 
 void set_flir_telemetry(bool enable);
 bool get_flir_telemetry();
-
-//Frame commands
-bool get_picture(uint16_t frame[60][82]);
-
 
 // Low level commands
 LEP_RESULT get_last_flir_result();

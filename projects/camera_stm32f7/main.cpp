@@ -25,7 +25,6 @@ int main()
     //} 
 
     delay(750);
-
     set_flir_agc(1);
     set_flir_telemetry(1);
 

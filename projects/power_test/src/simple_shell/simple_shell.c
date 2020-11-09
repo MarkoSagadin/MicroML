@@ -5,6 +5,7 @@
 #include "uart_ctrl.h"
 #include "simple_shell.h"
 #include "inference/inference.h"
+#include "flir/flir.h"
 
 static shell_cmd parse_command(char * buf, uint16_t len);
 static bool execute_command(shell_cmd cmd);
@@ -13,6 +14,9 @@ static bool deliver_cmd(shell_cmd cmd, char * buf, uint16_t max_len);
 static bool blink_exe();
 static void blink_response(char * buf, uint16_t max_len);
 static void invalid_cmd(char * buf, uint16_t max_len);
+
+uint16_t image[60][82];
+
 
 /*!
  * @brief       Entry point to simple shell, which does not
@@ -84,7 +88,13 @@ static bool deliver_cmd(shell_cmd cmd, char * buf, uint16_t max_len)
 
         case ML:
             if (!max_len) {
-                inference_exe(); 
+                if (get_flir_image(image)){
+                    printf("Doing inference");
+                    inference_exe(image); 
+                }
+                else{
+                    printf("Getting flir image failed");
+                }
             }
             else {
                 get_inference_results(buf, max_len);
