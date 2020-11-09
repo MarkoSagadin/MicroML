@@ -1,10 +1,15 @@
+#include <libopencm3/stm32/i2c.h>
+#include <libopencm3/stm32/spi.h>
+#include <libopencm3/stm32/spi.h>
+#include <libopencm3/cm3/systick.h>
+#include <libopencm3/cm3/dwt.h>
+#include "printf.h"
 #include "utility.h"
 #include "sys_init.h" //Needed because of g_clock_mhz
 
 // Storage for our monotonic system clock.
 // Note that it needs to be volatile since we're modifying it from an interrupt.
 static volatile uint64_t _millis = 0;
-
 
 /*!
  * @brief                   Prepares i2c peripheral for transfer of data 
@@ -527,7 +532,12 @@ void spi_read16(uint16_t * data, uint16_t num_words)
  */
 uint64_t millis()
 {
+#ifdef SYSTICK_TIMER
     return _millis;
+#else
+    return dwt_cycles_to_ms(dwt_read_cycle_counter());
+#endif
+
 }
 
 /*!
@@ -598,10 +608,9 @@ void delay_us(uint64_t duration)
  *
  * @param[in] dwt_cycles
  *
- * @return                  TIme in milliseconds
+ * @return                  Time in milliseconds
  */
 uint32_t dwt_cycles_to_ms(uint32_t dwt_cycles)
 {
-    // 48 represents the clock frequency in MHz
     return dwt_cycles * (1.0f / (g_clock_mhz * 1000.0f)) ;
 }

@@ -1,11 +1,6 @@
 #ifndef utility_H
 #define utility_H
 
-#include <libopencm3/stm32/i2c.h>
-#include <libopencm3/stm32/spi.h>
-#include <libopencm3/cm3/systick.h>
-#include "printf.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif

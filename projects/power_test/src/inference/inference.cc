@@ -40,7 +40,7 @@ static void print_result(tflite::ErrorReporter* error_reporter,
 
 bool inference_setup()
 {
-    tflite::MicroErrorReporter micro_error_reporter;
+    static tflite::MicroErrorReporter micro_error_reporter;
     error_reporter = &micro_error_reporter;
 
     model = tflite::GetModel(full_quant_tflite);
@@ -100,27 +100,30 @@ bool inference_setup()
     return true;
 }
 
-bool run_inference()
+bool inference_exe()
 {
-    input = interpreter->input(0);
     printf("\nExecuting ML\n");
-    load_test_data(image4, input);
-    //uint32_t start = millis();
-    interpreter->Invoke();
-    //uint32_t end = millis();
-    //output = interpreter->output(0);
-    //uint32_t duration = end - start;
+    load_test_data(image1, input);
+
+    uint32_t start = millis();
+    TfLiteStatus invoke_status = interpreter->Invoke();
+    if (invoke_status != kTfLiteOk) {
+        TF_LITE_REPORT_ERROR(error_reporter, "Invoke failed");
+        return false;
+    }
+    uint32_t end = millis();
+
+    duration = end - start;
     return true;
 }
 
 void get_inference_results(char * buf, uint16_t max_len)
 {
-    //snprintf(buf, max_len, "ML: GOOD\n");
-    //snprintf(buf, max_len, "ML: [[%f %f %f %f]], %ld\n", output->data.f[0],
-    //                                                     output->data.f[1],
-    //                                                     output->data.f[2],
-    //                                                     output->data.f[3],
-    //                                                     duration);
+    snprintf(buf, max_len, "ML: [[%f %f %f %f]], %ld ms\n", output->data.f[0],
+                                                            output->data.f[1],
+                                                            output->data.f[2],
+                                                            output->data.f[3],
+                                                            duration);
 }
 
 static void load_test_data(const signed char * data, TfLiteTensor * input)

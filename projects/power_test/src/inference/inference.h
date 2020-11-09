@@ -7,7 +7,7 @@ extern "C" {
 #include <stdint.h>
 
 bool inference_setup();
-bool run_inference();
+bool inference_exe();
 void get_inference_results(char * buf, uint16_t max_len);
 
 #ifdef __cplusplus

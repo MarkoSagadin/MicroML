@@ -13,7 +13,7 @@ DEBUG = -g
 # example: driver/motor.c -> $(wildcard driver/*.c)
 CFILES   := $(wildcard src/*.c)
 #CFILES   += $(wildcard src/flir/*.c)
-#CFILES   += $(wildcard src/simple_shell/*.c)
+CFILES   += $(wildcard src/simple_shell/*.c)
 CFILES   += $(wildcard src/system_setup/*.c)
 
 CXXFILES := $(wildcard src/*.cpp)
