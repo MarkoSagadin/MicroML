@@ -26,7 +26,7 @@ namespace {
     TfLiteTensor* output = nullptr;
 
     // An area of memory to use for input, output, and intermediate arrays.
-    const int kTensorArenaSize = 240000;
+    const int kTensorArenaSize = 271000;
     alignas(16) uint8_t tensor_arena[kTensorArenaSize];
     uint32_t duration = 0;
 }
@@ -105,7 +105,7 @@ bool inference_setup()
 bool inference_exe(uint16_t frame[60][82])
 {
     printf("\nExecuting ML\n");
-    //load_test_data(input, image1);
+    //load_test_data(input, image0);
     load_data(input, frame);
 
     uint32_t start = millis();
@@ -115,6 +115,7 @@ bool inference_exe(uint16_t frame[60][82])
         return false;
     }
     uint32_t end = millis();
+    output = interpreter->output(0);
 
     duration = end - start;
     return true;
@@ -140,17 +141,23 @@ static void load_test_data(TfLiteTensor * input, const signed char * data)
 static void load_data(TfLiteTensor * input, uint16_t frame[60][82])
 {
 
-    /* Explanation: frame is pointer of pointers, to make pointer arithemetic 
+    /* Explanation: frame is pointer of pointers, to make pointer arithmetic 
      * work on element to element basis we cast it to uint16_t*, then we can
      * move around this array simply by changing i.
-     * We then diference the pointer to get the actual value and then cast it to
+     * We then difference the pointer to get the actual value and then cast it to
      * int16_t, subtract the mean, and cast again, this time to int8_t, as this 
      * is expected by interpreter.
      * */
-    for (int i = 0; i < input->bytes; ++i)
-    {
-        input->data.int8[i] = (int8_t)(((int16_t)*((uint16_t *)frame + i)) - 128);
+    for(uint8_t row = 0; row < 60; row++) {
+        for(uint8_t col = 2; col < 80; col++)
+        {
+            input->data.int8[row * 80 + col - 2] = (int8_t)(((int16_t)frame[row][col]) - 128);
+        }
     }
+    //for (int i = 0; i < input->bytes; ++i)
+    //{
+    //    input->data.int8[i] = (int8_t)(((int16_t)*((uint16_t *)frame + i)) - 128);
+    //}
 }
 
 static void print_result(tflite::ErrorReporter* error_reporter, 

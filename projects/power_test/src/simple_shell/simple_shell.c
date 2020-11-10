@@ -89,6 +89,7 @@ static bool deliver_cmd(shell_cmd cmd, char * buf, uint16_t max_len)
         case ML:
             if (!max_len) {
                 if (get_flir_image(image)){
+
                     printf("Doing inference");
                     inference_exe(image); 
                 }

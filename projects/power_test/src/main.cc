@@ -5,7 +5,7 @@
 #include "system_setup/utility.h"
 #include "system_setup/printf.h"
 #include "simple_shell/simple_shell.h"
-//#include "inference/inference.h"
+#include "inference/inference.h"
 #include "flir/flir.h"
 
 
@@ -13,7 +13,7 @@ uint16_t imagex[60][82];
 int main(void)
 {
     system_setup();
-    //inference_setup();
+    inference_setup();
     flir_setup();
 
     printf("Setup done\n");
@@ -21,6 +21,8 @@ int main(void)
 	/* At this point our console is ready to go so we can create our
 	 * simple application to run on it.
 	 */
+    simple_shell();
+
     int i = 0;
     while (1)
     {
@@ -43,7 +45,6 @@ int main(void)
       }
     }
 
-    //simple_shell();
 
     while (1)
     {
