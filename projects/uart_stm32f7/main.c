@@ -77,7 +77,9 @@ void sys_tick_handler(void)
 
 void delay(uint64_t duration) 
 {
+    printf("dur: %lld\n", duration);
     const uint64_t until = millis() + duration;
+    printf("until: %lld\n", until);
     while (millis() < until);
 }
 

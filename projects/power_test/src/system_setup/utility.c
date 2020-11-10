@@ -537,7 +537,6 @@ uint64_t millis()
 #else
     return dwt_cycles_to_ms(dwt_read_cycle_counter());
 #endif
-
 }
 
 /*!
@@ -586,6 +585,11 @@ void sys_tick_handler(void)
  */
 void delay(uint64_t duration)
 {
+    /* This is needed because DWT counter does not automaticaly reload*/
+#ifndef SYSTICK_TIMER
+	DWT_CYCCNT = 0;         
+                            
+#endif
     const uint64_t until = millis() + duration;
     while (millis() < until);
 }

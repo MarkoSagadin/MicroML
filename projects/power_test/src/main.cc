@@ -8,7 +8,6 @@
 //#include "inference/inference.h"
 #include "flir/flir.h"
 
-#define SYSTICK_TIMER 1
 
 uint16_t imagex[60][82];
 int main(void)
@@ -25,38 +24,37 @@ int main(void)
     int i = 0;
     while (1)
     {
+      if (get_flir_image(imagex)){
+          printf("GOOD, %d\n", i++);
 
-        if (get_flir_image(imagex)){
-            printf("GOOD, %d\n", i++);
-
-            for(uint8_t row = 0; row < 20; row++)
-            {
-                for(uint8_t col = 2; col < 20; col++)
-                {
-                    printf("%d ", (uint8_t)imagex[row][col]);
-                }
-                printf("\n");
-            }
-            delay(1000);
-        }
-        else
-        {
-            printf("BAD\n");
-        }
+          for(uint8_t row = 0; row < 20; row++)
+          {
+              for(uint8_t col = 2; col < 20; col++)
+              {
+                  printf("%d ", (uint8_t)imagex[row][col]);
+              }
+              printf("\n");
+          }
+          delay(1000);
+      }
+      else
+      {
+          printf("BAD\n");
+      }
     }
 
-    simple_shell();
+    //simple_shell();
 
     while (1)
     {
         gpio_set(GPIOB, GPIO0);
         gpio_set(GPIOB, GPIO7);
         gpio_set(GPIOB, GPIO14);
-        delay(1000);
+        delay(100);
         gpio_clear(GPIOB, GPIO0);
         gpio_clear(GPIOB, GPIO7);
         gpio_clear(GPIOB, GPIO14);
-        delay(1000);
+        delay(100);
     }
 }
 

@@ -9,6 +9,8 @@ extern "C" {
 
 extern volatile uint8_t g_clock_mhz; //defined in sys_init.c
 
+//#define SYSTICK_TIMER
+
 void clock_setup();
 void i2c_setup();
 void spi_setup();
