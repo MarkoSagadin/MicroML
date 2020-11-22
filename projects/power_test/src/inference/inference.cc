@@ -123,11 +123,11 @@ bool inference_exe(uint16_t frame[60][82])
 
 void get_inference_results(char * buf, uint16_t max_len)
 {
-    snprintf(buf, max_len, "ML: [[%f %f %f %f]], %ld ms\n", output->data.f[0],
-                                                            output->data.f[1],
-                                                            output->data.f[2],
-                                                            output->data.f[3],
-                                                            duration);
+    snprintf(buf, max_len, "ML: %f %f %f %f %ld\n", output->data.f[0],
+                                                    output->data.f[1],
+                                                    output->data.f[2],
+                                                    output->data.f[3],
+                                                    duration);
 }
 
 static void load_test_data(TfLiteTensor * input, const signed char * data)

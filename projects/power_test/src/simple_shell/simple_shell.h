@@ -7,7 +7,7 @@ extern "C" {
 
 #define SHELL_BUF_LEN 512
 
-#define MINICOM_SHELL 1     // Define if using with minicom shell, or comment 
+//#define MINICOM_SHELL 1     // Define if using with minicom shell, or comment 
                             // out when using with other microcontroller
 
 typedef enum 

@@ -30,8 +30,8 @@ void simple_shell()
     shell_cmd cmd;
     bool status;
 
+    put_line("$");
     while (1) {
-        //put_line("$ ");
         len = get_line(buf, SHELL_BUF_LEN);
         if (len) {
             cmd = parse_command(buf, len);

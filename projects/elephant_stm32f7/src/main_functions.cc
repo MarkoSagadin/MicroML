@@ -26,7 +26,7 @@ namespace {
     TfLiteTensor* output = nullptr;
 
     // An area of memory to use for input, output, and intermediate arrays.
-    const int kTensorArenaSize = 240000;
+    const int kTensorArenaSize = 46400;
 
     alignas(16) uint8_t tensor_arena[kTensorArenaSize];
 }
@@ -121,10 +121,40 @@ void setup()
 
 void loop()
 {
-    load_data(image1, input);
+    load_data(image0, input);
     uint32_t start = millis();
     interpreter->Invoke();
     uint32_t end = millis();
     //output = interpreter->output(0);
-    print_result(error_reporter, "Image 1", output, end-start);
+    print_result(error_reporter, "Image 1", interpreter->output(0), end-start);
+
+    load_data(image1, input);
+    start = millis();
+    interpreter->Invoke();
+    end = millis();
+    //output = interpreter->output(0);
+    print_result(error_reporter, "Image 2", interpreter->output(0), end-start);
+
+    load_data(image2, input);
+    start = millis();
+    interpreter->Invoke();
+    end = millis();
+    //output = interpreter->output(0);
+    print_result(error_reporter, "Image 2", interpreter->output(0), end-start);
+
+    load_data(image3, input);
+    start = millis();
+    interpreter->Invoke();
+    end = millis();
+    //output = interpreter->output(0);
+    print_result(error_reporter, "Image 2", interpreter->output(0), end-start);
+
+    load_data(image4, input);
+    start = millis();
+    interpreter->Invoke();
+    end = millis();
+    //output = interpreter->output(0);
+    print_result(error_reporter, "Image 2", interpreter->output(0), end-start);
+
+    while(1);
 }
