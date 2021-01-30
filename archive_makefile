@@ -317,7 +317,7 @@ FLAGS :=\
 -fomit-frame-pointer \
 -fno-common \
 -O3\
--DCMSIS_NN
+-DCMSIS_NN			# Needed due to ifdef statement in tensorflow code
 
 # Default flags
 MICROLITE_CFLAGS 	:= $(ARCH_FLAGS) $(FLAGS) $(C_DEFS)   -std=c11

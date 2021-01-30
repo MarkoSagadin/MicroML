@@ -18,7 +18,7 @@ limitations under the License.
 #include "constants.h"
 #include "output_handler.h"
 #include "sine_model_data.h"
-#include "tensorflow/lite/micro/kernels/all_ops_resolver.h"
+#include "tensorflow/lite/micro/all_ops_resolver.h"
 #include "tensorflow/lite/micro/micro_error_reporter.h"
 #include "tensorflow/lite/micro/micro_interpreter.h"
 #include "tensorflow/lite/schema/schema_generated.h"
@@ -61,7 +61,7 @@ void setup() {
 
   // This pulls in all the operation implementations we need.
   // NOLINTNEXTLINE(runtime-global-variables)
-  static tflite::ops::micro::AllOpsResolver resolver;
+  static tflite::AllOpsResolver resolver;
 
   // Build an interpreter to run the model with.
   static tflite::MicroInterpreter static_interpreter(

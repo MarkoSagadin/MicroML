@@ -45,6 +45,9 @@ INCLUDES += \
 -I$(THIRD_PARTY_DIR)/ruy \
 -I$(THIRD_PARTY_DIR)/cmsis/CMSIS/Core/Include/ \
 -I$(THIRD_PARTY_DIR)/cmsis/CMSIS/DSP/Include/  \
+-isystem$(THIRD_PARTY_DIR)/cmsis/CMSIS/Core/Include/ \
+-Isystem$(THIRD_PARTY_DIR)/cmsis/CMSIS/DSP/Include/  \
+-I$(THIRD_PARTY_DIR)/cmsis/CMSIS/NN/Include/  \
 
 
 ################################################################################
@@ -91,7 +94,9 @@ FLAGS :=\
 $(ARCH_FLAGS) \
 $(OPT) \
 $(DEBUG) \
-$(CPPFLAGS) # These come from libopencm3
+$(CPPFLAGS)  			# These come from libopencm3
+FLAGS += -DCMSIS_NN 	# Needed due to ifdef statement in tensorflow code
+
 
 C_FLAGS := $(FLAGS) $(C_DEFS) -std=c11 
 CXX_FLAGS := $(FLAGS) $(CXX_DEFS) -std=c++11 -std=gnu++11 \
@@ -165,12 +170,13 @@ endif
 # Rules																		   #
 ################################################################################
 
+# DO NOT CALL get_size.sh for now
 # All command will also call get_size script, right now we are hardcoding 
 # flash and ram values, however this should be auto generated
-all: $(BUILD_DIR)/firmware.elf $(BUILD_DIR)/firmware.bin
-	@printf "  SIZE\t$<\n"
-	$(Q)bash ../../get_size.sh $(BUILD_DIR)/firmware.elf 0x200000 0x60000
+	#@printf "  SIZE\t$<\n"
+	#$(Q)bash ../../get_size.sh $(BUILD_DIR)/firmware.elf 0x200000 0x60000
 	#$(Q)$(SIZE) $(BUILD_DIR)/firmware.elf
+all: $(BUILD_DIR)/firmware.elf $(BUILD_DIR)/firmware.bin
 
 $(BUILD_DIR)/%.o: %.c
 	@printf "  CC\t$<\n"
