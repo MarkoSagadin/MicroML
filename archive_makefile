@@ -106,8 +106,6 @@ tensorflow/tensorflow/lite/micro/memory_helpers.cc \
 tensorflow/tensorflow/lite/micro/micro_allocator.cc \
 tensorflow/tensorflow/lite/micro/micro_error_reporter.cc \
 tensorflow/tensorflow/lite/micro/micro_interpreter.cc \
-tensorflow/tensorflow/lite/micro/debug_log.cc \
-tensorflow/tensorflow/lite/micro/micro_optional_debug_tools.cc \
 tensorflow/tensorflow/lite/micro/micro_profiler.cc \
 tensorflow/tensorflow/lite/micro/micro_string.cc \
 tensorflow/tensorflow/lite/micro/micro_utils.cc \
@@ -117,32 +115,44 @@ tensorflow/tensorflow/lite/micro/simple_memory_allocator.cc \
 tensorflow/tensorflow/lite/micro/test_helpers.cc \
 tensorflow/tensorflow/lite/micro/benchmarks/keyword_scrambled_model_data.cc \
 tensorflow/tensorflow/lite/micro/kernels/activations.cc \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/add.cc \
 tensorflow/tensorflow/lite/micro/kernels/arg_min_max.cc \
 tensorflow/tensorflow/lite/micro/kernels/ceil.cc \
 tensorflow/tensorflow/lite/micro/kernels/circular_buffer.cc \
 tensorflow/tensorflow/lite/micro/kernels/comparisons.cc \
 tensorflow/tensorflow/lite/micro/kernels/concatenation.cc \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/conv.cc \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/depthwise_conv.cc \
 tensorflow/tensorflow/lite/micro/kernels/dequantize.cc \
 tensorflow/tensorflow/lite/micro/kernels/elementwise.cc \
 tensorflow/tensorflow/lite/micro/kernels/ethosu.cc \
 tensorflow/tensorflow/lite/micro/kernels/floor.cc \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/fully_connected.cc \
+tensorflow/tensorflow/lite/micro/kernels/hard_swish.cc \
+tensorflow/tensorflow/lite/micro/kernels/kernel_runner.cc \
+tensorflow/tensorflow/lite/micro/kernels/kernel_util.cc \
 tensorflow/tensorflow/lite/micro/kernels/l2norm.cc \
 tensorflow/tensorflow/lite/micro/kernels/logical.cc \
 tensorflow/tensorflow/lite/micro/kernels/logistic.cc \
 tensorflow/tensorflow/lite/micro/kernels/maximum_minimum.cc \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/mul.cc \
 tensorflow/tensorflow/lite/micro/kernels/neg.cc \
 tensorflow/tensorflow/lite/micro/kernels/pack.cc \
 tensorflow/tensorflow/lite/micro/kernels/pad.cc \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/pooling.cc \
 tensorflow/tensorflow/lite/micro/kernels/prelu.cc \
 tensorflow/tensorflow/lite/micro/kernels/quantize.cc \
 tensorflow/tensorflow/lite/micro/kernels/reduce.cc \
 tensorflow/tensorflow/lite/micro/kernels/reshape.cc \
 tensorflow/tensorflow/lite/micro/kernels/resize_nearest_neighbor.cc \
 tensorflow/tensorflow/lite/micro/kernels/round.cc \
+tensorflow/tensorflow/lite/micro/kernels/shape.cc \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/softmax.cc \
 tensorflow/tensorflow/lite/micro/kernels/split.cc \
+tensorflow/tensorflow/lite/micro/kernels/split_v.cc \
 tensorflow/tensorflow/lite/micro/kernels/strided_slice.cc \
 tensorflow/tensorflow/lite/micro/kernels/sub.cc \
-tensorflow/tensorflow/lite/micro/kernels/svdf.cc \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/svdf.cc \
 tensorflow/tensorflow/lite/micro/kernels/tanh.cc \
 tensorflow/tensorflow/lite/micro/kernels/unpack.cc \
 tensorflow/tensorflow/lite/micro/memory_planner/greedy_memory_planner.cc \
@@ -155,23 +165,7 @@ tensorflow/tensorflow/lite/core/api/op_resolver.cc \
 tensorflow/tensorflow/lite/core/api/tensor_utils.cc \
 tensorflow/tensorflow/lite/kernels/internal/quantization_util.cc \
 tensorflow/tensorflow/lite/kernels/kernel_util.cc \
-tensorflow/tensorflow/lite/micro/testing/test_utils.cc \
-tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/DSP/Source/BasicMathFunctions/arm_mult_q15.c \
-tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/DSP/Source/TransformFunctions/arm_rfft_init_q15.c \
-tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/DSP/Source/TransformFunctions/arm_rfft_q15.c \
-tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/DSP/Source/TransformFunctions/arm_cfft_q15.c \
-tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/DSP/Source/TransformFunctions/arm_cfft_radix4_q15.c \
-tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/DSP/Source/CommonTables/arm_const_structs.c \
-tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/DSP/Source/CommonTables/arm_common_tables.c \
-tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/DSP/Source/StatisticsFunctions/arm_mean_q15.c \
-tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/DSP/Source/StatisticsFunctions/arm_max_q7.c \
-tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/add.cc \
-tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/conv.cc \
-tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/depthwise_conv.cc \
-tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/fully_connected.cc \
-tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/mul.cc \
-tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/pooling.cc \
-tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/softmax.cc \
+tensorflow/tensorflow/lite/schema/schema_utils.cc \
 
 #tensorflow/tensorflow/lite/micro/kernels/conv.cc \
 #tensorflow/tensorflow/lite/micro/kernels/add.cc \
@@ -182,77 +176,88 @@ tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/softmax.cc \
 #tensorflow/tensorflow/lite/micro/kernels/softmax.cc \
 
 
-CMSIS_NN_PATH := tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis//CMSIS/NN/Source
+CMSIS_NN_PATH := tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/
 MICROLITE_SRC += \
-${CMSIS_NN_PATH}/BasicMathFunctions/arm_elementwise_mul_s8.c \
-${CMSIS_NN_PATH}/BasicMathFunctions/arm_elementwise_add_s8.c \
-${CMSIS_NN_PATH}/FullyConnectedFunctions/arm_fully_connected_q7_opt.c \
-${CMSIS_NN_PATH}/FullyConnectedFunctions/arm_fully_connected_s8.c \
-${CMSIS_NN_PATH}/FullyConnectedFunctions/arm_fully_connected_q15_opt.c \
-${CMSIS_NN_PATH}/FullyConnectedFunctions/arm_fully_connected_q15.c \
-${CMSIS_NN_PATH}/FullyConnectedFunctions/arm_fully_connected_mat_q7_vec_q15.c \
-${CMSIS_NN_PATH}/FullyConnectedFunctions/arm_fully_connected_q7.c \
-${CMSIS_NN_PATH}/FullyConnectedFunctions/arm_fully_connected_mat_q7_vec_q15_opt.c \
-${CMSIS_NN_PATH}/ConcatenationFunctions/arm_concatenation_s8_z.c \
-${CMSIS_NN_PATH}/ConcatenationFunctions/arm_concatenation_s8_x.c \
-${CMSIS_NN_PATH}/ConcatenationFunctions/arm_concatenation_s8_w.c \
-${CMSIS_NN_PATH}/ConcatenationFunctions/arm_concatenation_s8_y.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_nn_depthwise_conv_s8_core.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_depthwise_conv_u8_basic_ver1.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_convolve_s8.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_convolve_1x1_s8_fast.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15_reordered.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_convolve_HWC_q7_RGB.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_nn_mat_mult_s8.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_convolve_1x1_HWC_q7_fast_nonsquare.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_convolve_HWC_q7_basic.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_depthwise_separable_conv_HWC_q7_nonsquare.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_convolve_HWC_q15_fast_nonsquare.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_depthwise_conv_3x3_s8.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_convolve_HWC_q15_basic.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_convolve_HWC_q15_fast.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_convolve_HWC_q7_fast_nonsquare.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_depthwise_separable_conv_HWC_q7.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_depthwise_conv_s8.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_convolve_1_x_n_s8.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_convolve_HWC_q7_basic_nonsquare.c \
-${CMSIS_NN_PATH}/ConvolutionFunctions/arm_convolve_wrapper_s8.c \
-${CMSIS_NN_PATH}/PoolingFunctions/arm_pool_q7_HWC.c \
-${CMSIS_NN_PATH}/PoolingFunctions/arm_max_pool_s8_opt.c \
-${CMSIS_NN_PATH}/PoolingFunctions/arm_avgpool_s8.c \
-${CMSIS_NN_PATH}/PoolingFunctions/arm_max_pool_s8.c \
-${CMSIS_NN_PATH}/ActivationFunctions/arm_relu_q15.c \
-${CMSIS_NN_PATH}/ActivationFunctions/arm_relu_q7.c \
-${CMSIS_NN_PATH}/ActivationFunctions/arm_nn_activations_q7.c \
-${CMSIS_NN_PATH}/ActivationFunctions/arm_relu6_s8.c \
-${CMSIS_NN_PATH}/ActivationFunctions/arm_nn_activations_q15.c \
-${CMSIS_NN_PATH}/NNSupportFunctions/arm_nn_add_q7.c \
-${CMSIS_NN_PATH}/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_padded_s8.c \
-${CMSIS_NN_PATH}/NNSupportFunctions/arm_q7_to_q15_reordered_no_shift.c \
-${CMSIS_NN_PATH}/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c \
-${CMSIS_NN_PATH}/NNSupportFunctions/arm_nntables.c \
-${CMSIS_NN_PATH}/NNSupportFunctions/arm_nn_accumulate_q7_to_q15.c \
-${CMSIS_NN_PATH}/NNSupportFunctions/arm_nn_mult_q7.c \
-${CMSIS_NN_PATH}/NNSupportFunctions/arm_nn_mult_q15.c \
-${CMSIS_NN_PATH}/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c \
-${CMSIS_NN_PATH}/NNSupportFunctions/arm_q7_to_q15_with_offset.c \
-${CMSIS_NN_PATH}/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c \
-${CMSIS_NN_PATH}/NNSupportFunctions/arm_nn_mat_mult_nt_t_s8.c \
-${CMSIS_NN_PATH}/NNSupportFunctions/arm_nn_vec_mat_mult_t_s8.c \
-${CMSIS_NN_PATH}/NNSupportFunctions/arm_nn_mat_mul_core_1x_s8.c \
-${CMSIS_NN_PATH}/NNSupportFunctions/arm_q7_to_q15_no_shift.c \
-${CMSIS_NN_PATH}/SoftmaxFunctions/arm_softmax_s8.c \
-${CMSIS_NN_PATH}/SoftmaxFunctions/arm_softmax_q15.c \
-${CMSIS_NN_PATH}/SoftmaxFunctions/arm_softmax_u8.c \
-${CMSIS_NN_PATH}/SoftmaxFunctions/arm_softmax_q7.c \
-${CMSIS_NN_PATH}/SoftmaxFunctions/arm_softmax_with_batch_q7.c \
-${CMSIS_NN_PATH}/ReshapeFunctions/arm_reshape_s8.c \
-
+${CMSIS_NN_PATH}/DSP/Source/BasicMathFunctions/arm_dot_prod_q15.c \
+${CMSIS_NN_PATH}/DSP/Source/BasicMathFunctions/arm_mult_q15.c \
+${CMSIS_NN_PATH}/DSP/Source/TransformFunctions/arm_rfft_init_q15.c \
+${CMSIS_NN_PATH}/DSP/Source/TransformFunctions/arm_rfft_q15.c \
+${CMSIS_NN_PATH}/DSP/Source/TransformFunctions/arm_bitreversal2.c \
+${CMSIS_NN_PATH}/DSP/Source/TransformFunctions/arm_cfft_q15.c \
+${CMSIS_NN_PATH}/DSP/Source/TransformFunctions/arm_cfft_radix4_q15.c \
+${CMSIS_NN_PATH}/DSP/Source/CommonTables/arm_const_structs.c \
+${CMSIS_NN_PATH}/DSP/Source/CommonTables/arm_common_tables.c \
+${CMSIS_NN_PATH}/DSP/Source/StatisticsFunctions/arm_mean_q15.c \
+${CMSIS_NN_PATH}/DSP/Source/StatisticsFunctions/arm_max_q7.c \
+${CMSIS_NN_PATH}/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c \
+${CMSIS_NN_PATH}/NN/Source/BasicMathFunctions/arm_elementwise_add_s8.c \
+${CMSIS_NN_PATH}/NN/Source/FullyConnectedFunctions/arm_fully_connected_q7_opt.c \
+${CMSIS_NN_PATH}/NN/Source/FullyConnectedFunctions/arm_fully_connected_s8.c \
+${CMSIS_NN_PATH}/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c \
+${CMSIS_NN_PATH}/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15.c \
+${CMSIS_NN_PATH}/NN/Source/FullyConnectedFunctions/arm_fully_connected_mat_q7_vec_q15.c \
+${CMSIS_NN_PATH}/NN/Source/FullyConnectedFunctions/arm_fully_connected_q7.c \
+${CMSIS_NN_PATH}/NN/Source/FullyConnectedFunctions/arm_fully_connected_mat_q7_vec_q15_opt.c \
+${CMSIS_NN_PATH}/NN/Source/SVDFunctions/arm_svdf_s8.c \
+${CMSIS_NN_PATH}/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c \
+${CMSIS_NN_PATH}/NN/Source/ConcatenationFunctions/arm_concatenation_s8_x.c \
+${CMSIS_NN_PATH}/NN/Source/ConcatenationFunctions/arm_concatenation_s8_w.c \
+${CMSIS_NN_PATH}/NN/Source/ConcatenationFunctions/arm_concatenation_s8_y.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_nn_depthwise_conv_s8_core.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_depthwise_conv_u8_basic_ver1.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_convolve_s8.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_convolve_1x1_s8_fast.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15_reordered.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_RGB.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_convolve_1x1_HWC_q7_fast_nonsquare.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_basic.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_depthwise_separable_conv_HWC_q7_nonsquare.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q15_fast_nonsquare.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_depthwise_conv_3x3_s8.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q15_basic.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q15_fast.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast_nonsquare.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_depthwise_separable_conv_HWC_q7.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_basic_nonsquare.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c \
+${CMSIS_NN_PATH}/NN/Source/ConvolutionFunctions/arm_depthwise_conv_wrapper_s8.c \
+${CMSIS_NN_PATH}/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c \
+${CMSIS_NN_PATH}/NN/Source/PoolingFunctions/arm_avgpool_s8.c \
+${CMSIS_NN_PATH}/NN/Source/PoolingFunctions/arm_max_pool_s8.c \
+${CMSIS_NN_PATH}/NN/Source/ActivationFunctions/arm_relu_q15.c \
+${CMSIS_NN_PATH}/NN/Source/ActivationFunctions/arm_relu_q7.c \
+${CMSIS_NN_PATH}/NN/Source/ActivationFunctions/arm_nn_activations_q7.c \
+${CMSIS_NN_PATH}/NN/Source/ActivationFunctions/arm_relu6_s8.c \
+${CMSIS_NN_PATH}/NN/Source/ActivationFunctions/arm_nn_activations_q15.c \
+${CMSIS_NN_PATH}/NN/Source/NNSupportFunctions/arm_nn_add_q7.c \
+${CMSIS_NN_PATH}/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_padded_s8.c \
+${CMSIS_NN_PATH}/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_no_shift.c \
+${CMSIS_NN_PATH}/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c \
+${CMSIS_NN_PATH}/NN/Source/NNSupportFunctions/arm_nntables.c \
+${CMSIS_NN_PATH}/NN/Source/NNSupportFunctions/arm_nn_accumulate_q7_to_q15.c \
+${CMSIS_NN_PATH}/NN/Source/NNSupportFunctions/arm_nn_mult_q7.c \
+${CMSIS_NN_PATH}/NN/Source/NNSupportFunctions/arm_nn_mult_q15.c \
+${CMSIS_NN_PATH}/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c \
+${CMSIS_NN_PATH}/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c \
+${CMSIS_NN_PATH}/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c \
+${CMSIS_NN_PATH}/NN/Source/NNSupportFunctions/arm_nn_mat_mult_nt_t_s8.c \
+${CMSIS_NN_PATH}/NN/Source/NNSupportFunctions/arm_nn_vec_mat_mult_t_s8.c \
+${CMSIS_NN_PATH}/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_1x_s8.c \
+${CMSIS_NN_PATH}/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c \
+${CMSIS_NN_PATH}/NN/Source/SoftmaxFunctions/arm_softmax_s8.c \
+${CMSIS_NN_PATH}/NN/Source/SoftmaxFunctions/arm_softmax_q15.c \
+${CMSIS_NN_PATH}/NN/Source/SoftmaxFunctions/arm_softmax_u8.c \
+${CMSIS_NN_PATH}/NN/Source/SoftmaxFunctions/arm_softmax_q7.c \
+${CMSIS_NN_PATH}/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c \
+${CMSIS_NN_PATH}/NN/Source/ReshapeFunctions/arm_reshape_s8.c \
 
 ################################################################################
 # Includes																	   #
@@ -267,8 +272,10 @@ INCLUDES := \
 -I$(THIRD_PARTY_DIR)/ruy \
 -I$(THIRD_PARTY_DIR)/cmsis/CMSIS/Core/Include/ \
 -I$(THIRD_PARTY_DIR)/cmsis/CMSIS/DSP/Include/  \
--I$(PROJECT_PATH)
-
+-isystem$(THIRD_PARTY_DIR)/cmsis/CMSIS/Core/Include/ \
+-Isystem$(THIRD_PARTY_DIR)/cmsis/CMSIS/DSP/Include/  \
+-I$(THIRD_PARTY_DIR)/cmsis/CMSIS/NN/Include/  \
+-I$(PROJECT_PATH) \
 
 ################################################################################
 # Objects																	   #
@@ -310,6 +317,7 @@ FLAGS :=\
 -fomit-frame-pointer \
 -fno-common \
 -O3\
+-DCMSIS_NN
 
 # Default flags
 MICROLITE_CFLAGS 	:= $(ARCH_FLAGS) $(FLAGS) $(C_DEFS)   -std=c11

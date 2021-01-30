@@ -58,8 +58,8 @@ If you accidentally did only `git clone` then just move into MicroML directory a
 
 ### TensorFlow setup 
 
-Before we can even compile a simple example for our target, we need to run a `hello_world` example that will be executed on our host machine.
-This is needed because makefiles written by TensorFlow team pull in several external dependencies from third parties, which are missing by defualt. 
+Before we can even compile a simple example for our target, we need to run a `hello_world` example for a SparkFun Edge board.
+This is needed because makefiles written by TensorFlow team pull in several external dependencies from third parties, which are missing by default. 
 After compilation these libraries can be found under `tensorflow/lite/micro/tools/make/downloads`. 
 
 To get them we first move inside `tensorflow` folder:
@@ -68,16 +68,28 @@ To get them we first move inside `tensorflow` folder:
 
 And then run:
 
-`sudo make -f tensorflow/lite/micro/tools/make/Makefile hello_world`
+`sudo make -f tensorflow/lite/micro/tools/make/Makefile TARGET=sparkfun_edge hello_world_bin`
 
 This will call several scripts that will download the libraries, after this 
 it will start compiling the source files. It might take a while, but we have to do this step only once.
+It can happen that because of a slow internet connection not all libraries get downloaded and then you get a compiler error (such as missing `flatbuffer` header or similiar).
+To try again you **need** to delete the generated files and downloaded libraries, and try again.
+
+`sudo make -f tensorflow/lite/micro/tools/make/Makefile TARGET=sparkfun_edge hello_world_bin`
+`rm -fr tensorflow/lite/micro/tools/make/downloads`
+
+### Optional hello_world on host computer
+
+This step is completely optional, you can run a `hello_world` example on your host system, by running below two commands:
+
+```
+sudo make -f tensorflow/lite/micro/tools/make/Makefile hello_world
+./tensorflow/lite/micro/tools/make/gen/linux_x86_64/bin/hello_world
+```
 
 Quick explanation of TensorFlow `hello_world` example: it is feeding values into a model that models the sine wave function.
 Both the input and output values are continuously printed.
-You can see program in action by running the following command:
 
-`./tensorflow/lite/micro/tools/make/gen/linux_x86_64/bin/hello_world`
 
 ### libopencm3 setup
 
@@ -93,13 +105,13 @@ To generate all necessary files just run following command inside MicroML's root
 
 If your project is using TensorFlow you need to run this command once before using general commands:
 
-`make -C tensorflow/ -f ../archive_makefile PROJECT=<name of our project>`
+`make -f archive_makefile PROJECT=<name of our project>`
 
 You also need need make sure that line `LIBDEPS = microlite_build/microlite.a` is inside `project.mk` file.
 
 If you want to be able to run and test TensorFlow functions on your host machine without any microcontroller target, you need to run this command before using general test commands:
 
-`make -C tensorflow/ -f ../archive_makefile test PROJECT=<name of our project>`
+`make -f archive_makefile test PROJECT=<name of our project>`
 
 Source files that are used only for testing purposes should be added to `TESTFILES` variable and filtered out from normal source files in `project.mk` file. An example of this can be seen inside `cifar_stm32f7/project.mk`.
 
