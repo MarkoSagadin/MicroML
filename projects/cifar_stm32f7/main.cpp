@@ -1,12 +1,13 @@
 
 // Includes connected with Tensorflow 
 #include "tensorflow/lite/c/common.h"
-#include "tensorflow/lite/micro/kernels/all_ops_resolver.h"
+#include "tensorflow/lite/micro/all_ops_resolver.h"
 #include "tensorflow/lite/micro/micro_error_reporter.h"
 #include "tensorflow/lite/micro/micro_interpreter.h"
 #include "tensorflow/lite/micro/testing/micro_test.h"
 #include "tensorflow/lite/schema/schema_generated.h"
 #include "tensorflow/lite/version.h"
+
 #include "tensorflow/lite/micro/micro_mutable_op_resolver.h"
 #include "tensorflow/lite/micro/kernels/micro_ops.h"
 
@@ -60,38 +61,13 @@ int main()
                "to supported version %d.\n",
                model->version(), TFLITE_SCHEMA_VERSION);
     }
-
-    tflite::MicroOpResolver <6> micro_op_resolver;
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_CONV_2D,
-            tflite::ops::micro::Register_CONV_2D(), 
-            3
-    );
-
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_MAX_POOL_2D,
-            tflite::ops::micro::Register_MAX_POOL_2D(),
-            2
-    );
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_RESHAPE, 
-            tflite::ops::micro::Register_RESHAPE()
-    );
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_FULLY_CONNECTED, 
-            tflite::ops::micro::Register_FULLY_CONNECTED(), 
-            4
-    );
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_SOFTMAX,
-            tflite::ops::micro::Register_SOFTMAX(), 
-            2
-    );
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_DEQUANTIZE, 
-            tflite::ops::micro::Register_DEQUANTIZE(), 
-            2
-    );
+    static tflite::MicroMutableOpResolver<6> micro_op_resolver;
+    micro_op_resolver.AddConv2D();
+    micro_op_resolver.AddMaxPool2D();
+    micro_op_resolver.AddReshape();
+    micro_op_resolver.AddFullyConnected();
+    micro_op_resolver.AddSoftmax();
+    micro_op_resolver.AddDequantize();
 
     // Build an interpreter to run the model with.
     tflite::MicroInterpreter interpreter(model, 

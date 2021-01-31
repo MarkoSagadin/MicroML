@@ -14,7 +14,7 @@ limitations under the License.
 ==============================================================================*/
 
 #include "tensorflow/lite/c/common.h"
-#include "tensorflow/lite/micro/kernels/all_ops_resolver.h"
+#include "tensorflow/lite/micro/all_ops_resolver.h"
 #include "tensorflow/lite/micro/micro_error_reporter.h"
 #include "tensorflow/lite/micro/micro_interpreter.h"
 #include "tensorflow/lite/micro/testing/micro_test.h"
@@ -88,37 +88,14 @@ TF_LITE_MICRO_TEST(TestInvoke) {
     // call any AddBultin ops. Make sure that number in definition of 
     // micro_op_resolver matches the number of ops. Adding more versions of same
     // op will demand larger number.
-    tflite::MicroOpResolver <6> micro_op_resolver;
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_CONV_2D,
-            tflite::ops::micro::Register_CONV_2D(), 
-            3
-    );
-
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_MAX_POOL_2D,
-            tflite::ops::micro::Register_MAX_POOL_2D(),
-            2
-    );
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_RESHAPE, 
-            tflite::ops::micro::Register_RESHAPE()
-    );
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_FULLY_CONNECTED, 
-            tflite::ops::micro::Register_FULLY_CONNECTED(), 
-            4
-    );
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_SOFTMAX,
-            tflite::ops::micro::Register_SOFTMAX(), 
-            2
-    );
-    micro_op_resolver.AddBuiltin(
-            tflite::BuiltinOperator_DEQUANTIZE, 
-            tflite::ops::micro::Register_DEQUANTIZE(), 
-            2
-    );
+    //
+    static tflite::MicroMutableOpResolver<6> micro_op_resolver;
+    micro_op_resolver.AddConv2D();
+    micro_op_resolver.AddMaxPool2D();
+    micro_op_resolver.AddReshape();
+    micro_op_resolver.AddFullyConnected();
+    micro_op_resolver.AddSoftmax();
+    micro_op_resolver.AddDequantize();
 
     // Build an interpreter to run the model with.
     tflite::MicroInterpreter interpreter(model, 

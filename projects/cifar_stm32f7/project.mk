@@ -23,11 +23,10 @@ TEST_LDLIBS = testlite_build/testlite.a
 CFILES = $(wildcard *.c)
 CXXFILES = $(wildcard *.cpp)
 CCFILES = $(filter-out cifar_test.cc,$(wildcard *.cc)) $(wildcard pictures/*.cc) # Needed to filter out testfiles
-
-
 AFILES = $(wildcard *.s)
+
 # It is needed to add archived microlite library
-LDLIBS = microlite_build/microlite.a
+LIBDEPS := microlite_build/microlite.a
 
 
 # If you add new folders do not forget to update the INCLUDES!

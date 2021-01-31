@@ -17,7 +17,8 @@ typedef enum
 {
     INVALID_CMD,
     BLINK,
-    ML 
+    ML,
+    FLIR 
 } shell_cmd; 
 
 void simple_shell();
