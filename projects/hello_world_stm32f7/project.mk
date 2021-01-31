@@ -12,7 +12,7 @@ DEBUG = -g
 # so do not include any routines that need hardware.
 # Explicitly define files used. For now only .cc files are supported 
 # Test routine is invoked with make test in project directory
-TESTFILES =  hello_world_test.cc sine_model_data.cc
+TESTFILES =  hello_world_test.cc model.cc
 TEST_LDLIBS = testlite_build/testlite.a
 
 # Source files are added here, wildcard function adds them automatically,

@@ -59,8 +59,8 @@ include libopencm3/mk/genlink-config.mk
 
 all: $(MICROLITE_LIB)
 # Clean up PREFIX variable
-test : PREFIX =
-test : $(TESTLITE_LIB)
+test: PREFIX =
+test: $(TESTLITE_LIB)
 else
 #Project was not found, exit gracefully 
 all: 
@@ -115,19 +115,15 @@ tensorflow/tensorflow/lite/micro/simple_memory_allocator.cc \
 tensorflow/tensorflow/lite/micro/test_helpers.cc \
 tensorflow/tensorflow/lite/micro/benchmarks/keyword_scrambled_model_data.cc \
 tensorflow/tensorflow/lite/micro/kernels/activations.cc \
-tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/add.cc \
 tensorflow/tensorflow/lite/micro/kernels/arg_min_max.cc \
 tensorflow/tensorflow/lite/micro/kernels/ceil.cc \
 tensorflow/tensorflow/lite/micro/kernels/circular_buffer.cc \
 tensorflow/tensorflow/lite/micro/kernels/comparisons.cc \
 tensorflow/tensorflow/lite/micro/kernels/concatenation.cc \
-tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/conv.cc \
-tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/depthwise_conv.cc \
 tensorflow/tensorflow/lite/micro/kernels/dequantize.cc \
 tensorflow/tensorflow/lite/micro/kernels/elementwise.cc \
 tensorflow/tensorflow/lite/micro/kernels/ethosu.cc \
 tensorflow/tensorflow/lite/micro/kernels/floor.cc \
-tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/fully_connected.cc \
 tensorflow/tensorflow/lite/micro/kernels/hard_swish.cc \
 tensorflow/tensorflow/lite/micro/kernels/kernel_runner.cc \
 tensorflow/tensorflow/lite/micro/kernels/kernel_util.cc \
@@ -135,11 +131,9 @@ tensorflow/tensorflow/lite/micro/kernels/l2norm.cc \
 tensorflow/tensorflow/lite/micro/kernels/logical.cc \
 tensorflow/tensorflow/lite/micro/kernels/logistic.cc \
 tensorflow/tensorflow/lite/micro/kernels/maximum_minimum.cc \
-tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/mul.cc \
 tensorflow/tensorflow/lite/micro/kernels/neg.cc \
 tensorflow/tensorflow/lite/micro/kernels/pack.cc \
 tensorflow/tensorflow/lite/micro/kernels/pad.cc \
-tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/pooling.cc \
 tensorflow/tensorflow/lite/micro/kernels/prelu.cc \
 tensorflow/tensorflow/lite/micro/kernels/quantize.cc \
 tensorflow/tensorflow/lite/micro/kernels/reduce.cc \
@@ -147,12 +141,10 @@ tensorflow/tensorflow/lite/micro/kernels/reshape.cc \
 tensorflow/tensorflow/lite/micro/kernels/resize_nearest_neighbor.cc \
 tensorflow/tensorflow/lite/micro/kernels/round.cc \
 tensorflow/tensorflow/lite/micro/kernels/shape.cc \
-tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/softmax.cc \
 tensorflow/tensorflow/lite/micro/kernels/split.cc \
 tensorflow/tensorflow/lite/micro/kernels/split_v.cc \
 tensorflow/tensorflow/lite/micro/kernels/strided_slice.cc \
 tensorflow/tensorflow/lite/micro/kernels/sub.cc \
-tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/svdf.cc \
 tensorflow/tensorflow/lite/micro/kernels/tanh.cc \
 tensorflow/tensorflow/lite/micro/kernels/unpack.cc \
 tensorflow/tensorflow/lite/micro/memory_planner/greedy_memory_planner.cc \
@@ -167,17 +159,8 @@ tensorflow/tensorflow/lite/kernels/internal/quantization_util.cc \
 tensorflow/tensorflow/lite/kernels/kernel_util.cc \
 tensorflow/tensorflow/lite/schema/schema_utils.cc \
 
-#tensorflow/tensorflow/lite/micro/kernels/conv.cc \
-#tensorflow/tensorflow/lite/micro/kernels/add.cc \
-#tensorflow/tensorflow/lite/micro/kernels/portable_optimized/depthwise_conv.cc \
-#tensorflow/tensorflow/lite/micro/kernels/fully_connected.cc \
-#tensorflow/tensorflow/lite/micro/kernels/mul.cc \
-#tensorflow/tensorflow/lite/micro/kernels/pooling.cc \
-#tensorflow/tensorflow/lite/micro/kernels/softmax.cc \
-
-
 CMSIS_NN_PATH := tensorflow/tensorflow/lite/micro/tools/make/downloads/cmsis/CMSIS/
-MICROLITE_SRC += \
+CMSIS_NN_SRC := \
 ${CMSIS_NN_PATH}/DSP/Source/BasicMathFunctions/arm_dot_prod_q15.c \
 ${CMSIS_NN_PATH}/DSP/Source/BasicMathFunctions/arm_mult_q15.c \
 ${CMSIS_NN_PATH}/DSP/Source/TransformFunctions/arm_rfft_init_q15.c \
@@ -259,6 +242,32 @@ ${CMSIS_NN_PATH}/NN/Source/SoftmaxFunctions/arm_softmax_q7.c \
 ${CMSIS_NN_PATH}/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c \
 ${CMSIS_NN_PATH}/NN/Source/ReshapeFunctions/arm_reshape_s8.c \
 
+CMSIS_KERNELS_SRC := \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/conv.cc \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/add.cc \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/depthwise_conv.cc \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/fully_connected.cc \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/mul.cc \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/pooling.cc \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/softmax.cc \
+tensorflow/tensorflow/lite/micro/kernels/cmsis-nn/svdf.cc
+
+NORMAL_KERNELS_SRC := \
+tensorflow/tensorflow/lite/micro/kernels/conv.cc \
+tensorflow/tensorflow/lite/micro/kernels/add.cc \
+tensorflow/tensorflow/lite/micro/kernels/depthwise_conv.cc \
+tensorflow/tensorflow/lite/micro/kernels/fully_connected.cc \
+tensorflow/tensorflow/lite/micro/kernels/mul.cc \
+tensorflow/tensorflow/lite/micro/kernels/pooling.cc \
+tensorflow/tensorflow/lite/micro/kernels/softmax.cc \
+tensorflow/tensorflow/lite/micro/kernels/svdf.cc \
+tensorflow/tensorflow/lite/micro/debug_log.cc
+
+#$(MICROLITE_LIB) : MICROLITE_SRC += $(CMSIS_KERNELS_SRC) $(CMSIS_NN_SRC)
+#$(TESTLITE_LIB) : MICROLITE_SRC += $(NORMAL_KERNELS_SRC) 
+#all : MICROLITE_SRC += $(CMSIS_KERNELS_SRC) $(CMSIS_NN_SRC)
+#test : MICROLITE_SRC += $(NORMAL_KERNELS_SRC) 
+
 ################################################################################
 # Includes																	   #
 ################################################################################
@@ -273,7 +282,7 @@ INCLUDES := \
 -I$(THIRD_PARTY_DIR)/cmsis/CMSIS/Core/Include/ \
 -I$(THIRD_PARTY_DIR)/cmsis/CMSIS/DSP/Include/  \
 -isystem$(THIRD_PARTY_DIR)/cmsis/CMSIS/Core/Include/ \
--Isystem$(THIRD_PARTY_DIR)/cmsis/CMSIS/DSP/Include/  \
+-isystem$(THIRD_PARTY_DIR)/cmsis/CMSIS/DSP/Include/  \
 -I$(THIRD_PARTY_DIR)/cmsis/CMSIS/NN/Include/  \
 -I$(PROJECT_PATH) \
 
@@ -281,12 +290,22 @@ INCLUDES := \
 # Objects																	   #
 ################################################################################
 MICROLITE_RAW_OBJS := $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(MICROLITE_SRC)))
+MICROLITE_RAW_OBJS += $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(CMSIS_KERNELS_SRC)))
+MICROLITE_RAW_OBJS += $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(CMSIS_NN_SRC)))
 MICROLITE_OBJS := $(addprefix $(MICROLITE_BUILD)/, $(MICROLITE_RAW_OBJS))
+
 TESTLITE_RAW_OBJS := $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(MICROLITE_SRC)))
+TESTLITE_RAW_OBJS += $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(NORMAL_KERNELS_SRC)))
 TESTLITE_OBJS := $(addprefix $(TESTLITE_BUILD)/, $(TESTLITE_RAW_OBJS))
+
 vpath %.c $(sort $(dir $(MICROLITE_SRC)))
 vpath %.cc $(sort $(dir $(MICROLITE_SRC)))
-
+vpath %.c $(sort $(dir $(CMSIS_KERNELS_SRC)))
+vpath %.cc $(sort $(dir $(CMSIS_KERNELS_SRC)))
+vpath %.c $(sort $(dir $(CMSIS_NN_SRC)))
+vpath %.cc $(sort $(dir $(CMSIS_NN_SRC)))
+vpath %.c $(sort $(dir $(NORMAL_KERNELS_SRC)))
+vpath %.cc $(sort $(dir $(NORMAL_KERNELS_SRC)))
 
 ################################################################################
 # Defines																	   #
@@ -316,7 +335,7 @@ FLAGS :=\
 -fno-unwind-tables \
 -fomit-frame-pointer \
 -fno-common \
--O3\
+-O3 \
 -DCMSIS_NN			# Needed due to ifdef statement in tensorflow code
 
 # Default flags

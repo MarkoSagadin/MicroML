@@ -220,7 +220,7 @@ test: $(TEST_BUILD_DIR)/test_firmware
 
 $(TEST_BUILD_DIR)/test_firmware: $(TEST_OBJS)
 	@printf "  LD\t$@\n"
-	$(Q)$(LD) $(TESTLITE_CXXFLAGS) $(TEST_OBJS) -lm -o $@
+	$(Q)$(LD) $(TESTLITE_CXXFLAGS) $(TEST_OBJS) $(TEST_LDLIBS) -lm -o $@
 
 $(TEST_BUILD_DIR)/%.o: %.cc
 	@printf "  CXX\t$<\n"
