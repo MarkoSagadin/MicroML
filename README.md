@@ -75,8 +75,10 @@ it will start compiling the source files. It might take a while, but we have to 
 It can happen that because of a slow internet connection not all libraries get downloaded and then you get a compiler error (such as missing `flatbuffer` header or similiar).
 To try again you **need** to delete the generated files and downloaded libraries, and try again.
 
-`sudo make -f tensorflow/lite/micro/tools/make/Makefile TARGET=sparkfun_edge hello_world_bin`
-`rm -fr tensorflow/lite/micro/tools/make/downloads`
+```
+sudo make -f tensorflow/lite/micro/tools/make/Makefile TARGET=sparkfun_edge hello_world_bin
+rm -fr tensorflow/lite/micro/tools/make/downloads`
+```
 
 ### Optional hello_world on host computer
 
